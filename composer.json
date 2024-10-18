@@ -16,8 +16,7 @@
             "name" : "Serhey Dolgushev",
             "homepage": "https://ua.linkedin.com/in/serheydolgushev",
             "role": "Author"
-        },
-	
+        }	
     ],
     "minimum-stability": "dev",
     "require": {
