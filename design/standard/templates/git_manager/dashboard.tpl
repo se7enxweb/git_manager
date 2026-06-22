@@ -13,10 +13,6 @@
 </div>	
 {/if}
 
-{if $output}
-<pre>{$output}</pre>
-{/if}
-
 <div class="context-block">
 	<div class="box-header">
 		<h1 class="context-title">{'Branches'|i18n( 'extension/git_manager' )}</h1>
@@ -79,6 +75,9 @@
 				</form>
 			</div>
 
+			{if $output}
+			<pre>{$output}</pre>
+			{/if}
 		</div>
 	</div>
 

@@ -70,7 +70,7 @@ $Result = array();
 $Result['content'] = $tpl->fetch( 'design:git_manager/dashboard.tpl' );
 $Result['path']    = array(
 	array(
-		'text' => ezpI18n::tr( 'extension/git_manager', 'GIT Manager' ),
+		'text' => ezpI18n::tr( 'extension/git_manager', 'Git Manager' ),
 		'url'  => false
 	)
 );

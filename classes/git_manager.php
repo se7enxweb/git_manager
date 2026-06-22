@@ -18,7 +18,40 @@ class GitManager
 		'remote_branches' => 'getRemoteBranches'
 	);
 
-	private function __construct() {}
+	private function __construct() {
+		// Resolve symlinked .git directory to actual repository root
+		self::$path = $this->resolveGitPath();
+	}
+
+	/**
+	 * Resolve the actual git repository path, following symlinks if necessary
+	 * 
+	 * @return string The real path to the git repository root
+	 */
+	private function resolveGitPath() {
+		$currentPath = './';
+		$gitDir = $currentPath . '.git';
+		
+		// Check if .git exists and is a symlink
+		if( is_link( $gitDir ) ) {
+			// Read the symlink target
+			$symlinkTarget = readlink( $gitDir );
+			
+			// If it's a relative path, resolve it relative to current directory
+			if( $symlinkTarget[0] !== '/' ) {
+				$symlinkTarget = realpath( $currentPath . $symlinkTarget );
+			}
+			
+			// Remove the .git suffix to get the repository root
+			if( substr( $symlinkTarget, -5 ) === '/.git' ) {
+				$repoRoot = substr( $symlinkTarget, 0, -5 );
+				return $repoRoot;
+			}
+		}
+		
+		// If not a symlink or couldn't resolve, use current path
+		return $currentPath;
+	}
 
 	public static function getInstance() {
 		if( self::$instance === null ) {
@@ -173,3 +206,5 @@ class GitManager
 		return $result;
 	}
 }
+
+?>

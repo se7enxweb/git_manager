@@ -1,14 +1,16 @@
 <?php /* #?ini charset="utf-8"?
 
 [NavigationPart]
-Part[gitmanagernavigationpart]=Git Manager
+Part[gitmanagernavigationpart]=Git
+# Part[gitmanagernavigationpart]=Git Manager
 
 [TopAdminMenu]
 Tabs[]=gitmanager
 
 [Topmenu_gitmanager]
 NavigationPartIdentifier=gitmanagernavigationpart
-Name=Git Manager
+Name=Git
+# Name=Git Manager
 Tooltip=Git Manager dashboard
 URL[]
 URL[default]=git_manager/dashboard
@@ -26,7 +28,7 @@ PolicyList[]=git_manager/dashboard
 
 [Leftmenu_setup]
 Links[git_manager]=git_manager/dashboard
-LinkNames[git_manager]=GIT Manager
+LinkNames[git_manager]=Git Manager
 Links[asset_manager]=git_manager/dump
 LinkNames[asset_manager]=Dump assets
 

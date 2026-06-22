@@ -34,6 +34,20 @@ $ViewList = array(
 		'script'                  => 'dump.php',
 		'functions'               => array( 'dump' ),
 		'params'                  => array(),
+		'default_navigation_part' => 'ezsetupnavigationpart',
+		'single_post_actions'     => array(
+			'CreateFullCaption'     => 'CreateFullCaption',
+			'CreateDatabaseCaption' => 'CreateDatabaseCaption',
+			'CreateVarCaption'      => 'CreateVarCaption',
+			'CreateFullSiteBackup'  => 'CreateFullSiteBackup',
+			'DeleteCaption'         => 'DeleteCaption',
+			'DeleteSelectedCaptions' => 'DeleteSelectedCaptions'
+		)
+	),
+	'download' => array(
+		'script'                  => 'download.php',
+		'functions'               => array( 'dump' ),
+		'params'                  => array( 'Timestamp', 'Filename' ),
 		'default_navigation_part' => 'ezsetupnavigationpart'
 	)
 );
