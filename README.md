@@ -4,7 +4,7 @@ Git Manager
 General Description
 -------------------
 
-Git Manager provides a complete web-based git management and site backup toolset for eZ Publish. It is designed for environments where **SSH access is not available** but git is installed on the server — enabling admins to manage deployments, branches, and site backups entirely through the web admin interface.
+Git Manager provides a complete web-based git management and site backup toolset for Exponential / eZ Publish. It is designed for environments where **SSH access is not available** but git is installed on the server — enabling admins to manage deployments, branches, and site backups entirely through the web admin interface.
 
 **Core use cases:**
 - No shell/SSH access to the server — manage git branches and deployments via web UI
