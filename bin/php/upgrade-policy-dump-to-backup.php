@@ -1,0 +1,56 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Renames the role policies git_manager/dump to git_manager/backup.
+ *
+ * Before 2.0.4 the backup view was git_manager/dump and its policy function was
+ * called dump. The function is now backup; dump is still accepted, so nothing
+ * breaks without this script, but a role shows the old name until it is run.
+ * Limitations of each policy stay with it.
+ *
+ * Usage (from the installation root):
+ *   php extension/git_manager/bin/php/upgrade-policy-dump-to-backup.php [--dry-run]
+ */
+
+require_once dirname( __FILE__ ) . '/../../../../autoload.php';
+
+$cli = eZCLI::instance();
+$script = eZScript::instance( array(
+    'description'    => "Renames the role policies git_manager/dump to git_manager/backup.",
+    'use-session'    => false,
+    'use-modules'    => true,
+    'use-extensions' => true,
+) );
+$script->startup();
+$options = $script->getOptions( '[dry-run]', '', array( 'dry-run' => 'show what would change, change nothing' ) );
+$script->initialize();
+
+$db = eZDB::instance();
+$rows = $db->arrayQuery( "SELECT id, role_id FROM ezpolicy WHERE module_name = 'git_manager' AND function_name = 'dump'" );
+if ( !$rows )
+{
+    $cli->output( 'No policy names git_manager/dump; nothing to do.' );
+    $script->shutdown( 0 );
+}
+
+$changed = 0;
+foreach ( $rows as $row )
+{
+    $policyID = (int)$row['id'];
+    $roleID = (int)$row['role_id'];
+    $cli->output( "role $roleID, policy $policyID: git_manager/dump -> git_manager/backup" . ( $options['dry-run'] ? ' (dry run)' : '' ) );
+    if ( $options['dry-run'] )
+    {
+        continue;
+    }
+    $db->query( "UPDATE ezpolicy SET function_name = 'backup' WHERE id = $policyID" );
+    $changed++;
+}
+
+if ( $changed )
+{
+    // Roles are cached; let every user read the new names at once.
+    eZRole::expireCache();
+    $cli->output( "$changed policies renamed." );
+}
+$script->shutdown( 0 );
