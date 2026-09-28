@@ -659,6 +659,13 @@
 </style>
 
 <script type="text/javascript">
+var gitManagerMessages = {ldelim}
+    selectedCount: '{'%count selected'|i18n( 'extension/git_manager' )|wash( javascript )}',
+    selectOne: '{'Please select at least one caption to delete.'|i18n( 'extension/git_manager' )|wash( javascript )}',
+    deleteOne: '{'Delete 1 selected caption? This cannot be undone.'|i18n( 'extension/git_manager' )|wash( javascript )}',
+    deleteMany: '{'Delete %count selected captions? This cannot be undone.'|i18n( 'extension/git_manager' )|wash( javascript )}',
+    deleteSingle: '{'Delete caption %timestamp? This cannot be undone.'|i18n( 'extension/git_manager' )|wash( javascript )}'
+{rdelim};
 {literal}
 $(document).ready(function() {
     // Toggle passphrase input visibility
@@ -679,7 +686,7 @@ $(document).ready(function() {
     // Multi-selection functionality
     function updateSelectedCount() {
         var count = $('.caption-select:checked').length;
-        $('.selected-count').text(count + ' selected');
+        $('.selected-count').text(gitManagerMessages.selectedCount.replace('%count', count));
         $('.btn-delete-selected').prop('disabled', count === 0);
     }
     
@@ -702,7 +709,7 @@ $(document).ready(function() {
         var count = $('.caption-select:checked').length;
         if(count === 0) {
             e.preventDefault();
-            alert('Please select at least one caption to delete.');
+            alert(gitManagerMessages.selectOne);
             return false;
         }
         
@@ -714,8 +721,8 @@ $(document).ready(function() {
         $('#selected-timestamps-input').val(timestamps.join(','));
         
         var confirmMsg = count === 1 
-            ? 'Delete 1 selected caption? This cannot be undone.'
-            : 'Delete ' + count + ' selected captions? This cannot be undone.';
+            ? gitManagerMessages.deleteOne
+            : gitManagerMessages.deleteMany.replace('%count', count);
         
         if(!confirm(confirmMsg)) {
             e.preventDefault();
@@ -726,7 +733,7 @@ $(document).ready(function() {
     // Individual delete button confirmation
     $('.btn-delete-single').on('click', function(e) {
         var timestamp = $(this).data('timestamp');
-        if(!confirm('Delete caption ' + timestamp + '? This cannot be undone.')) {
+        if(!confirm(gitManagerMessages.deleteSingle.replace('%timestamp', timestamp))) {
             e.preventDefault();
             return false;
         }
@@ -740,19 +747,19 @@ $(document).ready(function() {
 
 {if $error}
 <div class="message-error">
-    <h2><strong>Error:</strong> {$error}</h2>
+    <h2><strong>{'Error:'|i18n( 'extension/git_manager' )}</strong> {$error}</h2>
 </div>
 {/if}
 
 {if $message}
 <div class="message-feedback">
-    <h2><strong>Success:</strong> {$message}</h2>
+    <h2><strong>{'Success:'|i18n( 'extension/git_manager' )}</strong> {$message}</h2>
 </div>	
 {/if}
 
 {if $processing}
 <div class="processing-indicator">
-    <strong>⏳ Processing...</strong> Creating backup, please wait. This may take several minutes depending on your database and file sizes.
+    {'<strong>⏳ Processing...</strong> Creating backup, please wait. This may take several minutes depending on your database and file sizes.'|i18n( 'extension/git_manager' )}
 </div>
 {/if}
 
@@ -767,20 +774,20 @@ $(document).ready(function() {
         <div class="backup-outdated-warning backup-critical-warning">
             <div class="backup-outdated-warning-header">
                 <div class="backup-outdated-warning-icon">🚨</div>
-                <h3 class="backup-outdated-warning-title">No Backups Found — System Unprotected!</h3>
+                <h3 class="backup-outdated-warning-title">{'No Backups Found — System Unprotected!'|i18n( 'extension/git_manager' )}</h3>
             </div>
             <p class="backup-outdated-warning-message">
-                <strong>Your website has ZERO backup captions.</strong> Take a backup caption <strong>right now</strong> to protect your site database and var directory files from data loss!
+                {'<strong>Your website has ZERO backup captions.</strong> Take a backup caption <strong>right now</strong> to protect your site database and var directory files from data loss!'|i18n( 'extension/git_manager' )}
             </p>
         </div>
         {elseif $oldest_warning}
         <div class="backup-outdated-warning">
             <div class="backup-outdated-warning-header">
                 <div class="backup-outdated-warning-icon">⚠️</div>
-                <h3 class="backup-outdated-warning-title">Backup Outdated Warning</h3>
+                <h3 class="backup-outdated-warning-title">{'Backup Outdated Warning'|i18n( 'extension/git_manager' )}</h3>
             </div>
             <p class="backup-outdated-warning-message">
-                Your site backup captions are <strong>{$oldest_warning.age} old</strong> and outdated. Please create a new caption now to protect your site database and var directory.
+                {'Your site backup captions are <strong>%age old</strong> and outdated. Please create a new caption now to protect your site database and var directory.'|i18n( 'extension/git_manager',, hash( '%age', $oldest_warning.age ) )}
             </p>
         </div>
         {/if}
@@ -790,34 +797,34 @@ $(document).ready(function() {
                 <!-- Full Site Backup Card -->
                 <div class="backup-action-card primary">
                     <div class="backup-action-icon full">🌐</div>
-                    <div class="backup-action-title">Full Site Backup</div>
+                    <div class="backup-action-title">{'Full Site Backup'|i18n( 'extension/git_manager' )}</div>
                     <div class="backup-action-description">
-                        <strong>Includes: SQL database dump + var directory files + extensions + settings + config.php</strong>
+                        <strong>{'Includes: SQL database dump + var directory files + extensions + settings + config.php'|i18n( 'extension/git_manager' )}</strong>
                     </div>
                     <div class="backup-action-help">
-                        ⭐ <strong>Most Complete:</strong> Creates 3 archives — (1) SQL dump of entire database, (2) var/ directory including uploaded files, (3) site files: extensions/, settings/, config.php. Use this to fully restore the site from scratch.
+                        ⭐ {'<strong>Most Complete:</strong> Creates 3 archives — (1) SQL dump of entire database, (2) var/ directory including uploaded files, (3) site files: extensions/, settings/, config.php. Use this to fully restore the site from scratch.'|i18n( 'extension/git_manager' )}
                     </div>
                     <form action="{'git_manager/dump'|ezurl( 'no' )}" method="post">
-                        <input type="text" name="description" class="backup-description-input" placeholder="Optional: Add description..." />
+                        <input type="text" name="description" class="backup-description-input" placeholder="{'Optional: Add description...'|i18n( 'extension/git_manager' )}" />
                         
                         <div class="backup-encryption-box">
                             <div class="backup-encryption-header">
                                 <input type="checkbox" name="encrypt" value="yes" class="encrypt-checkbox" id="encrypt-fullsite" />
-                                <label for="encrypt-fullsite">🔒 Encrypt backup files</label>
+                                <label for="encrypt-fullsite">{'🔒 Encrypt backup files'|i18n( 'extension/git_manager' )}</label>
                             </div>
-                            <input type="password" name="passphrase" class="backup-passphrase-input" placeholder="Enter encryption passphrase..." />
+                            <input type="password" name="passphrase" class="backup-passphrase-input" placeholder="{'Enter encryption passphrase...'|i18n( 'extension/git_manager' )}" />
                             <div class="encryption-note">
-                                ⚠️ <strong>Important:</strong> Remember your passphrase! Encrypted files cannot be recovered without it.
+                                ⚠️ {'<strong>Important:</strong> Remember your passphrase! Encrypted files cannot be recovered without it.'|i18n( 'extension/git_manager' )}
                             </div>
                         </div>
                         
                         <div class="agpl-box">
                             <label>
                                 <input type="checkbox" name="agpl_compatible" value="yes" />
-                                🔓 AGPL Compatible Release
+                                {'🔓 AGPL Compatible Release'|i18n( 'extension/git_manager' )}
                             </label>
                             <div class="agpl-note">
-                                Creates an additional sanitized SQL dump with all private data removed (user passwords, emails, API keys, GA IDs, disk paths, credentials). Safe to share with other developers per AGPL/GPL obligations. Marked in caption history.
+                                {'Creates an additional sanitized SQL dump with all private data removed (user passwords, emails, API keys, GA IDs, disk paths, credentials). Safe to share with other developers per AGPL/GPL obligations. Marked in caption history.'|i18n( 'extension/git_manager' )}
                             </div>
                         </div>
                         
@@ -828,34 +835,34 @@ $(document).ready(function() {
                 <!-- Full Caption Card -->
                 <div class="backup-action-card">
                     <div class="backup-action-icon full">📦</div>
-                    <div class="backup-action-title">DB + Files Caption</div>
+                    <div class="backup-action-title">{'DB + Files Caption'|i18n( 'extension/git_manager' )}</div>
                     <div class="backup-action-description">
-                        <strong>Includes: SQL database dump + var directory files</strong>
+                        <strong>{'Includes: SQL database dump + var directory files'|i18n( 'extension/git_manager' )}</strong>
                     </div>
                     <div class="backup-action-help">
-                        💡 <strong>Recommended daily backup:</strong> Creates 2 archives — (1) SQL dump of entire database (schema + data), (2) var/ directory with all uploaded files. Does <em>not</em> include extensions or settings.
+                        💡 {'<strong>Recommended daily backup:</strong> Creates 2 archives — (1) SQL dump of entire database (schema + data), (2) var/ directory with all uploaded files. Does <em>not</em> include extensions or settings.'|i18n( 'extension/git_manager' )}
                     </div>
                     <form action="{'git_manager/dump'|ezurl( 'no' )}" method="post">
-                        <input type="text" name="description" class="backup-description-input" placeholder="Optional: Add description..." />
+                        <input type="text" name="description" class="backup-description-input" placeholder="{'Optional: Add description...'|i18n( 'extension/git_manager' )}" />
                         
                         <div class="backup-encryption-box">
                             <div class="backup-encryption-header">
                                 <input type="checkbox" name="encrypt" value="yes" class="encrypt-checkbox" id="encrypt-full" />
-                                <label for="encrypt-full">🔒 Encrypt backup files</label>
+                                <label for="encrypt-full">{'🔒 Encrypt backup files'|i18n( 'extension/git_manager' )}</label>
                             </div>
-                            <input type="password" name="passphrase" class="backup-passphrase-input" placeholder="Enter encryption passphrase..." />
+                            <input type="password" name="passphrase" class="backup-passphrase-input" placeholder="{'Enter encryption passphrase...'|i18n( 'extension/git_manager' )}" />
                             <div class="encryption-note">
-                                ⚠️ <strong>Important:</strong> Remember your passphrase! Encrypted files cannot be recovered without it.
+                                ⚠️ {'<strong>Important:</strong> Remember your passphrase! Encrypted files cannot be recovered without it.'|i18n( 'extension/git_manager' )}
                             </div>
                         </div>
                         
                         <div class="agpl-box">
                             <label>
                                 <input type="checkbox" name="agpl_compatible" value="yes" />
-                                🔓 AGPL Compatible Release
+                                {'🔓 AGPL Compatible Release'|i18n( 'extension/git_manager' )}
                             </label>
                             <div class="agpl-note">
-                                Creates an additional sanitized SQL dump with all private data removed (user passwords, emails, API keys, GA IDs, disk paths, credentials). Safe to share with other developers per AGPL/GPL obligations. Marked in caption history.
+                                {'Creates an additional sanitized SQL dump with all private data removed (user passwords, emails, API keys, GA IDs, disk paths, credentials). Safe to share with other developers per AGPL/GPL obligations. Marked in caption history.'|i18n( 'extension/git_manager' )}
                             </div>
                         </div>
                         
@@ -866,34 +873,34 @@ $(document).ready(function() {
                 <!-- Database Caption Card -->
                 <div class="backup-action-card">
                     <div class="backup-action-icon database">🗄️</div>
-                    <div class="backup-action-title">Database Only</div>
+                    <div class="backup-action-title">{'Database Only'|i18n( 'extension/git_manager' )}</div>
                     <div class="backup-action-description">
-                        <strong>Includes: SQL database dump only — no files</strong>
+                        <strong>{'Includes: SQL database dump only — no files'|i18n( 'extension/git_manager' )}</strong>
                     </div>
                     <div class="backup-action-help">
-                        💾 Creates a single SQL archive with the full database (schema + data). No var/ directory or site files are included. Use before database changes or migrations.
+                        {'💾 Creates a single SQL archive with the full database (schema + data). No var/ directory or site files are included. Use before database changes or migrations.'|i18n( 'extension/git_manager' )}
                     </div>
                     <form action="{'git_manager/dump'|ezurl( 'no' )}" method="post">
-                        <input type="text" name="description" class="backup-description-input" placeholder="Optional: Add description..." />
+                        <input type="text" name="description" class="backup-description-input" placeholder="{'Optional: Add description...'|i18n( 'extension/git_manager' )}" />
                         
                         <div class="backup-encryption-box">
                             <div class="backup-encryption-header">
                                 <input type="checkbox" name="encrypt" value="yes" class="encrypt-checkbox" id="encrypt-db" />
-                                <label for="encrypt-db">🔒 Encrypt backup file</label>
+                                <label for="encrypt-db">{'🔒 Encrypt backup file'|i18n( 'extension/git_manager' )}</label>
                             </div>
-                            <input type="password" name="passphrase" class="backup-passphrase-input" placeholder="Enter encryption passphrase..." />
+                            <input type="password" name="passphrase" class="backup-passphrase-input" placeholder="{'Enter encryption passphrase...'|i18n( 'extension/git_manager' )}" />
                             <div class="encryption-note">
-                                ⚠️ <strong>Important:</strong> Remember your passphrase! Encrypted files cannot be recovered without it.
+                                ⚠️ {'<strong>Important:</strong> Remember your passphrase! Encrypted files cannot be recovered without it.'|i18n( 'extension/git_manager' )}
                             </div>
                         </div>
                         
                         <div class="agpl-box">
                             <label>
                                 <input type="checkbox" name="agpl_compatible" value="yes" />
-                                🔓 AGPL Compatible Release
+                                {'🔓 AGPL Compatible Release'|i18n( 'extension/git_manager' )}
                             </label>
                             <div class="agpl-note">
-                                Creates an additional sanitized SQL dump with all private data removed (user passwords, emails, API keys, GA IDs, disk paths, credentials). Safe to share with other developers per AGPL/GPL obligations. Marked in caption history.
+                                {'Creates an additional sanitized SQL dump with all private data removed (user passwords, emails, API keys, GA IDs, disk paths, credentials). Safe to share with other developers per AGPL/GPL obligations. Marked in caption history.'|i18n( 'extension/git_manager' )}
                             </div>
                         </div>
                         
@@ -904,24 +911,24 @@ $(document).ready(function() {
                 <!-- Var Directory Caption Card -->
                 <div class="backup-action-card">
                     <div class="backup-action-icon files">📁</div>
-                    <div class="backup-action-title">Files Only (var/)</div>
+                    <div class="backup-action-title">{'Files Only (var/)'|i18n( 'extension/git_manager' )}</div>
                     <div class="backup-action-description">
-                        <strong>Includes: var/ directory only — no database</strong>
+                        <strong>{'Includes: var/ directory only — no database'|i18n( 'extension/git_manager' )}</strong>
                     </div>
                     <div class="backup-action-help">
-                        📂 Archives the var/ directory containing uploaded images, files, and user content. Cache, logs, and existing backups are excluded. No SQL dump is included.
+                        {'📂 Archives the var/ directory containing uploaded images, files, and user content. Cache, logs, and existing backups are excluded. No SQL dump is included.'|i18n( 'extension/git_manager' )}
                     </div>
                     <form action="{'git_manager/dump'|ezurl( 'no' )}" method="post">
-                        <input type="text" name="description" class="backup-description-input" placeholder="Optional: Add description..." />
+                        <input type="text" name="description" class="backup-description-input" placeholder="{'Optional: Add description...'|i18n( 'extension/git_manager' )}" />
                         
                         <div class="backup-encryption-box">
                             <div class="backup-encryption-header">
                                 <input type="checkbox" name="encrypt" value="yes" class="encrypt-checkbox" id="encrypt-var" />
-                                <label for="encrypt-var">🔒 Encrypt backup file</label>
+                                <label for="encrypt-var">{'🔒 Encrypt backup file'|i18n( 'extension/git_manager' )}</label>
                             </div>
-                            <input type="password" name="passphrase" class="backup-passphrase-input" placeholder="Enter encryption passphrase..." />
+                            <input type="password" name="passphrase" class="backup-passphrase-input" placeholder="{'Enter encryption passphrase...'|i18n( 'extension/git_manager' )}" />
                             <div class="encryption-note">
-                                ⚠️ <strong>Important:</strong> Remember your passphrase! Encrypted files cannot be recovered without it.
+                                ⚠️ {'<strong>Important:</strong> Remember your passphrase! Encrypted files cannot be recovered without it.'|i18n( 'extension/git_manager' )}
                             </div>
                         </div>
                         
@@ -934,24 +941,24 @@ $(document).ready(function() {
 
     <div class="context-block" style="margin-top: 30px;">
         <div class="backup-list-header">
-            <h2 class="backup-list-title">📋 Existing Captions</h2>
+            <h2 class="backup-list-title">{'📋 Existing Captions'|i18n( 'extension/git_manager' )}</h2>
         </div>
 
         {if $captions|count()}
             <div class="bulk-actions-bar">
                 <label>
                     <input type="checkbox" id="select-all-captions" />
-                    Select All
+                    {'Select All'|i18n( 'extension/git_manager' )}
                 </label>
                 
                 <form id="delete-selected-form" action="{'git_manager/dump'|ezurl('no')}" method="post" style="margin: 0;">
                     <button type="submit" name="DeleteSelectedCaptions" class="btn-delete-selected" disabled>
-                        🗑️ Delete Selected
+                        {'🗑️ Delete Selected'|i18n( 'extension/git_manager' )}
                     </button>
                     <input type="hidden" name="selected_timestamps" id="selected-timestamps-input" value="" />
                 </form>
                 
-                <span class="selected-count">0 selected</span>
+                <span class="selected-count">{'%count selected'|i18n( 'extension/git_manager',, hash( '%count', 0 ) )}</span>
             </div>
             
             {foreach $captions as $caption}
@@ -967,10 +974,10 @@ $(document).ready(function() {
                         <span class="caption-age" style="color:{$caption.time_ago.color};font-weight:600;margin-left:10px;">
                             ⏱ {$caption.time_ago.display}
                         </span>
-                        {if $caption.agpl_compatible}<span class="badge-agpl" title="Includes AGPL-compatible sanitized SQL dump — safe for public sharing">🔓 AGPL COMPATIBLE</span>{/if}
+                        {if $caption.agpl_compatible}<span class="badge-agpl" title="{'Includes AGPL-compatible sanitized SQL dump — safe for public sharing'|i18n( 'extension/git_manager' )}">{'🔓 AGPL COMPATIBLE'|i18n( 'extension/git_manager' )}</span>{/if}
                     </div>
                     <div>
-                        <strong>Total Size:</strong> {$caption.total_size_formatted}
+                        <strong>{'Total Size:'|i18n( 'extension/git_manager' )}</strong> {$caption.total_size_formatted}
                     </div>
                 </div>
 
@@ -994,7 +1001,7 @@ $(document).ready(function() {
                         {/if}
                         <span><strong>{$file.name}</strong> ({$file.size_formatted})</span>
                         {if $file.encrypted}
-                            <span style="color:#d35400;margin-left:5px;" title="Encrypted file - passphrase required">🔒</span>
+                            <span style="color:#d35400;margin-left:5px;" title="{'Encrypted file - passphrase required'|i18n( 'extension/git_manager' )}">🔒</span>
                         {/if}
                     </div>
                     {/foreach}
@@ -1004,7 +1011,7 @@ $(document).ready(function() {
                     <div class="caption-actions-downloads">
                     {foreach $caption.files as $file}
                     <a href="{concat('git_manager/download/', $caption.timestamp, '/', $file.name)|ezurl('no')}" class="btn-download">
-                        ⬇️ Download {$file.name}
+                        {'⬇️ Download %name'|i18n( 'extension/git_manager',, hash( '%name', $file.name ) )}
                     </a>
                     {/foreach}
                     </div>
@@ -1013,7 +1020,7 @@ $(document).ready(function() {
                     <form action="{'git_manager/dump'|ezurl( 'no' )}" method="post" style="display: inline;">
                         <input type="hidden" name="timestamp" value="{$caption.timestamp}" />
                         <button type="submit" name="DeleteCaption" class="btn-delete btn-delete-single" data-timestamp="{$caption.timestamp}">
-                            🗑️ Delete Caption
+                            {'🗑️ Delete Caption'|i18n( 'extension/git_manager' )}
                         </button>
                     </form>
                     </div>
@@ -1023,8 +1030,8 @@ $(document).ready(function() {
             {/foreach}
         {else}
             <div class="no-captions">
-                <p><strong>📭 No captions found</strong></p>
-                <p>Create your first caption using the action cards above.</p>
+                <p><strong>{'📭 No captions found'|i18n( 'extension/git_manager' )}</strong></p>
+                <p>{'Create your first caption using the action cards above.'|i18n( 'extension/git_manager' )}</p>
             </div>
         {/if}
     </div>

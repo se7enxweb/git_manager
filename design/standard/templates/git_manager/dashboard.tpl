@@ -112,10 +112,10 @@
 				<table class="list" cellspacing="0">
 					<tbody>
 						<tr>
-							<th class="tight">Hash</th>
-							<th>Title</th>
-							<th>Author</th>
-							<th>Date</th>
+							<th class="tight">{'Hash'|i18n( 'extension/git_manager' )}</th>
+							<th>{'Title'|i18n( 'extension/git_manager' )}</th>
+							<th>{'Author'|i18n( 'extension/git_manager' )}</th>
+							<th>{'Date'|i18n( 'extension/git_manager' )}</th>
 						</tr>
 						{foreach $commits as $commit sequence array( 'bgdark', 'bglight' ) as $style}
 						<tr class="{$style}">
