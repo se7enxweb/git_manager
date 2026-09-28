@@ -11,10 +11,10 @@ class git_managerInfo
 	public static function info() {
 		return array(
 			'Name'      => '<a href="https://github.com/se7enxweb/git_manager">Git Manager</a>',
-			'Version'   => '2.0.1',
+			'Version'   => '2.0.2',
 			'Author'    => '7x and Serhey Dolgushev',
 			'Copyright' => 'Copyright &copy; ' . date( 'Y' ) . ' <a href="http://ua.linkedin.com/in/serheydolgushev" target="blank">Serhey Dolgushev</a> and 1998 - ' . date( 'Y' ) . ' 7x',
-                        'License' => "GNU General Public License",
+                        'License' => "GNU General Public License v2.0 (or any later version)",
                         'info_url'  => 'https://github.com/se7enxweb/git_manager'
                         
 		);
