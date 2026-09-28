@@ -29,7 +29,8 @@ PolicyList[]=git_manager/dashboard
 [Leftmenu_setup]
 Links[git_manager]=git_manager/dashboard
 LinkNames[git_manager]=Git Manager
-Links[asset_manager]=git_manager/dump
-LinkNames[asset_manager]=Dump assets
+Links[git_manager_backup]=git_manager/backup
+LinkNames[git_manager_backup]=Backup
+PolicyList_git_manager_backup[]=git_manager/backup
 
 */ ?>

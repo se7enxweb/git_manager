@@ -120,7 +120,7 @@ Both warnings are:
 Using the Backup Manager (Web)
 -------------------------------
 
-1. Navigate to **Git Manager → Backup Manager** in the admin interface
+1. Open **Setup → Backup** in the admin interface (`/git_manager/backup`; the address before 2.0.4, `/git_manager/dump`, redirects there)
 2. Choose a backup type card
 3. Optionally add a description
 4. Optionally check **Encrypt backup files** and enter a passphrase
@@ -136,10 +136,24 @@ Using the Backup Manager (Web)
 > - 🔴 Red = outdated (90+ days or 1+ year)
 
 
+Access
+------
+
+The backup page and the downloads need the policy **git_manager/backup**. Before 2.0.4 this
+function was called **git_manager/dump**; roles that grant the old name keep working, and
+
+```bash
+php extension/git_manager/bin/php/upgrade-policy-dump-to-backup.php --dry-run
+php extension/git_manager/bin/php/upgrade-policy-dump-to-backup.php
+```
+
+renames them.
+
+
 Using the CLI Backup Tools
 ---------------------------
 
-Run from the eZ Publish root directory (e.g. `/var/www/vhosts/site/doc/site/`):
+Run from the Exponential root directory (e.g. `/var/www/vhosts/site/doc/site/`):
 
 **List all backups:**
 ```bash

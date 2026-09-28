@@ -804,7 +804,7 @@ $(document).ready(function() {
                     <div class="backup-action-help">
                         ⭐ {'<strong>Most Complete:</strong> Creates 3 archives — (1) SQL dump of entire database, (2) var/ directory including uploaded files, (3) site files: extensions/, settings/, config.php. Use this to fully restore the site from scratch.'|i18n( 'extension/git_manager' )}
                     </div>
-                    <form action="{'git_manager/dump'|ezurl( 'no' )}" method="post">
+                    <form action="{'git_manager/backup'|ezurl( 'no' )}" method="post">
                         <input type="text" name="description" class="backup-description-input" placeholder="{'Optional: Add description...'|i18n( 'extension/git_manager' )}" />
                         
                         <div class="backup-encryption-box">
@@ -842,7 +842,7 @@ $(document).ready(function() {
                     <div class="backup-action-help">
                         💡 {'<strong>Recommended daily backup:</strong> Creates 2 archives — (1) SQL dump of entire database (schema + data), (2) var/ directory with all uploaded files. Does <em>not</em> include extensions or settings.'|i18n( 'extension/git_manager' )}
                     </div>
-                    <form action="{'git_manager/dump'|ezurl( 'no' )}" method="post">
+                    <form action="{'git_manager/backup'|ezurl( 'no' )}" method="post">
                         <input type="text" name="description" class="backup-description-input" placeholder="{'Optional: Add description...'|i18n( 'extension/git_manager' )}" />
                         
                         <div class="backup-encryption-box">
@@ -880,7 +880,7 @@ $(document).ready(function() {
                     <div class="backup-action-help">
                         {'💾 Creates a single SQL archive with the full database (schema + data). No var/ directory or site files are included. Use before database changes or migrations.'|i18n( 'extension/git_manager' )}
                     </div>
-                    <form action="{'git_manager/dump'|ezurl( 'no' )}" method="post">
+                    <form action="{'git_manager/backup'|ezurl( 'no' )}" method="post">
                         <input type="text" name="description" class="backup-description-input" placeholder="{'Optional: Add description...'|i18n( 'extension/git_manager' )}" />
                         
                         <div class="backup-encryption-box">
@@ -918,7 +918,7 @@ $(document).ready(function() {
                     <div class="backup-action-help">
                         {'📂 Archives the var/ directory containing uploaded images, files, and user content. Cache, logs, and existing backups are excluded. No SQL dump is included.'|i18n( 'extension/git_manager' )}
                     </div>
-                    <form action="{'git_manager/dump'|ezurl( 'no' )}" method="post">
+                    <form action="{'git_manager/backup'|ezurl( 'no' )}" method="post">
                         <input type="text" name="description" class="backup-description-input" placeholder="{'Optional: Add description...'|i18n( 'extension/git_manager' )}" />
                         
                         <div class="backup-encryption-box">
@@ -951,7 +951,7 @@ $(document).ready(function() {
                     {'Select All'|i18n( 'extension/git_manager' )}
                 </label>
                 
-                <form id="delete-selected-form" action="{'git_manager/dump'|ezurl('no')}" method="post" style="margin: 0;">
+                <form id="delete-selected-form" action="{'git_manager/backup'|ezurl('no')}" method="post" style="margin: 0;">
                     <button type="submit" name="DeleteSelectedCaptions" class="btn-delete-selected" disabled>
                         {'🗑️ Delete Selected'|i18n( 'extension/git_manager' )}
                     </button>
@@ -1017,7 +1017,7 @@ $(document).ready(function() {
                     </div>
                     
                     <div class="caption-actions-delete">
-                    <form action="{'git_manager/dump'|ezurl( 'no' )}" method="post" style="display: inline;">
+                    <form action="{'git_manager/backup'|ezurl( 'no' )}" method="post" style="display: inline;">
                         <input type="hidden" name="timestamp" value="{$caption.timestamp}" />
                         <button type="submit" name="DeleteCaption" class="btn-delete btn-delete-single" data-timestamp="{$caption.timestamp}">
                             {'🗑️ Delete Caption'|i18n( 'extension/git_manager' )}

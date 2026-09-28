@@ -30,9 +30,10 @@ $ViewList = array(
 		'params'                  => array( 'Hash' ),
 		'default_navigation_part' => 'ezsetupnavigationpart'
 	),
-	'dump' => array(
-		'script'                  => 'dump.php',
-		'functions'               => array( 'dump' ),
+	'backup' => array(
+		'script'                  => 'backup.php',
+		// 'dump' is the function's name before 2.0.4: roles that grant it keep working.
+		'functions'               => 'backup or dump',
 		'params'                  => array(),
 		'default_navigation_part' => 'ezsetupnavigationpart',
 		'single_post_actions'     => array(
@@ -44,9 +45,17 @@ $ViewList = array(
 			'DeleteSelectedCaptions' => 'DeleteSelectedCaptions'
 		)
 	),
+	// The address before 2.0.4, kept so bookmarks and links still arrive: it
+	// redirects to git_manager/backup.
+	'dump' => array(
+		'script'                  => 'dump.php',
+		'functions'               => 'backup or dump',
+		'params'                  => array(),
+		'default_navigation_part' => 'ezsetupnavigationpart'
+	),
 	'download' => array(
 		'script'                  => 'download.php',
-		'functions'               => array( 'dump' ),
+		'functions'               => 'backup or dump',
 		'params'                  => array( 'Timestamp', 'Filename' ),
 		'default_navigation_part' => 'ezsetupnavigationpart'
 	)
@@ -54,5 +63,8 @@ $ViewList = array(
 
 $FunctionList = array(
 	'git_manager' => array(),
+	'backup' => array(),
+	// Before 2.0.4 the backup function was called dump. Kept so existing roles
+	// stay valid; bin/php/upgrade-policy-dump-to-backup.php renames them.
 	'dump' => array()
 );
