@@ -1,76 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0">
+<TS version="2.0" language="en_US" sourcelanguage="en">
 <context>
     <name>extension/git_manager</name>
-    <message>
-        <source>Checkout</source>
-        <translation>Checkout</translation>
-    </message>
-    <message>
-        <source>Branches</source>
-        <translation>Branches</translation>
-    </message>
-    <message>
-        <source>HEAD</source>
-        <translation>HEAD</translation>
-    </message>
-    <message>
-        <source>Local</source>
-        <translation>Local</translation>
-    </message>
-    <message>
-        <source>- Select -</source>
-        <translation>- Select -</translation>
-    </message>
-    <message>
-        <source>Regenerate autoloads</source>
-        <translation>Regenerate autoloads</translation>
-    </message>
-    <message>
-        <source>Remote</source>
-        <translation>Remote</translation>
-    </message>
-    <message>
-        <source>Update Local Submodules</source>
-        <translation>Update Local Submodules</translation>
-    </message>
-    <message>
-        <source>Update</source>
-        <translation>Update</translation>
-    </message>
-    <message>
-        <source>Commits log</source>
-        <translation>Commits log</translation>
-    </message>
-    <message>
-        <source>Author</source>
-        <translation>Author</translation>
-    </message>
-    <message>
-        <source>Start date</source>
-        <translation>Start date</translation>
-    </message>
-    <message>
-        <source>End date</source>
-        <translation>End date</translation>
-    </message>
-    <message>
-        <source>Filter</source>
-        <translation>Filter</translation>
-    </message>
-    <message>
-        <source>Hash</source>
-        <translation>Hash</translation>
-    </message>
-    <message>
-        <source>Title</source>
-        <translation>Title</translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation>Date</translation>
-    </message>
     <message>
         <source>%count selected</source>
         <translation>%count selected</translation>
@@ -260,20 +192,172 @@
         <translation>Create your first caption using the action cards above.</translation>
     </message>
     <message>
-        <source>GIT Manager</source>
-        <translation>GIT Manager</translation>
-    </message>
-    <message>
         <source>Commit details</source>
         <translation>Commit details</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copy</translation>
+    </message>
+    <message>
+        <source>Changes</source>
+        <translation>Changes</translation>
+    </message>
+    <message>
+        <source>files</source>
+        <translation>files</translation>
+    </message>
+    <message>
+        <source>Only the first 500 lines of this file are shown.</source>
+        <translation>Only the first 500 lines of this file are shown.</translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation>Output</translation>
+    </message>
+    <message>
+        <source>Check out this commit? The installation then runs its code, on a detached HEAD.</source>
+        <translation>Check out this commit? The installation then runs its code, on a detached HEAD.</translation>
+    </message>
+    <message>
+        <source>Back to the dashboard</source>
+        <translation>Back to the dashboard</translation>
+    </message>
+    <message>
+        <source>Checkout this commit</source>
+        <translation>Checkout this commit</translation>
     </message>
     <message>
         <source>Git Manager</source>
         <translation>Git Manager</translation>
     </message>
     <message>
+        <source>HEAD</source>
+        <translation>HEAD</translation>
+    </message>
+    <message>
+        <source>Copy the full hash</source>
+        <translation>Copy the full hash</translation>
+    </message>
+    <message>
+        <source>local branches</source>
+        <translation>local branches</translation>
+    </message>
+    <message>
+        <source>remote branches</source>
+        <translation>remote branches</translation>
+    </message>
+    <message>
+        <source>Last commit</source>
+        <translation>Last commit</translation>
+    </message>
+    <message>
+        <source>Check out the local branch chosen here and pull it from origin? The installation then runs that branch's code.</source>
+        <translation>Check out the local branch chosen here and pull it from origin? The installation then runs that branch's code.</translation>
+    </message>
+    <message>
+        <source>Local branch</source>
+        <translation>Local branch</translation>
+    </message>
+    <message>
+        <source>- Select -</source>
+        <translation>- Select -</translation>
+    </message>
+    <message>
+        <source>current</source>
+        <translation>current</translation>
+    </message>
+    <message>
+        <source>Regenerate autoloads</source>
+        <translation>Regenerate autoloads</translation>
+    </message>
+    <message>
+        <source>Checkout</source>
+        <translation>Checkout</translation>
+    </message>
+    <message>
+        <source>Check out the remote branch chosen here and pull it from origin? The installation then runs that branch's code.</source>
+        <translation>Check out the remote branch chosen here and pull it from origin? The installation then runs that branch's code.</translation>
+    </message>
+    <message>
+        <source>Remote branch</source>
+        <translation>Remote branch</translation>
+    </message>
+    <message>
+        <source>Update the submodules to the commits this branch records?</source>
+        <translation>Update the submodules to the commits this branch records?</translation>
+    </message>
+    <message>
+        <source>Submodules</source>
+        <translation>Submodules</translation>
+    </message>
+    <message>
+        <source>Initialises and updates every submodule, recursively, to the commit the checked out branch records.</source>
+        <translation>Initialises and updates every submodule, recursively, to the commit the checked out branch records.</translation>
+    </message>
+    <message>
+        <source>Update submodules</source>
+        <translation>Update submodules</translation>
+    </message>
+    <message>
+        <source>Commits log</source>
+        <translation>Commits log</translation>
+    </message>
+    <message>
+        <source>Author</source>
+        <translation>Author</translation>
+    </message>
+    <message>
+        <source>Name or e-mail</source>
+        <translation>Name or e-mail</translation>
+    </message>
+    <message>
+        <source>Start date</source>
+        <translation>Start date</translation>
+    </message>
+    <message>
+        <source>End date</source>
+        <translation>End date</translation>
+    </message>
+    <message>
+        <source>Filter</source>
+        <translation>Filter</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>Clear</translation>
+    </message>
+    <message>
+        <source>Find on this page</source>
+        <translation>Find on this page</translation>
+    </message>
+    <message>
+        <source>Title, author or hash</source>
+        <translation>Title, author or hash</translation>
+    </message>
+    <message>
+        <source>No commit on this page matches.</source>
+        <translation>No commit on this page matches.</translation>
+    </message>
+    <message>
+        <source>No commits match the filter.</source>
+        <translation>No commits match the filter.</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation>Copied</translation>
+    </message>
+    <message>
+        <source>Choose a branch first.</source>
+        <translation>Choose a branch first.</translation>
+    </message>
+    <message>
         <source>Backup Manager</source>
         <translation>Backup Manager</translation>
+    </message>
+    <message>
+        <source>GIT Manager</source>
+        <translation>GIT Manager</translation>
     </message>
 </context>
 </TS>

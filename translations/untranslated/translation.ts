@@ -4,74 +4,6 @@
 <context>
     <name>extension/git_manager</name>
     <message>
-        <source>Checkout</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Branches</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>HEAD</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Local</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>- Select -</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Regenerate autoloads</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remote</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Update Local Submodules</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Update</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Commits log</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Author</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Start date</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>End date</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hash</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Title</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Date</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>%count selected</source>
         <translation type="unfinished"></translation>
     </message>
@@ -260,11 +192,39 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>GIT Manager</source>
+        <source>Commit details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Commit details</source>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only the first 500 lines of this file are shown.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check out this commit? The installation then runs its code, on a detached HEAD.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Back to the dashboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Checkout this commit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -272,7 +232,131 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>HEAD</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy the full hash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>local branches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>remote branches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last commit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check out the local branch chosen here and pull it from origin? The installation then runs that branch's code.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local branch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>- Select -</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Regenerate autoloads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Checkout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check out the remote branch chosen here and pull it from origin? The installation then runs that branch's code.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote branch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Update the submodules to the commits this branch records?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Submodules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Initialises and updates every submodule, recursively, to the commit the checked out branch records.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Update submodules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Commits log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Author</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name or e-mail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>End date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find on this page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title, author or hash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No commit on this page matches.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No commits match the filter.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a branch first.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Backup Manager</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GIT Manager</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

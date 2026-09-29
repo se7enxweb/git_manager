@@ -1,0 +1,90 @@
+/* git_manager: the dashboard and commit details. Made for the admin3 design,
+   readable in the admin design; no external stylesheet. */
+
+.gm { --gm-line: #dfe4ea; --gm-muted: #6b7785; --gm-ink: #1d2b3a; --gm-soft: #f6f8fa; --gm-accent: #3a6ea5; }
+.gm .box-content { padding-bottom: 0.6em; }
+.gm-muted { color: var(--gm-muted); font-size: 0.92em; }
+.gm code, .gm .gm-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; }
+
+/* Status: where HEAD is. */
+.gm-status { display: flex; flex-wrap: wrap; align-items: center; gap: 0.8em 1.6em; padding: 0.9em 1.1em; border: 1px solid var(--gm-line); border-radius: 8px; background: linear-gradient(180deg, #fbfcfd, #f3f6f9); }
+.gm-status-branch { display: flex; align-items: center; gap: 0.6em; font-size: 1.15em; }
+.gm-branch { display: inline-flex; align-items: center; gap: 0.35em; padding: 0.2em 0.7em; border-radius: 999px; background: #e3f1e6; color: #1f5f2c; font-weight: bold; }
+.gm-branch::before { content: ""; width: 0.55em; height: 0.55em; border-radius: 50%; background: #2f8f46; }
+.gm-branch.is-detached { background: #fff4e0; color: #8a5a00; }
+.gm-branch.is-detached::before { background: #d08a00; }
+.gm-status-facts { display: flex; flex-wrap: wrap; gap: 0.4em 1.4em; color: var(--gm-muted); }
+.gm-status-facts strong { color: var(--gm-ink); }
+
+/* Hash pill with copy. */
+.gm-hash { display: inline-flex; align-items: center; gap: 0.25em; }
+.gm-hash a, .gm-hash span.gm-mono { padding: 0.08em 0.45em; border-radius: 4px; background: #eef2f6; color: var(--gm-ink); text-decoration: none; }
+.gm-hash a:hover { background: #dfe7f0; }
+.gm-copy { padding: 0 0.35em; border: 1px solid transparent; border-radius: 3px; background: transparent; color: var(--gm-muted); cursor: pointer; font-size: 0.85em; line-height: 1.6; }
+.gm-copy:hover, .gm-copy:focus { border-color: #c5ced8; background: #eef2f6; color: var(--gm-ink); }
+.gm-copy.is-done { color: #1f5f2c; }
+
+/* Action cards. */
+.gm-actions { display: grid; grid-template-columns: repeat(auto-fill, minmax(19em, 1fr)); gap: 0.9em; margin: 1em 0 0.4em 0; }
+.gm-card { display: flex; flex-direction: column; gap: 0.6em; margin: 0; padding: 0.9em 1em; border: 1px solid var(--gm-line); border-radius: 8px; background: #fff; transition: box-shadow 0.15s, border-color 0.15s; }
+.gm-card:hover { border-color: #c9d3de; box-shadow: 0 2px 6px rgba(29, 43, 58, 0.07); }
+.gm-card h2 { margin: 0; font-size: 1.02em; color: var(--gm-ink); }
+.gm-card p { margin: 0; }
+.gm-card select { width: 100%; }
+.gm-card .gm-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5em; }
+.gm-check { display: inline-flex; align-items: center; gap: 0.35em; color: var(--gm-muted); font-size: 0.92em; cursor: pointer; }
+.gm-card .button, .gm-card .defaultbutton { align-self: flex-start; }
+
+/* Output of the last action, as a terminal. */
+.gm-output { margin: 1em 0 0 0; border-radius: 8px; overflow: hidden; border: 1px solid #1e2a36; }
+.gm-output-head { display: flex; align-items: center; justify-content: space-between; padding: 0.35em 0.8em; background: #2a3847; color: #c9d6e2; font-size: 0.88em; }
+.gm-output-head .gm-copy { color: #c9d6e2; }
+.gm-output-head .gm-copy:hover { background: #3a4a5c; border-color: #4b5d70; color: #fff; }
+.gm-output pre { margin: 0; padding: 0.8em 1em; max-height: 26em; overflow: auto; background: #1d2733; color: #e6edf3; font-size: 0.88em; line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
+
+/* Commit log. */
+.gm-filter { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.6em 1em; margin: 0 0 0.9em 0; padding: 0.7em 0.9em; border: 1px solid var(--gm-line); border-radius: 8px; background: var(--gm-soft); }
+.gm-filter label { display: flex; flex-direction: column; gap: 0.2em; font-weight: bold; font-size: 0.9em; color: #3a4a5c; }
+.gm-filter input[type=text], .gm-filter input[type=date], .gm-filter input[type=search] { font-weight: normal; min-width: 11em; }
+.gm-filter .gm-filter-quick { margin-left: auto; }
+.gm-log { margin: 0; padding: 0; list-style: none; border: 1px solid var(--gm-line); border-radius: 8px; overflow: hidden; }
+.gm-log li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.3em 0.9em; padding: 0.55em 0.9em; border-top: 1px solid #edf0f3; background: #fff; }
+.gm-log li:first-child { border-top: 0; }
+.gm-log li:hover { background: #f7f9fb; }
+.gm-log li.is-head { background: #f1f8f2; }
+.gm-avatar { display: inline-flex; align-items: center; justify-content: center; width: 2em; height: 2em; border-radius: 50%; color: #fff; font-weight: bold; font-size: 0.85em; }
+.gm-log-main { min-width: 0; }
+.gm-log-title { display: block; color: var(--gm-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; font-weight: 600; }
+.gm-log-title:hover { color: var(--gm-accent); text-decoration: underline; }
+.gm-log-meta { color: var(--gm-muted); font-size: 0.88em; }
+.gm-log-side { display: flex; align-items: center; gap: 0.6em; white-space: nowrap; }
+.gm-tag-head { padding: 0.05em 0.5em; border-radius: 999px; background: #e3f1e6; color: #1f5f2c; font-size: 0.8em; font-weight: bold; }
+.gm-empty { padding: 1.2em; text-align: center; color: var(--gm-muted); }
+
+/* Commit details. */
+.gm-commit-head { padding: 1em 1.1em; border: 1px solid var(--gm-line); border-radius: 8px; background: linear-gradient(180deg, #fbfcfd, #f3f6f9); }
+.gm-commit-subject { margin: 0 0 0.4em 0; font-size: 1.25em; color: var(--gm-ink); }
+.gm-commit-body { margin: 0.6em 0 0 0; white-space: pre-wrap; color: #3a4a5c; font-family: inherit; }
+.gm-commit-fields { display: grid; grid-template-columns: max-content 1fr; gap: 0.25em 1em; margin: 0.7em 0 0 0; }
+.gm-commit-fields dt { font-weight: bold; color: #3a4a5c; }
+.gm-commit-fields dd { margin: 0; }
+.gm-stat-add { color: #1f7a38; font-weight: bold; }
+.gm-stat-del { color: #b3261e; font-weight: bold; }
+.gm-files { margin: 1em 0 0 0; }
+.gm-file { margin: 0 0 0.8em 0; border: 1px solid var(--gm-line); border-radius: 8px; overflow: hidden; background: #fff; }
+.gm-file > summary { display: flex; align-items: center; gap: 0.8em; padding: 0.5em 0.8em; background: var(--gm-soft); cursor: pointer; list-style-position: inside; }
+.gm-file-name { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; word-break: break-all; }
+.gm-file-stats { margin-left: auto; white-space: nowrap; font-size: 0.88em; }
+.gm-diff { margin: 0; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.85em; line-height: 1.45; }
+.gm-diff div { padding: 0 0.8em; white-space: pre; min-height: 1.45em; }
+.gm-diff .is-add { background: #e6f6ea; color: #14532d; }
+.gm-diff .is-del { background: #fdecec; color: #7f1d1d; }
+.gm-diff .is-hunk { background: #eef2fb; color: #3a5aa5; }
+.gm-diff .is-meta { color: var(--gm-muted); }
+.gm-truncated { padding: 0.5em 0.8em; background: #fff8e6; color: #8a5a00; font-size: 0.88em; }
+
+@media (max-width: 700px) {
+    .gm-log li { grid-template-columns: auto 1fr; }
+    .gm-log-side { grid-column: 2; }
+    .gm-filter .gm-filter-quick { margin-left: 0; }
+}
