@@ -205,6 +205,10 @@ $submodulesAccess = eZUser::currentUser()->hasAccessTo( 'git_manager', 'submodul
 $tpl->setVariable( 'can_manage_submodules', $submodulesAccess['accessWord'] !== 'no' );
 $tpl->setVariable( 'submodules', $git->attribute( 'submodules' ) );
 
+// The "Add a submodule" card stays open when that very action just failed,
+// so the error is never hidden behind the fold.
+$tpl->setVariable( 'submodule_add_failed', $module->isCurrentAction( 'AddSubmodule' ) && $error !== null );
+
 $Result = array();
 $Result['content'] = $tpl->fetch( 'design:git_manager/dashboard.tpl' );
 $Result['path']    = array(

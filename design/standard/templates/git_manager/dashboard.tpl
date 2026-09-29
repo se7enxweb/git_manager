@@ -211,7 +211,11 @@
             <p class="gm-muted">{'This repository has no submodules.'|i18n( 'extension/git_manager' )}</p>
             {/if}
             {if $can_manage_submodules}
-            <details class="gm-remote-add"{if $submodules|count|not} open="open"{/if}>
+            {* Closed unless this user opened it, or the add just failed
+               validation, so the error is never hidden. Kept as the user
+               preference admin_git_manager_add_submodule; unset means closed. *}
+            <details class="gm-remote-add" id="gm-add-submodule-card"{if or( eq( ezpreference( 'admin_git_manager_add_submodule' ), '1' ), $submodule_add_failed )} open="open"{/if}
+                     data-preference-url={'/user/preferences/set_and_exit/admin_git_manager_add_submodule'|ezurl}>
                 <summary>{'Add a submodule'|i18n( 'extension/git_manager' )}</summary>
                 <form action={'git_manager/dashboard'|ezurl} method="post" class="gm-remote-form"
                       data-gm-confirm="{'Clone the repository into this path and stage it as a submodule?'|i18n( 'extension/git_manager' )|wash}">

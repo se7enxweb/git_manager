@@ -118,6 +118,29 @@ var gmTexts = {ldelim}
         });
     }
 
+    // "Add a submodule"'s fold, kept as a user preference. Works as a plain
+    // details element without this; the fetch just remembers the state. The
+    // form token travels with it: a POST without it is refused as expired.
+    var addSubmodule = document.getElementById('gm-add-submodule-card');
+    if (addSubmodule && addSubmodule.getAttribute('data-preference-url')) {
+        addSubmodule.addEventListener('toggle', function () {
+            var meta = document.querySelector('meta[name="csrf-token"]');
+            var field = document.querySelector('input[name="ezxform_token"]');
+            var url = addSubmodule.getAttribute('data-preference-url') + '/' + (addSubmodule.open ? '1' : '0');
+            var headers = { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' };
+            if (meta) { headers['X-CSRF-Token'] = meta.getAttribute('content'); }
+            try {
+                fetch(url, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    redirect: 'manual',
+                    headers: headers,
+                    body: field ? 'ezxform_token=' + encodeURIComponent(field.value) : ''
+                });
+            } catch (err) {}
+        });
+    }
+
     // Only the commits some remote does not have yet.
     var only = document.getElementById('gm-only-unpushed');
     if (only && document.getElementById('gm-log')) {
