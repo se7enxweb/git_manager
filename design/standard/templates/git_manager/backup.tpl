@@ -1,5 +1,3 @@
-{ezscript_require( array( 'ezjsc::jqueryui' ) )}
-{ezcss_require( 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/cupertino/jquery-ui.min.css' )}
 
 <style>
 {literal}   
