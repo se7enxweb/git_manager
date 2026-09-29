@@ -29,6 +29,31 @@ class AGPLDumpSanitizer
         'ezpending_actions',
         'eznotificationcollection',
         'eznotificationcollection_item',
+        // Secrets: a password reset key or an activation key signs in as that user.
+        'ezforgot_password',
+        'ezuser_accountkey',
+        // Who visited when, from where.
+        'ezuservisit',
+        // Notification and digest settings of each user.
+        'ezsubtree_notification_rule',
+        'ezgeneral_digest_user_settings',
+    ];
+
+    /**
+     * Table name prefixes whose rows are removed as well: OAuth clients and
+     * tokens, what visitors sent in forms, shop orders, baskets and payments,
+     * and newsletter subscribers.
+     */
+    private $excludedTablePrefixes = [
+        'ezprest_',
+        'ezinfocollection',
+        'ezorder',
+        'ezbasket',
+        'ezproductcollection',
+        'ezwishlist',
+        'ezpaymentobject',
+        'ezcollab_',
+        'cjwnl_',
     ];
 
     /**
@@ -89,7 +114,19 @@ class AGPLDumpSanitizer
      */
     private function removeExcludedTableData( $content )
     {
-        foreach( $this->excludedTables as $table ) {
+        // Every table named in the dump that starts with an excluded prefix.
+        $tables = $this->excludedTables;
+        if( preg_match_all( '/^INSERT INTO `?([A-Za-z0-9_]+)`?\s/m', $content, $m ) ) {
+            foreach( array_unique( $m[1] ) as $name ) {
+                foreach( $this->excludedTablePrefixes as $prefix ) {
+                    if( strpos( $name, $prefix ) === 0 ) {
+                        $tables[] = $name;
+                    }
+                }
+            }
+        }
+        foreach( array_unique( $tables ) as $table ) {
+            $table = preg_quote( $table, '/' );
             $before = strlen( $content );
             $content = preg_replace(
                 "/^INSERT INTO `?{$table}`?\s[^\n]+\n/im",
@@ -116,15 +153,19 @@ class AGPLDumpSanitizer
             "/'([0-9a-f]{32,64})'/i",
         ];
 
+        // Only in the rows of ezuser, where the password hashes are: across
+        // the whole dump the hex pattern also replaced every remote_id (32 hex
+        // characters) with one and the same text, and the dump no longer
+        // imported.
         $count = 0;
-        foreach( $patterns as $p ) {
-            $content = preg_replace(
-                $p,
-                "'REPLACE_WITH_YOUR_HASHED_PASSWORD_VALUE_DO_NOT_DISTRIBUTE_OR_USE_AS_IS'",
-                $content, -1, $c
-            );
-            $count += (int)$c;
-        }
+        $content = preg_replace_callback( '/^INSERT INTO `?ezuser`?\s[^\n]*$/m', function ( $line ) use ( $patterns, &$count ) {
+            $row = $line[0];
+            foreach( $patterns as $p ) {
+                $row = preg_replace( $p, "'REPLACE_WITH_YOUR_HASHED_PASSWORD_VALUE_DO_NOT_DISTRIBUTE_OR_USE_AS_IS'", $row, -1, $c );
+                $count += (int)$c;
+            }
+            return $row;
+        }, $content );
 
         if( $count > 0 ) $this->log[] = "Replaced {$count} password hash(es)";
         return $content;
