@@ -745,13 +745,13 @@ $(document).ready(function() {
 
 {if $error}
 <div class="message-error">
-    <h2><strong>{'Error:'|i18n( 'extension/git_manager' )}</strong> {$error}</h2>
+    <h2><strong>{'Error:'|i18n( 'extension/git_manager' )}</strong> {$error|wash}</h2>
 </div>
 {/if}
 
 {if $message}
 <div class="message-feedback">
-    <h2><strong>{'Success:'|i18n( 'extension/git_manager' )}</strong> {$message}</h2>
+    <h2><strong>{'Success:'|i18n( 'extension/git_manager' )}</strong> {$message|wash}</h2>
 </div>	
 {/if}
 
@@ -962,12 +962,12 @@ $(document).ready(function() {
             {foreach $captions as $caption}
             <div class="caption-item-wrapper">
                 <div class="caption-checkbox">
-                    <input type="checkbox" class="caption-select" name="timestamps[]" value="{$caption.timestamp}" />
+                    <input type="checkbox" class="caption-select" name="timestamps[]" value="{$caption.timestamp|wash}" />
                 </div>
                 <div class="caption-item" style="flex: 1;">
                 <div class="caption-header">
                     <div>
-                        <span class="caption-timestamp">🕐 {$caption.timestamp}</span>
+                        <span class="caption-timestamp">🕐 {$caption.timestamp|wash}</span>
                         <span class="caption-date">({$caption.date})</span>
                         <span class="caption-age" style="color:{$caption.time_ago.color};font-weight:600;margin-left:10px;">
                             ⏱ {$caption.time_ago.display}
@@ -981,7 +981,7 @@ $(document).ready(function() {
 
                 {if $caption.description}
                 <div class="caption-description">
-                    📝 {$caption.description}
+                    📝 {$caption.description|wash}
                 </div>
                 {/if}
 
@@ -997,7 +997,7 @@ $(document).ready(function() {
                         {else}
                             <span class="caption-file-icon">📁</span>
                         {/if}
-                        <span><strong>{$file.name}</strong> ({$file.size_formatted})</span>
+                        <span><strong>{$file.name|wash}</strong> ({$file.size_formatted})</span>
                         {if $file.encrypted}
                             <span style="color:#d35400;margin-left:5px;" title="{'Encrypted file - passphrase required'|i18n( 'extension/git_manager' )}">🔒</span>
                         {/if}
@@ -1009,15 +1009,15 @@ $(document).ready(function() {
                     <div class="caption-actions-downloads">
                     {foreach $caption.files as $file}
                     <a href="{concat('git_manager/download/', $caption.timestamp, '/', $file.name)|ezurl('no')}" class="btn-download">
-                        {'⬇️ Download %name'|i18n( 'extension/git_manager',, hash( '%name', $file.name ) )}
+                        {'⬇️ Download %name'|i18n( 'extension/git_manager',, hash( '%name', $file.name|wash ) )}
                     </a>
                     {/foreach}
                     </div>
                     
                     <div class="caption-actions-delete">
                     <form action="{'git_manager/backup'|ezurl( 'no' )}" method="post" style="display: inline;">
-                        <input type="hidden" name="timestamp" value="{$caption.timestamp}" />
-                        <button type="submit" name="DeleteCaption" class="btn-delete btn-delete-single" data-timestamp="{$caption.timestamp}">
+                        <input type="hidden" name="timestamp" value="{$caption.timestamp|wash}" />
+                        <button type="submit" name="DeleteCaption" class="btn-delete btn-delete-single" data-timestamp="{$caption.timestamp|wash}">
                             {'🗑️ Delete Caption'|i18n( 'extension/git_manager' )}
                         </button>
                     </form>
