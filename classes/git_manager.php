@@ -335,23 +335,48 @@ class GitManager
 		if( $exit === 124 ) {
 			$output .= "\n(stopped after 90 seconds)";
 		}
+		// No credentials in an address git prints (To https://token@host/...).
+		$output = preg_replace( '#([a-z][a-z0-9+.-]*://)[^/@\s]+@#i', '$1***@', $output );
 		return array( 'exit' => $exit, 'output' => trim( $output ) );
 	}
 
+	/** A commit hash: 7 to 40 hexadecimal characters, nothing else. */
+	public static function isCommitHash( $hash ) {
+		return is_string( $hash ) && preg_match( '/^[0-9a-f]{7,40}$/i', $hash ) === 1;
+	}
+
+	/**
+	 * Checks out a branch the repository has. The name is validated and
+	 * quoted, so a branch name is never read as a command or an option.
+	 */
 	public function checkout( $branch ) {
-		return $this->cli( 'checkout ' . $branch );
+		if( !self::isBranchName( $branch ) ) {
+			return 'Not a branch name';
+		}
+		return $this->cli( 'checkout ' . escapeshellarg( $branch ) );
 	}
 
-        public function pull( $branch, $regenerateAutoloads = false ) {
-                return $this->cli( 'pull origin ' . $branch, false, false, $regenerateAutoloads );
-        }
+	public function pull( $branch, $regenerateAutoloads = false ) {
+		if( !self::isBranchName( $branch ) ) {
+			return 'Not a branch name';
+		}
+		return $this->cli( 'pull origin ' . escapeshellarg( $branch ), false, false, $regenerateAutoloads );
+	}
 
+	/** git log of one commit; only a commit hash is accepted. */
 	public function commitInfo( $hash ) {
-		return $this->cli( 'log -1 -p ' . escapeshellcmd( $hash ) );
+		if( !self::isCommitHash( $hash ) ) {
+			return '';
+		}
+		return $this->cli( 'log -1 -p ' . escapeshellarg( $hash ) . ' --' );
 	}
 
+	/** Checks out one commit (detached HEAD); only a commit hash is accepted. */
 	public function checkoutCommit( $hash ) {
-		return $this->cli( 'checkout ' . escapeshellcmd( $hash ) );
+		if( !self::isCommitHash( $hash ) ) {
+			return 'Not a commit hash';
+		}
+		return $this->cli( 'checkout ' . escapeshellarg( $hash ) );
 	}
 
 	/**
@@ -544,11 +569,11 @@ class GitManager
 	private function cli( $command, $path = false, $explodeLines = false, $regenerateAutoloads = false ) {
                 if( $path === false )
                 {
-                    $cdCmd = 'cd ' . self::$path;
+                    $cdCmd = 'cd ' . escapeshellarg( self::$path );
                 }
                 else
                 {
-                    $cdCmd = 'cd ' . $path;
+                    $cdCmd = 'cd ' . escapeshellarg( $path );
                 }
 
 		$cmd    = $cdCmd . ' && git ' . $command . ' 2>&1';
