@@ -117,14 +117,17 @@ class GitManager
 		$limit     = 50;
 		
 		if( is_array(  $params ) ) {
-			if( isset( $params['author'] ) ) {
-				$limit .= ' --author=' . $params['author'];
+			// Each value quoted for the shell: they come from the filter form
+			// and went into the git command as typed, so a value with a ; or
+			// a $( ) in it ran as a command of its own.
+			if( isset( $params['author'] ) && is_string( $params['author'] ) && $params['author'] !== '' ) {
+				$limit .= ' --author=' . escapeshellarg( $params['author'] );
 			}
-			if( isset( $params['start_date'] ) ) {
-				$limit .= ' --since=' . $params['start_date'];
+			if( isset( $params['start_date'] ) && is_string( $params['start_date'] ) && $params['start_date'] !== '' ) {
+				$limit .= ' --since=' . escapeshellarg( $params['start_date'] );
 			}
-			if( isset( $params['end_date'] ) ) {
-				$limit .= ' --until=' . $params['end_date'];
+			if( isset( $params['end_date'] ) && is_string( $params['end_date'] ) && $params['end_date'] !== '' ) {
+				$limit .= ' --until=' . escapeshellarg( $params['end_date'] );
 			}
 		}
 		
