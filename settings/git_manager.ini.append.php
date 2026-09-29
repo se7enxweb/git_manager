@@ -13,6 +13,8 @@ VarExcludeDirs[]
 VarExcludeDirs[]=cache
 VarExcludeDirs[]=log
 VarExcludeDirs[]=site/backups
+# The session files of signed-in users: a backup that has them is a way in.
+VarExcludeDirs[]=site/sessions
 
 # Maximum number of backups to keep (0 = unlimited)
 MaxBackups=36

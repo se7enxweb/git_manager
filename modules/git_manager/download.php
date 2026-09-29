@@ -68,8 +68,11 @@ if( !file_exists( $filePath ) || !is_readable( $filePath ) ) {
 header( 'Content-Type: application/gzip' );
 header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
 header( 'Content-Length: ' . filesize( $filePath ) );
-header( 'Cache-Control: must-revalidate' );
-header( 'Pragma: public' );
+// A backup holds the database and the settings: never kept by a browser or
+// a cache on the way (it was sent "Pragma: public").
+header( 'Cache-Control: private, no-store, max-age=0' );
+header( 'Pragma: no-cache' );
+header( 'X-Content-Type-Options: nosniff' );
 
 readfile( $filePath );
 

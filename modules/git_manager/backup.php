@@ -12,6 +12,12 @@ $error  = null;
 $message = null;
 $processing = false;
 
+// Every file an action writes (captions, archives, descriptions) is its
+// owner's only: backups hold the database and the settings with their
+// passwords. Put back before the page is drawn.
+$gmOldUmask = umask( 0077 );
+$backup->protectBackupRoot();
+
 // Handle actions
 if( $module->isCurrentAction( 'CreateFullCaption' ) ) {
     $processing = true;
@@ -66,7 +72,7 @@ if( $module->isCurrentAction( 'CreateFullCaption' ) ) {
         $captionDir = $realPath . '/' . $backupPath . '/' . $timestamp;
         
         if( !is_dir($captionDir) ) {
-            mkdir($captionDir, 0775, true);
+            mkdir($captionDir, 0700, true);
         }
         
         if( !empty($description) ) {
@@ -113,7 +119,7 @@ if( $module->isCurrentAction( 'CreateFullCaption' ) ) {
         $captionDir = $realPath . '/' . $backupPath . '/' . $timestamp;
         
         if( !is_dir($captionDir) ) {
-            mkdir($captionDir, 0775, true);
+            mkdir($captionDir, 0700, true);
         }
         
         if( !empty($description) ) {
@@ -178,7 +184,7 @@ if( $module->isCurrentAction( 'CreateFullCaption' ) ) {
             // Create site archive (extensions, settings, config files)
             $siteFile = $captionDir . '/site_' . $timestamp . '.tar.gz';
             $excludes = '--exclude=\'./var/*\' --exclude=\'./.git\' --exclude=\'./vendor/composer\' --exclude=\'./autoload/*\'';
-            $siteCmd = "cd {$realPath} && tar -czf {$siteFile} {$excludes} ./extension ./settings ./config.php ./config.php-RECOMMENDED 2>&1";
+            $siteCmd = 'cd ' . escapeshellarg( $realPath ) . ' && tar -czf ' . escapeshellarg( $siteFile ) . ' ' . $excludes . ' ./extension ./settings ./config.php ./config.php-RECOMMENDED 2>&1';
             
             exec($siteCmd, $siteOutput, $siteReturn);
             
@@ -269,6 +275,8 @@ if( empty($captions) ) {
         );
     }
 }
+
+umask( $gmOldUmask );
 
 $tpl = eZTemplate::factory();
 $tpl->setVariable( 'error', $error );

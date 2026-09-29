@@ -81,7 +81,14 @@ class BackupManager
      * @param string $passphrase Passphrase for encryption (required if $encrypt is true)
      * @return array Result with success status and message
      */
+    /** createFullCaption, with every file it writes readable by its owner only. */
     public function createFullCaption( $description = '', $encrypt = false, $passphrase = '', $agplCompatible = false ) {
+        return $this->withPrivateFiles( function () use ( $description, $encrypt, $passphrase, $agplCompatible ) {
+            return $this->createFullCaptionUnguarded( $description, $encrypt, $passphrase, $agplCompatible );
+        } );
+    }
+
+    private function createFullCaptionUnguarded( $description = '', $encrypt = false, $passphrase = '', $agplCompatible = false ) {
         $timestamp = date('Y-m-d_H-i-s');
         $captionDir = $this->backupPath . '/' . $timestamp;
         
@@ -135,7 +142,14 @@ class BackupManager
      * @param string $passphrase Passphrase for encryption
      * @return array Result with success status and file path
      */
+    /** createDatabaseDump, with every file it writes readable by its owner only. */
     public function createDatabaseDump( $outputDir, $encrypt = false, $passphrase = '', $agplCompatible = false ) {
+        return $this->withPrivateFiles( function () use ( $outputDir, $encrypt, $passphrase, $agplCompatible ) {
+            return $this->createDatabaseDumpUnguarded( $outputDir, $encrypt, $passphrase, $agplCompatible );
+        } );
+    }
+
+    private function createDatabaseDumpUnguarded( $outputDir, $encrypt = false, $passphrase = '', $agplCompatible = false ) {
         $dbSettings = $this->getDatabaseSettings();
         
         if( empty($dbSettings['database']) ) {
@@ -162,38 +176,29 @@ class BackupManager
             $this->writeLicenseFiles( $outputDir );
         }
         
-        // Dump schema only
+        // The connection in an option file (not on the command line).
+        $optionFile = $this->mysqlOptionFile( $dbSettings );
+        if( $optionFile === false ) {
+            return array(
+                'success' => false,
+                'message' => 'Could not write the mysqldump option file'
+            );
+        }
+
+        // Dump schema only, data only, and complete (schema + data)
         $schemaFile = $sqlDir . '/schema.sql';
-        $schemaCmd = str_replace(
-            array('{host}', '{port}', '{user}', '{password}', '{database}', '{output_file}'),
-            array($dbSettings['host'], $dbSettings['port'], $dbSettings['user'], $dbSettings['password'], $dbSettings['database'], $schemaFile),
-            $dumpCommand
-        );
-        $schemaCmd .= ' --no-data > ' . escapeshellarg($schemaFile) . ' 2>&1';
-        
-        // Dump data only
         $dataFile = $sqlDir . '/data.sql';
-        $dataCmd = str_replace(
-            array('{host}', '{port}', '{user}', '{password}', '{database}', '{output_file}'),
-            array($dbSettings['host'], $dbSettings['port'], $dbSettings['user'], $dbSettings['password'], $dbSettings['database'], $dataFile),
-            $dumpCommand
-        );
-        $dataCmd .= ' --no-create-info > ' . escapeshellarg($dataFile) . ' 2>&1';
-        
-        // Dump complete (schema + data)
         $completeFile = $sqlDir . '/complete.sql';
-        $completeCmd = str_replace(
-            array('{host}', '{port}', '{user}', '{password}', '{database}', '{output_file}'),
-            array($dbSettings['host'], $dbSettings['port'], $dbSettings['user'], $dbSettings['password'], $dbSettings['database'], $completeFile),
-            $dumpCommand
-        );
-        $completeCmd .= ' > ' . escapeshellarg($completeFile) . ' 2>&1';
-        
+        $schemaCmd = $this->mysqldumpCommand( $dumpCommand, $optionFile, $dbSettings, $schemaFile ) . ' --no-data > ' . escapeshellarg($schemaFile) . ' 2>&1';
+        $dataCmd = $this->mysqldumpCommand( $dumpCommand, $optionFile, $dbSettings, $dataFile ) . ' --no-create-info > ' . escapeshellarg($dataFile) . ' 2>&1';
+        $completeCmd = $this->mysqldumpCommand( $dumpCommand, $optionFile, $dbSettings, $completeFile ) . ' > ' . escapeshellarg($completeFile) . ' 2>&1';
+
         // Execute dumps
         exec( $schemaCmd, $schemaOutput, $schemaReturn );
         exec( $dataCmd, $dataOutput, $dataReturn );
         exec( $completeCmd, $completeOutput, $completeReturn );
-        
+        unlink( $optionFile );
+
         if( $schemaReturn !== 0 || $dataReturn !== 0 || $completeReturn !== 0 ) {
             return array(
                 'success' => false,
@@ -285,7 +290,14 @@ class BackupManager
      * @param string $passphrase Passphrase for encryption
      * @return array Result with success status and file path
      */
+    /** createVarBackup, with every file it writes readable by its owner only. */
     public function createVarBackup( $outputDir, $encrypt = false, $passphrase = '' ) {
+        return $this->withPrivateFiles( function () use ( $outputDir, $encrypt, $passphrase ) {
+            return $this->createVarBackupUnguarded( $outputDir, $encrypt, $passphrase );
+        } );
+    }
+
+    private function createVarBackupUnguarded( $outputDir, $encrypt = false, $passphrase = '' ) {
         // Ensure output directory exists
         if( !$this->createDirectory( $outputDir ) ) {
             return array(
@@ -550,7 +562,82 @@ class BackupManager
             return true;
         }
         
-        return mkdir($dir, 0775, true);
+        return mkdir($dir, 0700, true);
+    }
+
+    /**
+     * Runs $work with umask 077, so every file and directory it and the
+     * commands it starts create (dumps, archives, encrypted copies) is its
+     * owner's only. Backups hold the database and the settings with their
+     * passwords; world-readable, any account on a shared server could read
+     * them. The umask is put back afterwards: several servers (PHP-FPM,
+     * Velocity) share this installation's cache and run as different users.
+     */
+    private function withPrivateFiles( $work ) {
+        $old = umask( 0077 );
+        try {
+            $this->protectBackupRoot();
+            return $work();
+        } finally {
+            umask( $old );
+        }
+    }
+
+    /**
+     * The backup folder refuses web requests itself (Apache .htaccess), in
+     * case the web server's rules ever let a request through to var/.
+     */
+    public function protectBackupRoot() {
+        if( !is_dir( $this->backupPath ) && !mkdir( $this->backupPath, 0700, true ) ) {
+            return false;
+        }
+        $htaccess = $this->backupPath . '/.htaccess';
+        if( !is_file( $htaccess ) ) {
+            file_put_contents( $htaccess, "# git_manager backups: never served.\nRequire all denied\n" );
+        }
+        if( !is_file( $this->backupPath . '/index.html' ) ) {
+            file_put_contents( $this->backupPath . '/index.html', '' );
+        }
+        return true;
+    }
+
+    /**
+     * The client settings for mysqldump in an option file only its owner can
+     * read, so the password is never on a command line (where every account
+     * on the server can see it in the process list). Returns the file path;
+     * the caller removes it.
+     */
+    private function mysqlOptionFile( array $db ) {
+        $file = tempnam( sys_get_temp_dir(), 'gm-my-' );
+        if( $file === false ) {
+            return false;
+        }
+        chmod( $file, 0600 );
+        $quote = function ( $value ) {
+            return '"' . str_replace( array( '\\', '"' ), array( '\\\\', '\\"' ), (string)$value ) . '"';
+        };
+        $lines = array( '[client]' );
+        foreach( array( 'host', 'port', 'user', 'password' ) as $key ) {
+            if( isset( $db[ $key ] ) && (string)$db[ $key ] !== '' ) {
+                $lines[] = $key . '=' . $quote( $db[ $key ] );
+            }
+        }
+        file_put_contents( $file, implode( "\n", $lines ) . "\n" );
+        return $file;
+    }
+
+    /**
+     * The MySQLDumpCommand of git_manager.ini as a shell command: the option
+     * file first (mysqldump reads it only as its first argument), the
+     * connection placeholders dropped (the option file has them), the database
+     * and output file quoted.
+     */
+    private function mysqldumpCommand( $template, $optionFile, array $db, $outputFile ) {
+        $template = preg_replace( '/\s*(--host=\{host\}|--port=\{port\}|--user=\{user\}|--password=\{password\}|-p\{password\}|-h\s*\{host\}|-P\s*\{port\}|-u\s*\{user\})/', '', $template );
+        $parts = preg_split( '/\s+/', trim( $template ), 2 );
+        $command = $parts[0] . ' --defaults-extra-file=' . escapeshellarg( $optionFile ) . ( isset( $parts[1] ) ? ' ' . $parts[1] : '' );
+        return str_replace( array( '{database}', '{output_file}' ),
+                            array( escapeshellarg( (string)$db['database'] ), escapeshellarg( $outputFile ) ), $command );
     }
     
     /**
