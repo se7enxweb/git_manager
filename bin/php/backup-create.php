@@ -15,7 +15,10 @@
  * Options:
  *   -d "description"  - Add description
  *   -e                - Encrypt backup
- *   -p "passphrase"   - Encryption passphrase (required with -e)
+ *   -p "passphrase"   - Encryption passphrase (visible to other accounts in the process list; prefer below)
+ *   --passphrase-file <file>  - Read the passphrase from the first line of a file
+ *   GIT_MANAGER_BACKUP_PASSPHRASE - or from this environment variable
+ *   (with -e and none of these on a terminal, the passphrase is asked for, not echoed)
  * 
  * Examples:
  *   php backup-create.php full
@@ -49,7 +52,9 @@ if (count($args) < 1) {
     $cli->output("\nOptions:");
     $cli->output("  -d \"description\"  - Add description");
     $cli->output("  -e                - Encrypt backup");
-    $cli->output("  -p \"passphrase\"   - Encryption passphrase (required with -e)");
+    $cli->output("  -p \"passphrase\"   - Encryption passphrase (other accounts can see it in the process list)");
+    $cli->output("  --passphrase-file <file>   - Read the passphrase from a file (safer)");
+    $cli->output("  GIT_MANAGER_BACKUP_PASSPHRASE - Or from this environment variable; on a terminal it is asked for");
     $script->shutdown(1);
 }
 
@@ -78,17 +83,49 @@ for ($i = 1; $i < count($args); $i++) {
         case '-p':
             if (isset($args[$i + 1])) {
                 $passphrase = $args[$i + 1];
+                $passphraseOnCommandLine = true;
+                $i++;
+            }
+            break;
+        case '--passphrase-file':
+            if (isset($args[$i + 1])) {
+                $passphraseFile = $args[$i + 1];
                 $i++;
             }
             break;
     }
 }
 
+// The passphrase, safest first: a file, the environment, a hidden prompt; -p last.
+if ($encrypt && $passphrase === '' && isset($passphraseFile)) {
+    if (!is_readable($passphraseFile)) {
+        $cli->error("Error: cannot read the passphrase file");
+        $script->shutdown(1);
+    }
+    $passphrase = rtrim((string)strtok((string)file_get_contents($passphraseFile), "\n"), "\r");
+}
+if ($encrypt && $passphrase === '' && getenv('GIT_MANAGER_BACKUP_PASSPHRASE') !== false) {
+    $passphrase = (string)getenv('GIT_MANAGER_BACKUP_PASSPHRASE');
+}
+if ($encrypt && $passphrase === '' && function_exists('posix_isatty') && posix_isatty(STDIN)) {
+    fwrite(STDOUT, 'Passphrase: ');
+    shell_exec('stty -echo 2>/dev/null');
+    $passphrase = rtrim((string)fgets(STDIN), "\r\n");
+    shell_exec('stty echo 2>/dev/null');
+    fwrite(STDOUT, "\n");
+}
+if (!empty($passphraseOnCommandLine)) {
+    $cli->warning("The passphrase was given with -p: other accounts on this server can see it in the process list. Prefer --passphrase-file or GIT_MANAGER_BACKUP_PASSPHRASE.");
+}
+
 // Validate encryption
 if ($encrypt && empty($passphrase)) {
-    $cli->error("Error: Encryption enabled but no passphrase provided. Use -p \"passphrase\"");
+    $cli->error("Error: Encryption enabled but no passphrase provided. Use --passphrase-file, GIT_MANAGER_BACKUP_PASSPHRASE or -p.");
     $script->shutdown(1);
 }
+
+// Every file the backup writes is its owner's only.
+umask(0077);
 
 // Create backup
 $backup = new BackupManager();
@@ -124,7 +161,7 @@ try {
             
             $captionDir = $realPath . '/' . $backupPath . '/' . $timestamp;
             if (!is_dir($captionDir)) {
-                mkdir($captionDir, 0775, true);
+                mkdir($captionDir, 0700, true);
             }
             
             if (!empty($description)) {
@@ -153,7 +190,7 @@ try {
             
             $captionDir = $realPath . '/' . $backupPath . '/' . $timestamp;
             if (!is_dir($captionDir)) {
-                mkdir($captionDir, 0775, true);
+                mkdir($captionDir, 0700, true);
             }
             
             if (!empty($description)) {
@@ -187,7 +224,7 @@ try {
                 $captionDir = $realPath . '/' . $backupPath . '/' . $timestamp;
                 $siteFile = $captionDir . '/site_' . $timestamp . '.tar.gz';
                 $excludes = '--exclude=\'./var/*\' --exclude=\'./.git\' --exclude=\'./vendor/composer\' --exclude=\'./autoload/*\'';
-                $siteCmd = "cd {$realPath} && tar -czf {$siteFile} {$excludes} ./extension ./settings ./config.php ./config.php-RECOMMENDED 2>&1";
+                $siteCmd = 'cd ' . escapeshellarg($realPath) . ' && tar -czf ' . escapeshellarg($siteFile) . ' ' . $excludes . ' ./extension ./settings ./config.php ./config.php-RECOMMENDED 2>&1';
                 
                 exec($siteCmd, $siteOutput, $siteReturn);
                 
