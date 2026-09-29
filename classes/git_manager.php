@@ -16,7 +16,8 @@ class GitManager
 		'current_commit'  => 'getCurrentCommit',
 		'local_branches'  => 'getLocalBranches',
 		'remote_branches' => 'getRemoteBranches',
-		'remotes'         => 'getRemotes'
+		'remotes'         => 'getRemotes',
+		'submodules'      => 'getSubmodules'
 	);
 
 	private function __construct() {
@@ -351,6 +352,182 @@ class GitManager
 
 	public function checkoutCommit( $hash ) {
 		return $this->cli( 'checkout ' . escapeshellcmd( $hash ) );
+	}
+
+	/**
+	 * A submodule path inside the repository: relative, letters, digits, dot,
+	 * dash, underscore and slashes, no "..", no leading dash, dot or slash.
+	 */
+	public static function isSubmodulePath( $path ) {
+		return is_string( $path ) && strlen( $path ) <= 255
+			&& preg_match( '#^[A-Za-z0-9_][A-Za-z0-9._/-]*$#', $path ) === 1
+			&& strpos( $path, '..' ) === false && strpos( $path, '//' ) === false && substr( $path, -1 ) !== '/'
+			&& strpos( $path, '.git' ) !== 0;
+	}
+
+	/** A branch name git accepts and the shell cannot misread. */
+	public static function isBranchName( $branch ) {
+		return is_string( $branch ) && strlen( $branch ) <= 200
+			&& preg_match( '#^[A-Za-z0-9_][A-Za-z0-9._/-]*$#', $branch ) === 1
+			&& strpos( $branch, '..' ) === false && strpos( $branch, '//' ) === false
+			&& substr( $branch, -1 ) !== '/' && substr( $branch, -5 ) !== '.lock';
+	}
+
+	/**
+	 * A submodule address: what a remote may be (isRemoteUrl), or a path
+	 * relative to the superproject's remote (../name.git, ./name.git).
+	 */
+	public static function isSubmoduleUrl( $url ) {
+		if( is_string( $url ) && preg_match( '#^\.\.?/[A-Za-z0-9._/-]+$#', $url ) === 1 && strpos( $url, '::' ) === false && strpos( $url, '//' ) === false ) {
+			return true;
+		}
+		return self::isRemoteUrl( $url );
+	}
+
+	/**
+	 * The submodules of .gitmodules with their state:
+	 * name => array( 'name', 'path', 'url' (credentials left out), 'branch',
+	 * 'commit', 'state' (current, not_initialized, changed, conflict, missing),
+	 * 'describe' ).
+	 */
+	public function getSubmodules() {
+		$modules = array();
+		if( !is_file( rtrim( self::$path, '/' ) . '/.gitmodules' ) ) {
+			return $modules;
+		}
+		foreach( $this->cli( 'config -f .gitmodules --get-regexp ' . escapeshellarg( '^submodule\..*\.(path|url|branch)$' ), false, true ) as $line ) {
+			if( preg_match( '/^submodule\.(.+)\.(path|url|branch) (.*)$/', trim( $line ), $m ) ) {
+				if( !isset( $modules[ $m[1] ] ) ) {
+					$modules[ $m[1] ] = array( 'name' => $m[1], 'path' => '', 'url' => '', 'branch' => '', 'commit' => '', 'state' => 'missing', 'describe' => '' );
+				}
+				$value = $m[2] === 'url' ? preg_replace( '#^([a-z][a-z0-9+.-]*://)[^/@]*@#i', '$1', $m[3] ) : $m[3];
+				$modules[ $m[1] ][ $m[2] ] = $value;
+			}
+		}
+		$byPath = array();
+		foreach( $modules as $name => $module ) {
+			$byPath[ $module['path'] ] = $name;
+		}
+		foreach( $this->cli( 'submodule status', false, true ) as $line ) {
+			// The mark may be missing: cli() trims the whole output, and with it
+			// the space (up to date) in front of the first line.
+			if( preg_match( '/^([ +\-U]?)([0-9a-f]{40}) (\S+)(?: \((.*)\))?$/', rtrim( $line ), $m ) && isset( $byPath[ $m[3] ] ) ) {
+				$states = array( '' => 'current', ' ' => 'current', '-' => 'not_initialized', '+' => 'changed', 'U' => 'conflict' );
+				$name = $byPath[ $m[3] ];
+				$modules[ $name ]['commit'] = $m[2];
+				$modules[ $name ]['state'] = $states[ $m[1] ];
+				$modules[ $name ]['describe'] = isset( $m[4] ) ? $m[4] : '';
+			}
+		}
+		ksort( $modules );
+		return $modules;
+	}
+
+	/**
+	 * Adds a submodule: clones $url into $path (optionally following
+	 * $branch) and stages .gitmodules and the new path, for a commit.
+	 */
+	public function addSubmodule( $url, $path, $branch = '' ) {
+		if( !self::isSubmoduleUrl( $url ) ) {
+			return array( 'exit' => 1, 'output' => 'Not a submodule address' );
+		}
+		if( !self::isSubmodulePath( $path ) ) {
+			return array( 'exit' => 1, 'output' => 'Not a submodule path: a relative path inside the repository' );
+		}
+		if( file_exists( rtrim( self::$path, '/' ) . '/' . $path ) ) {
+			return array( 'exit' => 1, 'output' => 'That path exists already' );
+		}
+		if( $branch !== '' && !self::isBranchName( $branch ) ) {
+			return array( 'exit' => 1, 'output' => 'Not a branch name' );
+		}
+		return $this->run( 'submodule add ' . ( $branch !== '' ? '-b ' . escapeshellarg( $branch ) . ' ' : '' )
+			. '-- ' . escapeshellarg( $url ) . ' ' . escapeshellarg( $path ) );
+	}
+
+	/**
+	 * Changes a submodule's address and the branch it follows ('' for none)
+	 * in .gitmodules, carries the address into the submodule's own
+	 * configuration (git submodule sync) and stages .gitmodules. An address
+	 * shown without its credential and sent back unchanged is left as it is.
+	 */
+	public function editSubmodule( $name, $url, $branch ) {
+		$modules = $this->getSubmodules();
+		if( !isset( $modules[ $name ] ) ) {
+			return array( 'exit' => 1, 'output' => 'Unknown submodule' );
+		}
+		$module = $modules[ $name ];
+		$key = 'submodule.' . $name;
+		$output = array();
+		if( $url !== $module['url'] ) {
+			if( !self::isSubmoduleUrl( $url ) ) {
+				return array( 'exit' => 1, 'output' => 'Not a submodule address' );
+			}
+			$step = $this->run( 'config -f .gitmodules ' . escapeshellarg( $key . '.url' ) . ' ' . escapeshellarg( $url ) );
+			if( $step['exit'] !== 0 ) return $step;
+			$output[] = $step['output'];
+		}
+		if( $branch !== $module['branch'] ) {
+			if( $branch !== '' && !self::isBranchName( $branch ) ) {
+				return array( 'exit' => 1, 'output' => 'Not a branch name' );
+			}
+			$step = $branch === ''
+				? $this->run( 'config -f .gitmodules --unset ' . escapeshellarg( $key . '.branch' ) )
+				: $this->run( 'config -f .gitmodules ' . escapeshellarg( $key . '.branch' ) . ' ' . escapeshellarg( $branch ) );
+			if( $step['exit'] !== 0 ) return $step;
+			$output[] = $step['output'];
+		}
+		if( !$output ) {
+			return array( 'exit' => 0, 'output' => '' );
+		}
+		foreach( array( 'submodule sync -- ' . escapeshellarg( $module['path'] ), 'add .gitmodules' ) as $command ) {
+			$step = $this->run( $command );
+			if( $step['exit'] !== 0 ) return $step;
+			$output[] = $step['output'];
+		}
+		return array( 'exit' => 0, 'output' => trim( implode( "\n", array_filter( $output, 'strlen' ) ) ) );
+	}
+
+	/** Initialises and updates one submodule to the commit the branch records. */
+	public function updateSubmodule( $name ) {
+		$modules = $this->getSubmodules();
+		if( !isset( $modules[ $name ] ) ) {
+			return array( 'exit' => 1, 'output' => 'Unknown submodule' );
+		}
+		return $this->run( 'submodule update --init --recursive -- ' . escapeshellarg( $modules[ $name ]['path'] ) );
+	}
+
+	/**
+	 * Removes a submodule: deinit (its working tree emptied), git rm (the
+	 * path and its .gitmodules entry, staged for a commit), and its copy of
+	 * the repository under .git/modules, so that it can be added again.
+	 */
+	public function removeSubmodule( $name ) {
+		$modules = $this->getSubmodules();
+		if( !isset( $modules[ $name ] ) ) {
+			return array( 'exit' => 1, 'output' => 'Unknown submodule' );
+		}
+		$path = $modules[ $name ]['path'];
+		if( !self::isSubmodulePath( $path ) ) {
+			return array( 'exit' => 1, 'output' => 'The submodule path in .gitmodules is not one this page removes' );
+		}
+		$output = array();
+		foreach( array( 'submodule deinit -f -- ' . escapeshellarg( $path ), 'rm -f -- ' . escapeshellarg( $path ) ) as $command ) {
+			$step = $this->run( $command );
+			$output[] = $step['output'];
+			if( $step['exit'] !== 0 ) {
+				return array( 'exit' => $step['exit'], 'output' => trim( implode( "\n", $output ) ) );
+			}
+		}
+		// Its repository copy, only when it lies inside this repository's
+		// .git/modules.
+		$gitDir = trim( $this->cli( 'rev-parse --absolute-git-dir' ) );
+		$modulesDir = realpath( $gitDir . '/modules' );
+		$moduleDir = realpath( $gitDir . '/modules/' . $name );
+		if( $modulesDir && $moduleDir && strpos( $moduleDir, $modulesDir . '/' ) === 0 && is_dir( $moduleDir ) ) {
+			$removed = eZDir::recursiveDelete( $moduleDir, false );
+			$output[] = $removed ? 'Removed ' . $moduleDir : 'Could not remove ' . $moduleDir;
+		}
+		return array( 'exit' => 0, 'output' => trim( implode( "\n", array_filter( $output, 'strlen' ) ) ) );
 	}
 
 	public function updateSubmodules() {

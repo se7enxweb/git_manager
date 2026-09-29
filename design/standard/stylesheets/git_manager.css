@@ -137,3 +137,9 @@
 .gm-log li.is-head { box-shadow: inset 4px 0 0 #2f8f46; }
 .gm-log li.is-head.is-local { box-shadow: inset 4px 0 0 #2f8f46, inset 8px 0 0 #e8871e; }
 .gm-log.is-only-unpushed li:not([data-unpushed]) { display: none; }
+
+/* Submodules (the remotes' layout). */
+.gm-section-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5em; }
+.gm-section-head h2 { margin: 0; }
+.gm-section-head form { margin: 0; }
+.gm-actions { grid-template-columns: repeat(auto-fill, minmax(22em, 1fr)); }

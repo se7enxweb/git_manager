@@ -107,6 +107,41 @@ if(
 	if( $output === '' ) {
 		$output = null;
 	}
+} elseif( $module->isCurrentAction( 'UpdateSubmodule' ) ) {
+	$name = (string)$http->postVariable( 'submodule', '' );
+	$result = $git->updateSubmodule( $name );
+	$output = $result['output'] !== '' ? $result['output'] : ezpI18n::tr( 'extension/git_manager', 'Already up to date.' );
+	if( $result['exit'] === 0 ) {
+		$message = ezpI18n::tr( 'extension/git_manager', 'The submodule %name was updated.', null, array( '%name' => $name ) );
+	} else {
+		$error = ezpI18n::tr( 'extension/git_manager', 'Updating the submodule %name failed (git exit %exit).', null, array( '%name' => $name, '%exit' => $result['exit'] ) );
+	}
+} elseif( $module->isCurrentAction( 'AddSubmodule' ) || $module->isCurrentAction( 'EditSubmodule' ) || $module->isCurrentAction( 'RemoveSubmodule' ) ) {
+	// Changes the working tree and the index: its own policy function, git_manager/submodules.
+	$access = eZUser::currentUser()->hasAccessTo( 'git_manager', 'submodules' );
+	if( $access['accessWord'] === 'no' ) {
+		return $module->handleError( eZError::KERNEL_ACCESS_DENIED, 'kernel' );
+	}
+	$name   = (string)$http->postVariable( 'submodule', '' );
+	$url    = trim( (string)$http->postVariable( 'url', '' ) );
+	$branch = trim( (string)$http->postVariable( 'submodule_branch', '' ) );
+	if( $module->isCurrentAction( 'AddSubmodule' ) ) {
+		$path = trim( (string)$http->postVariable( 'path', '' ), " /" );
+		$result = $git->addSubmodule( $url, $path, $branch );
+		$done = ezpI18n::tr( 'extension/git_manager', 'The submodule %name was added and staged; commit it to keep it.', null, array( '%name' => $path ) );
+	} elseif( $module->isCurrentAction( 'RemoveSubmodule' ) ) {
+		$result = $git->removeSubmodule( $name );
+		$done = ezpI18n::tr( 'extension/git_manager', 'The submodule %name was removed and the removal staged; commit it to keep it.', null, array( '%name' => $name ) );
+	} else {
+		$result = $git->editSubmodule( $name, $url, $branch );
+		$done = ezpI18n::tr( 'extension/git_manager', 'The submodule %name was saved and .gitmodules staged; commit it to keep it.', null, array( '%name' => $name ) );
+	}
+	$output = $result['output'] !== '' ? $result['output'] : null;
+	if( $result['exit'] === 0 ) {
+		$message = $done;
+	} else {
+		$error = ezpI18n::tr( 'extension/git_manager', 'The submodule was not changed; see the output.' );
+	}
 } elseif( $module->isCurrentAction( 'CheckoutUpdateSubmodules' ) ) {
         $output = $git->updateSubmodules();
         if( $output == '' )
@@ -166,6 +201,9 @@ $tpl->setVariable( 'unpushed_total', array_sum( $unpushedCounts ) );
 $tpl->setVariable( 'can_push', $pushAccess['accessWord'] !== 'no' );
 $remotesAccess = eZUser::currentUser()->hasAccessTo( 'git_manager', 'remotes' );
 $tpl->setVariable( 'can_manage_remotes', $remotesAccess['accessWord'] !== 'no' );
+$submodulesAccess = eZUser::currentUser()->hasAccessTo( 'git_manager', 'submodules' );
+$tpl->setVariable( 'can_manage_submodules', $submodulesAccess['accessWord'] !== 'no' );
+$tpl->setVariable( 'submodules', $git->attribute( 'submodules' ) );
 
 $Result = array();
 $Result['content'] = $tpl->fetch( 'design:git_manager/dashboard.tpl' );

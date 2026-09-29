@@ -125,6 +125,21 @@ php extension/git_manager/bin/php/remote.php push origin [branch]
 `list` shows each remote's address (without a user name, password or token)
 and how the checked out branch stands against it.
 
+### submodule.php
+
+The submodules of the installation's git repository: the same as the
+dashboard's "Submodules" section. Adding, changing and removing stage the
+change; commit it to keep it.
+
+```bash
+php extension/git_manager/bin/php/submodule.php list
+php extension/git_manager/bin/php/submodule.php add https://github.com/owner/repo.git extension/repo [branch]
+php extension/git_manager/bin/php/submodule.php set-url extension/repo git@github.com:owner/repo.git
+php extension/git_manager/bin/php/submodule.php set-branch extension/repo main
+php extension/git_manager/bin/php/submodule.php update [extension/repo]
+php extension/git_manager/bin/php/submodule.php remove extension/repo
+```
+
 ## Quick Reference
 
 ```bash

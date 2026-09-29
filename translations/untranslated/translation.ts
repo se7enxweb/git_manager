@@ -284,22 +284,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Update the submodules to the commits this branch records?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Submodules</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Initialises and updates every submodule, recursively, to the commit the checked out branch records.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Update submodules</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Remotes and push</source>
         <translation type="unfinished"></translation>
     </message>
@@ -389,6 +373,98 @@
     </message>
     <message>
         <source>Adding, changing and removing remotes needs the git_manager/remotes policy.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Submodules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Update the submodules to the commits this branch records?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Update all submodules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adding, changing and removing a submodule changes the working tree and stages the change; it is kept once it is committed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Follows this branch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>up to date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>not checked out</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The checked out commit is not the one this branch records</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>other commit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>conflict</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>not in the index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Branch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>none</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove the submodule %name? Its files leave the working tree and the removal is staged for a commit.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name in .gitmodules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This repository has no submodules.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add a submodule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clone the repository into this path and stage it as a submodule?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>optional</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The path is relative to the installation, and must not exist yet. The address may also be relative to this repository's remote: ../name.git.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adding, changing and removing submodules needs the git_manager/submodules policy.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -533,6 +609,30 @@
     </message>
     <message>
         <source>The remote was not changed; see the output.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The submodule %name was updated.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Updating the submodule %name failed (git exit %exit).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The submodule %name was added and staged; commit it to keep it.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The submodule %name was removed and the removal staged; commit it to keep it.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The submodule %name was saved and .gitmodules staged; commit it to keep it.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The submodule was not changed; see the output.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

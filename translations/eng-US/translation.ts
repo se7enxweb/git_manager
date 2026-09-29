@@ -284,22 +284,6 @@
         <translation>Remote branch</translation>
     </message>
     <message>
-        <source>Update the submodules to the commits this branch records?</source>
-        <translation>Update the submodules to the commits this branch records?</translation>
-    </message>
-    <message>
-        <source>Submodules</source>
-        <translation>Submodules</translation>
-    </message>
-    <message>
-        <source>Initialises and updates every submodule, recursively, to the commit the checked out branch records.</source>
-        <translation>Initialises and updates every submodule, recursively, to the commit the checked out branch records.</translation>
-    </message>
-    <message>
-        <source>Update submodules</source>
-        <translation>Update submodules</translation>
-    </message>
-    <message>
         <source>Remotes and push</source>
         <translation>Remotes and push</translation>
     </message>
@@ -390,6 +374,98 @@
     <message>
         <source>Adding, changing and removing remotes needs the git_manager/remotes policy.</source>
         <translation>Adding, changing and removing remotes needs the git_manager/remotes policy.</translation>
+    </message>
+    <message>
+        <source>Submodules</source>
+        <translation>Submodules</translation>
+    </message>
+    <message>
+        <source>Update the submodules to the commits this branch records?</source>
+        <translation>Update the submodules to the commits this branch records?</translation>
+    </message>
+    <message>
+        <source>Update all submodules</source>
+        <translation>Update all submodules</translation>
+    </message>
+    <message>
+        <source>Adding, changing and removing a submodule changes the working tree and stages the change; it is kept once it is committed.</source>
+        <translation>Adding, changing and removing a submodule changes the working tree and stages the change; it is kept once it is committed.</translation>
+    </message>
+    <message>
+        <source>Follows this branch</source>
+        <translation>Follows this branch</translation>
+    </message>
+    <message>
+        <source>up to date</source>
+        <translation>up to date</translation>
+    </message>
+    <message>
+        <source>not checked out</source>
+        <translation>not checked out</translation>
+    </message>
+    <message>
+        <source>The checked out commit is not the one this branch records</source>
+        <translation>The checked out commit is not the one this branch records</translation>
+    </message>
+    <message>
+        <source>other commit</source>
+        <translation>other commit</translation>
+    </message>
+    <message>
+        <source>conflict</source>
+        <translation>conflict</translation>
+    </message>
+    <message>
+        <source>not in the index</source>
+        <translation>not in the index</translation>
+    </message>
+    <message>
+        <source>Update</source>
+        <translation>Update</translation>
+    </message>
+    <message>
+        <source>Branch</source>
+        <translation>Branch</translation>
+    </message>
+    <message>
+        <source>none</source>
+        <translation>none</translation>
+    </message>
+    <message>
+        <source>Remove the submodule %name? Its files leave the working tree and the removal is staged for a commit.</source>
+        <translation>Remove the submodule %name? Its files leave the working tree and the removal is staged for a commit.</translation>
+    </message>
+    <message>
+        <source>Name in .gitmodules</source>
+        <translation>Name in .gitmodules</translation>
+    </message>
+    <message>
+        <source>This repository has no submodules.</source>
+        <translation>This repository has no submodules.</translation>
+    </message>
+    <message>
+        <source>Add a submodule</source>
+        <translation>Add a submodule</translation>
+    </message>
+    <message>
+        <source>Clone the repository into this path and stage it as a submodule?</source>
+        <translation>Clone the repository into this path and stage it as a submodule?</translation>
+    </message>
+    <message>
+        <source>Path</source>
+        <translation>Path</translation>
+    </message>
+    <message>
+        <source>optional</source>
+        <translation>optional</translation>
+    </message>
+    <message>
+        <source>The path is relative to the installation, and must not exist yet. The address may also be relative to this repository's remote: ../name.git.</source>
+        <translation>The path is relative to the installation, and must not exist yet. The address may also be relative to this repository's remote: ../name.git.</translation>
+    </message>
+    <message>
+        <source>Adding, changing and removing submodules needs the git_manager/submodules policy.</source>
+        <translation>Adding, changing and removing submodules needs the git_manager/submodules policy.</translation>
     </message>
     <message>
         <source>Commits log</source>
@@ -534,6 +610,30 @@
     <message>
         <source>The remote was not changed; see the output.</source>
         <translation>The remote was not changed; see the output.</translation>
+    </message>
+    <message>
+        <source>The submodule %name was updated.</source>
+        <translation>The submodule %name was updated.</translation>
+    </message>
+    <message>
+        <source>Updating the submodule %name failed (git exit %exit).</source>
+        <translation>Updating the submodule %name failed (git exit %exit).</translation>
+    </message>
+    <message>
+        <source>The submodule %name was added and staged; commit it to keep it.</source>
+        <translation>The submodule %name was added and staged; commit it to keep it.</translation>
+    </message>
+    <message>
+        <source>The submodule %name was removed and the removal staged; commit it to keep it.</source>
+        <translation>The submodule %name was removed and the removal staged; commit it to keep it.</translation>
+    </message>
+    <message>
+        <source>The submodule %name was saved and .gitmodules staged; commit it to keep it.</source>
+        <translation>The submodule %name was saved and .gitmodules staged; commit it to keep it.</translation>
+    </message>
+    <message>
+        <source>The submodule was not changed; see the output.</source>
+        <translation>The submodule was not changed; see the output.</translation>
     </message>
 </context>
 </TS>

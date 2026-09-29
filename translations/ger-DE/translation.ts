@@ -284,22 +284,6 @@
         <translation>Entfernter Branch</translation>
     </message>
     <message>
-        <source>Update the submodules to the commits this branch records?</source>
-        <translation>Die Submodule auf die Commits aktualisieren, die dieser Branch festhält?</translation>
-    </message>
-    <message>
-        <source>Submodules</source>
-        <translation>Submodule</translation>
-    </message>
-    <message>
-        <source>Initialises and updates every submodule, recursively, to the commit the checked out branch records.</source>
-        <translation>Initialisiert und aktualisiert jedes Submodul rekursiv auf den Commit, den der ausgecheckte Branch festhält.</translation>
-    </message>
-    <message>
-        <source>Update submodules</source>
-        <translation>Submodule aktualisieren</translation>
-    </message>
-    <message>
         <source>Remotes and push</source>
         <translation>Remotes und Push</translation>
     </message>
@@ -390,6 +374,98 @@
     <message>
         <source>Adding, changing and removing remotes needs the git_manager/remotes policy.</source>
         <translation>Remotes hinzufügen, ändern und entfernen erfordert die Richtlinie git_manager/remotes.</translation>
+    </message>
+    <message>
+        <source>Submodules</source>
+        <translation>Submodule</translation>
+    </message>
+    <message>
+        <source>Update the submodules to the commits this branch records?</source>
+        <translation>Die Submodule auf die Commits aktualisieren, die dieser Branch festhält?</translation>
+    </message>
+    <message>
+        <source>Update all submodules</source>
+        <translation>Alle Submodule aktualisieren</translation>
+    </message>
+    <message>
+        <source>Adding, changing and removing a submodule changes the working tree and stages the change; it is kept once it is committed.</source>
+        <translation>Ein Submodul hinzuzufügen, zu ändern oder zu entfernen ändert das Arbeitsverzeichnis und merkt die Änderung vor; sie bleibt, sobald sie committet ist.</translation>
+    </message>
+    <message>
+        <source>Follows this branch</source>
+        <translation>Folgt diesem Branch</translation>
+    </message>
+    <message>
+        <source>up to date</source>
+        <translation>aktuell</translation>
+    </message>
+    <message>
+        <source>not checked out</source>
+        <translation>nicht ausgecheckt</translation>
+    </message>
+    <message>
+        <source>The checked out commit is not the one this branch records</source>
+        <translation>Der ausgecheckte Commit ist nicht der, den dieser Branch festhält</translation>
+    </message>
+    <message>
+        <source>other commit</source>
+        <translation>anderer Commit</translation>
+    </message>
+    <message>
+        <source>conflict</source>
+        <translation>Konflikt</translation>
+    </message>
+    <message>
+        <source>not in the index</source>
+        <translation>nicht im Index</translation>
+    </message>
+    <message>
+        <source>Update</source>
+        <translation>Aktualisieren</translation>
+    </message>
+    <message>
+        <source>Branch</source>
+        <translation>Branch</translation>
+    </message>
+    <message>
+        <source>none</source>
+        <translation>keiner</translation>
+    </message>
+    <message>
+        <source>Remove the submodule %name? Its files leave the working tree and the removal is staged for a commit.</source>
+        <translation>Das Submodul %name entfernen? Seine Dateien verlassen das Arbeitsverzeichnis, und das Entfernen wird für einen Commit vorgemerkt.</translation>
+    </message>
+    <message>
+        <source>Name in .gitmodules</source>
+        <translation>Name in .gitmodules</translation>
+    </message>
+    <message>
+        <source>This repository has no submodules.</source>
+        <translation>Dieses Repository hat keine Submodule.</translation>
+    </message>
+    <message>
+        <source>Add a submodule</source>
+        <translation>Ein Submodul hinzufügen</translation>
+    </message>
+    <message>
+        <source>Clone the repository into this path and stage it as a submodule?</source>
+        <translation>Das Repository in diesen Pfad klonen und als Submodul vormerken?</translation>
+    </message>
+    <message>
+        <source>Path</source>
+        <translation>Pfad</translation>
+    </message>
+    <message>
+        <source>optional</source>
+        <translation>optional</translation>
+    </message>
+    <message>
+        <source>The path is relative to the installation, and must not exist yet. The address may also be relative to this repository's remote: ../name.git.</source>
+        <translation>Der Pfad ist relativ zur Installation und darf noch nicht existieren. Die Adresse kann auch relativ zum Remote dieses Repositorys sein: ../name.git.</translation>
+    </message>
+    <message>
+        <source>Adding, changing and removing submodules needs the git_manager/submodules policy.</source>
+        <translation>Submodule hinzufügen, ändern und entfernen erfordert die Richtlinie git_manager/submodules.</translation>
     </message>
     <message>
         <source>Commits log</source>
@@ -534,6 +610,30 @@
     <message>
         <source>The remote was not changed; see the output.</source>
         <translation>Das Remote wurde nicht geändert; siehe die Ausgabe.</translation>
+    </message>
+    <message>
+        <source>The submodule %name was updated.</source>
+        <translation>Das Submodul %name wurde aktualisiert.</translation>
+    </message>
+    <message>
+        <source>Updating the submodule %name failed (git exit %exit).</source>
+        <translation>Das Aktualisieren des Submoduls %name ist fehlgeschlagen (git exit %exit).</translation>
+    </message>
+    <message>
+        <source>The submodule %name was added and staged; commit it to keep it.</source>
+        <translation>Das Submodul %name wurde hinzugefügt und vorgemerkt; committen Sie es, um es zu behalten.</translation>
+    </message>
+    <message>
+        <source>The submodule %name was removed and the removal staged; commit it to keep it.</source>
+        <translation>Das Submodul %name wurde entfernt und das Entfernen vorgemerkt; committen Sie es, um es zu behalten.</translation>
+    </message>
+    <message>
+        <source>The submodule %name was saved and .gitmodules staged; commit it to keep it.</source>
+        <translation>Das Submodul %name wurde gespeichert und .gitmodules vorgemerkt; committen Sie es, um es zu behalten.</translation>
+    </message>
+    <message>
+        <source>The submodule was not changed; see the output.</source>
+        <translation>Das Submodul wurde nicht geändert; siehe die Ausgabe.</translation>
     </message>
 </context>
 </TS>

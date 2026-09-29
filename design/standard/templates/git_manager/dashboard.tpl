@@ -68,11 +68,6 @@
                 </div>
             </form>
 
-            <form class="gm-card" action={'git_manager/dashboard'|ezurl} method="post" data-gm-confirm="{'Update the submodules to the commits this branch records?'|i18n( 'extension/git_manager' )|wash}">
-                <h2>{'Submodules'|i18n( 'extension/git_manager' )}</h2>
-                <p class="gm-muted">{'Initialises and updates every submodule, recursively, to the commit the checked out branch records.'|i18n( 'extension/git_manager' )}</p>
-                <input class="button" type="submit" name="CheckoutUpdateSubmodules" value="{'Update submodules'|i18n( 'extension/git_manager' )}" />
-            </form>
         </div>
 
         {* Push: each remote, how the checked out branch stands against it, fetch and push. *}
@@ -156,6 +151,82 @@
             </details>
             {else}
             <p class="gm-muted">{'Adding, changing and removing remotes needs the git_manager/remotes policy.'|i18n( 'extension/git_manager' )}</p>
+            {/if}
+        </section>
+
+        {* Submodules: the list, and adding, changing, updating and removing them. *}
+        <section class="gm-push gm-submodules">
+            <div class="gm-section-head">
+                <h2>{'Submodules'|i18n( 'extension/git_manager' )} <span class="gm-muted">({$submodules|count})</span></h2>
+                {if $submodules|count}
+                <form action={'git_manager/dashboard'|ezurl} method="post" data-gm-confirm="{'Update the submodules to the commits this branch records?'|i18n( 'extension/git_manager' )|wash}">
+                    <input class="button" type="submit" name="CheckoutUpdateSubmodules" value="{'Update all submodules'|i18n( 'extension/git_manager' )}" />
+                </form>
+                {/if}
+            </div>
+            <p class="gm-muted">{'Adding, changing and removing a submodule changes the working tree and stages the change; it is kept once it is committed.'|i18n( 'extension/git_manager' )}</p>
+            {if $submodules|count}
+            <ul class="gm-remotes">
+            {foreach $submodules as $sub}
+                <li class="gm-remote">
+                    <div class="gm-remote-name">
+                        <strong>{$sub.path|wash}</strong>
+                        <code class="gm-remote-url">{$sub.url|wash}</code>
+                    </div>
+                    <div class="gm-remote-state">
+                        {if $sub.branch}<span class="gm-pill is-even" title="{'Follows this branch'|i18n( 'extension/git_manager' )|wash}">{$sub.branch|wash}</span>{/if}
+                        {if eq( $sub.state, 'current' )}<span class="gm-pill is-even">{'up to date'|i18n( 'extension/git_manager' )}</span>
+                        {elseif eq( $sub.state, 'not_initialized' )}<span class="gm-pill is-new">{'not checked out'|i18n( 'extension/git_manager' )}</span>
+                        {elseif eq( $sub.state, 'changed' )}<span class="gm-pill is-behind" title="{'The checked out commit is not the one this branch records'|i18n( 'extension/git_manager' )|wash}">{'other commit'|i18n( 'extension/git_manager' )}</span>
+                        {elseif eq( $sub.state, 'conflict' )}<span class="gm-pill is-local">{'conflict'|i18n( 'extension/git_manager' )}</span>
+                        {else}<span class="gm-pill is-local">{'not in the index'|i18n( 'extension/git_manager' )}</span>{/if}
+                        {if $sub.commit}<span class="gm-hash"><span class="gm-mono">{$sub.commit|shorten( 10, '' )|wash}</span><button type="button" class="gm-copy" data-copy="{$sub.commit|wash}">{'Copy'|i18n( 'extension/git_manager' )}</button></span>{/if}
+                    </div>
+                    <div class="gm-remote-actions">
+                        <form action={'git_manager/dashboard'|ezurl} method="post">
+                            <input type="hidden" name="submodule" value="{$sub.name|wash}" />
+                            <input class="button" type="submit" name="UpdateSubmodule" value="{'Update'|i18n( 'extension/git_manager' )}" />
+                        </form>
+                    </div>
+                    {if $can_manage_submodules}
+                    <details class="gm-remote-edit">
+                        <summary>{'Edit'|i18n( 'extension/git_manager' )}</summary>
+                        <form action={'git_manager/dashboard'|ezurl} method="post" class="gm-remote-form">
+                            <input type="hidden" name="submodule" value="{$sub.name|wash}" />
+                            <label class="gm-remote-form-url">{'Address'|i18n( 'extension/git_manager' )}
+                                <input type="text" name="url" value="{$sub.url|wash}" required="required" spellcheck="false" /></label>
+                            <label>{'Branch'|i18n( 'extension/git_manager' )}
+                                <input type="text" name="submodule_branch" value="{$sub.branch|wash}" placeholder="{'none'|i18n( 'extension/git_manager' )|wash}" /></label>
+                            <input class="defaultbutton" type="submit" name="EditSubmodule" value="{'Save'|i18n( 'extension/git_manager' )}" />
+                            <input class="button gm-danger" type="submit" name="RemoveSubmodule" value="{'Remove'|i18n( 'extension/git_manager' )}" formnovalidate="formnovalidate"
+                                   data-gm-confirm-button="{'Remove the submodule %name? Its files leave the working tree and the removal is staged for a commit.'|i18n( 'extension/git_manager',, hash( '%name', $sub.path ) )|wash}" />
+                        </form>
+                        <p class="gm-muted">{'Name in .gitmodules'|i18n( 'extension/git_manager' )}: <code>{$sub.name|wash}</code></p>
+                    </details>
+                    {/if}
+                </li>
+            {/foreach}
+            </ul>
+            {else}
+            <p class="gm-muted">{'This repository has no submodules.'|i18n( 'extension/git_manager' )}</p>
+            {/if}
+            {if $can_manage_submodules}
+            <details class="gm-remote-add"{if $submodules|count|not} open="open"{/if}>
+                <summary>{'Add a submodule'|i18n( 'extension/git_manager' )}</summary>
+                <form action={'git_manager/dashboard'|ezurl} method="post" class="gm-remote-form"
+                      data-gm-confirm="{'Clone the repository into this path and stage it as a submodule?'|i18n( 'extension/git_manager' )|wash}">
+                    <label class="gm-remote-form-url">{'Address'|i18n( 'extension/git_manager' )}
+                        <input type="text" name="url" required="required" spellcheck="false" placeholder="https://github.com/owner/repository.git" /></label>
+                    <label>{'Path'|i18n( 'extension/git_manager' )}
+                        <input type="text" name="path" required="required" placeholder="extension/example" /></label>
+                    <label>{'Branch'|i18n( 'extension/git_manager' )}
+                        <input type="text" name="submodule_branch" placeholder="{'optional'|i18n( 'extension/git_manager' )|wash}" /></label>
+                    <input class="defaultbutton" type="submit" name="AddSubmodule" value="{'Add'|i18n( 'extension/git_manager' )}" />
+                </form>
+                <p class="gm-muted">{'The path is relative to the installation, and must not exist yet. The address may also be relative to this repository\'s remote: ../name.git.'|i18n( 'extension/git_manager' )}</p>
+            </details>
+            {else}
+            <p class="gm-muted">{'Adding, changing and removing submodules needs the git_manager/submodules policy.'|i18n( 'extension/git_manager' )}</p>
             {/if}
         </section>
 
