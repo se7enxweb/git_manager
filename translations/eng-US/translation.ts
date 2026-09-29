@@ -300,8 +300,8 @@
         <translation>Update submodules</translation>
     </message>
     <message>
-        <source>Push to a remote</source>
-        <translation>Push to a remote</translation>
+        <source>Remotes and push</source>
+        <translation>Remotes and push</translation>
     </message>
     <message>
         <source>A push is never forced: when the remote has commits this branch does not, it is refused and the output says so. Fetch first to see where a remote stands.</source>
@@ -340,6 +340,34 @@
         <translation>Push</translation>
     </message>
     <message>
+        <source>Edit</source>
+        <translation>Edit</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Name</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Address</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Save</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Remove</translation>
+    </message>
+    <message>
+        <source>Remove the remote %remote? Its remote-tracking branches go with it; the commits stay.</source>
+        <translation>Remove the remote %remote? Its remote-tracking branches go with it; the commits stay.</translation>
+    </message>
+    <message>
+        <source>An address shown without its user name, password or token is left as it is when saved unchanged.</source>
+        <translation>An address shown without its user name, password or token is left as it is when saved unchanged.</translation>
+    </message>
+    <message>
         <source>Pushing needs the git_manager/push policy.</source>
         <translation>Pushing needs the git_manager/push policy.</translation>
     </message>
@@ -348,8 +376,40 @@
         <translation>This repository has no remotes.</translation>
     </message>
     <message>
+        <source>Add a remote</source>
+        <translation>Add a remote</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Add</translation>
+    </message>
+    <message>
+        <source>https://, ssh://, git:// or file:// addresses, user@host:path, or an absolute path.</source>
+        <translation>https://, ssh://, git:// or file:// addresses, user@host:path, or an absolute path.</translation>
+    </message>
+    <message>
+        <source>Adding, changing and removing remotes needs the git_manager/remotes policy.</source>
+        <translation>Adding, changing and removing remotes needs the git_manager/remotes policy.</translation>
+    </message>
+    <message>
         <source>Commits log</source>
         <translation>Commits log</translation>
+    </message>
+    <message>
+        <source>The latest %count commits</source>
+        <translation>The latest %count commits</translation>
+    </message>
+    <message>
+        <source>%count not pushed anywhere</source>
+        <translation>%count not pushed anywhere</translation>
+    </message>
+    <message>
+        <source>%count not on %remote</source>
+        <translation>%count not on %remote</translation>
+    </message>
+    <message>
+        <source>Everything here is on every remote</source>
+        <translation>Everything here is on every remote</translation>
     </message>
     <message>
         <source>Author</source>
@@ -382,6 +442,34 @@
     <message>
         <source>Title, author or hash</source>
         <translation>Title, author or hash</translation>
+    </message>
+    <message>
+        <source>not pushed to any remote</source>
+        <translation>not pushed to any remote</translation>
+    </message>
+    <message>
+        <source>missing on some remotes</source>
+        <translation>missing on some remotes</translation>
+    </message>
+    <message>
+        <source>checked out (HEAD)</source>
+        <translation>checked out (HEAD)</translation>
+    </message>
+    <message>
+        <source>Only commits to push</source>
+        <translation>Only commits to push</translation>
+    </message>
+    <message>
+        <source>No remote has this commit yet</source>
+        <translation>No remote has this commit yet</translation>
+    </message>
+    <message>
+        <source>not pushed</source>
+        <translation>not pushed</translation>
+    </message>
+    <message>
+        <source>not on %remote</source>
+        <translation>not on %remote</translation>
     </message>
     <message>
         <source>No commit on this page matches.</source>
@@ -430,6 +518,22 @@
     <message>
         <source>Pushing %branch to %remote failed (git exit %exit); see the output.</source>
         <translation>Pushing %branch to %remote failed (git exit %exit); see the output.</translation>
+    </message>
+    <message>
+        <source>The remote %remote was added.</source>
+        <translation>The remote %remote was added.</translation>
+    </message>
+    <message>
+        <source>The remote %remote was removed.</source>
+        <translation>The remote %remote was removed.</translation>
+    </message>
+    <message>
+        <source>The remote %remote was saved.</source>
+        <translation>The remote %remote was saved.</translation>
+    </message>
+    <message>
+        <source>The remote was not changed; see the output.</source>
+        <translation>The remote was not changed; see the output.</translation>
     </message>
 </context>
 </TS>

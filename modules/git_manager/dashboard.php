@@ -70,6 +70,43 @@ if(
 	} else {
 		$error = ezpI18n::tr( 'extension/git_manager', 'Pushing %branch to %remote failed (git exit %exit); see the output.', null, array( '%branch' => $branch, '%remote' => $remote, '%exit' => $result['exit'] ) );
 	}
+} elseif( $module->isCurrentAction( 'AddRemote' ) || $module->isCurrentAction( 'UpdateRemote' ) || $module->isCurrentAction( 'RemoveRemote' ) ) {
+	// The repository's configuration: its own policy function, git_manager/remotes.
+	$access = eZUser::currentUser()->hasAccessTo( 'git_manager', 'remotes' );
+	if( $access['accessWord'] === 'no' ) {
+		return $module->handleError( eZError::KERNEL_ACCESS_DENIED, 'kernel' );
+	}
+	$remote = (string)$http->postVariable( 'remote', '' );
+	$url    = trim( (string)$http->postVariable( 'url', '' ) );
+	$steps  = array();
+	if( $module->isCurrentAction( 'AddRemote' ) ) {
+		$steps[] = $git->addRemote( $remote, $url );
+		$done = ezpI18n::tr( 'extension/git_manager', 'The remote %remote was added.', null, array( '%remote' => $remote ) );
+	} elseif( $module->isCurrentAction( 'RemoveRemote' ) ) {
+		$steps[] = $git->removeRemote( $remote );
+		$done = ezpI18n::tr( 'extension/git_manager', 'The remote %remote was removed.', null, array( '%remote' => $remote ) );
+	} else {
+		$newName = trim( (string)$http->postVariable( 'new_name', $remote ) );
+		$steps[] = $git->setRemoteUrl( $remote, $url );
+		if( $steps[0]['exit'] === 0 && $newName !== $remote ) {
+			$steps[] = $git->renameRemote( $remote, $newName );
+		}
+		$done = ezpI18n::tr( 'extension/git_manager', 'The remote %remote was saved.', null, array( '%remote' => $newName ) );
+	}
+	$failed = false;
+	$output = '';
+	foreach( $steps as $step ) {
+		$output .= ( $output !== '' && $step['output'] !== '' ? "\n" : '' ) . $step['output'];
+		$failed = $failed || $step['exit'] !== 0;
+	}
+	if( $failed ) {
+		$error = ezpI18n::tr( 'extension/git_manager', 'The remote was not changed; see the output.' );
+	} else {
+		$message = $done;
+	}
+	if( $output === '' ) {
+		$output = null;
+	}
 } elseif( $module->isCurrentAction( 'CheckoutUpdateSubmodules' ) ) {
         $output = $git->updateSubmodules();
         if( $output == '' )
@@ -99,7 +136,36 @@ foreach( $remotes as $remoteName => $remoteUrl ) {
 }
 $pushAccess = eZUser::currentUser()->hasAccessTo( 'git_manager', 'push' );
 $tpl->setVariable( 'remotes', $pushState );
+
+// Which commits of the log a remote does not have yet: marked on each commit,
+// counted for the log's summary.
+$unpushed = array();
+foreach( array_keys( $remotes ) as $remoteName ) {
+	$unpushed[ $remoteName ] = $git->unpushedCommits( $remoteName );
+}
+$unpushedCounts = array_fill_keys( array_keys( $remotes ), 0 );
+$localOnly = 0;
+foreach( $commits as $index => $commit ) {
+	$missing = array();
+	foreach( $unpushed as $remoteName => $hashes ) {
+		if( isset( $hashes[ $commit['hash'] ] ) ) {
+			$missing[] = $remoteName;
+			$unpushedCounts[ $remoteName ]++;
+		}
+	}
+	$commits[ $index ]['missing'] = $missing;
+	$commits[ $index ]['local_only'] = $remotes && count( $missing ) === count( $remotes );
+	if( $commits[ $index ]['local_only'] ) {
+		$localOnly++;
+	}
+}
+$tpl->setVariable( 'commits', $commits );
+$tpl->setVariable( 'unpushed_counts', $unpushedCounts );
+$tpl->setVariable( 'local_only_count', $localOnly );
+$tpl->setVariable( 'unpushed_total', array_sum( $unpushedCounts ) );
 $tpl->setVariable( 'can_push', $pushAccess['accessWord'] !== 'no' );
+$remotesAccess = eZUser::currentUser()->hasAccessTo( 'git_manager', 'remotes' );
+$tpl->setVariable( 'can_manage_remotes', $remotesAccess['accessWord'] !== 'no' );
 
 $Result = array();
 $Result['content'] = $tpl->fetch( 'design:git_manager/dashboard.tpl' );

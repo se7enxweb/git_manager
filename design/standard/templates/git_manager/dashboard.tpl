@@ -77,7 +77,7 @@
 
         {* Push: each remote, how the checked out branch stands against it, fetch and push. *}
         <section class="gm-push">
-            <h2>{'Push to a remote'|i18n( 'extension/git_manager' )}</h2>
+            <h2>{'Remotes and push'|i18n( 'extension/git_manager' )}</h2>
             <p class="gm-muted">{'A push is never forced: when the remote has commits this branch does not, it is refused and the output says so. Fetch first to see where a remote stands.'|i18n( 'extension/git_manager' )}</p>
             {if $remotes|count}
             <ul class="gm-remotes">
@@ -119,12 +119,43 @@
                         </form>
                         {/if}
                     </div>
+                    {if $can_manage_remotes}
+                    <details class="gm-remote-edit">
+                        <summary>{'Edit'|i18n( 'extension/git_manager' )}</summary>
+                        <form action={'git_manager/dashboard'|ezurl} method="post" class="gm-remote-form">
+                            <input type="hidden" name="remote" value="{$remote.name|wash}" />
+                            <label>{'Name'|i18n( 'extension/git_manager' )}
+                                <input type="text" name="new_name" value="{$remote.name|wash}" required="required" pattern="[A-Za-z0-9_][A-Za-z0-9._\-]*" /></label>
+                            <label class="gm-remote-form-url">{'Address'|i18n( 'extension/git_manager' )}
+                                <input type="text" name="url" value="{$remote.url|wash}" required="required" spellcheck="false" /></label>
+                            <input class="defaultbutton" type="submit" name="UpdateRemote" value="{'Save'|i18n( 'extension/git_manager' )}" />
+                            <input class="button gm-danger" type="submit" name="RemoveRemote" value="{'Remove'|i18n( 'extension/git_manager' )}" formnovalidate="formnovalidate"
+                                   data-gm-confirm-button="{'Remove the remote %remote? Its remote-tracking branches go with it; the commits stay.'|i18n( 'extension/git_manager',, hash( '%remote', $remote.name ) )|wash}" />
+                        </form>
+                        <p class="gm-muted">{'An address shown without its user name, password or token is left as it is when saved unchanged.'|i18n( 'extension/git_manager' )}</p>
+                    </details>
+                    {/if}
                 </li>
             {/foreach}
             </ul>
             {if $can_push|not}<p class="gm-muted">{'Pushing needs the git_manager/push policy.'|i18n( 'extension/git_manager' )}</p>{/if}
             {else}
             <p class="gm-muted">{'This repository has no remotes.'|i18n( 'extension/git_manager' )}</p>
+            {/if}
+            {if $can_manage_remotes}
+            <details class="gm-remote-add"{if $remotes|count|not} open="open"{/if}>
+                <summary>{'Add a remote'|i18n( 'extension/git_manager' )}</summary>
+                <form action={'git_manager/dashboard'|ezurl} method="post" class="gm-remote-form">
+                    <label>{'Name'|i18n( 'extension/git_manager' )}
+                        <input type="text" name="remote" required="required" placeholder="upstream" pattern="[A-Za-z0-9_][A-Za-z0-9._\-]*" /></label>
+                    <label class="gm-remote-form-url">{'Address'|i18n( 'extension/git_manager' )}
+                        <input type="text" name="url" required="required" spellcheck="false" placeholder="https://github.com/owner/repository.git" /></label>
+                    <input class="defaultbutton" type="submit" name="AddRemote" value="{'Add'|i18n( 'extension/git_manager' )}" />
+                </form>
+                <p class="gm-muted">{'https://, ssh://, git:// or file:// addresses, user@host:path, or an absolute path.'|i18n( 'extension/git_manager' )}</p>
+            </details>
+            {else}
+            <p class="gm-muted">{'Adding, changing and removing remotes needs the git_manager/remotes policy.'|i18n( 'extension/git_manager' )}</p>
             {/if}
         </section>
 
@@ -146,41 +177,69 @@
         <div class="header-mainline"></div>
     </div>
     <div class="box-content">
-        <form class="gm-filter" id="gm-filter" action={'git_manager/dashboard'|ezurl} method="post">
-            <label>{'Author'|i18n( 'extension/git_manager' )}
-                <input type="text" name="filter[author]" value="{$filter.author|wash}" placeholder="{'Name or e-mail'|i18n( 'extension/git_manager' )|wash}" /></label>
-            <label>{'Start date'|i18n( 'extension/git_manager' )}
-                <input type="date" name="filter[start_date]" value="{$filter.start_date|wash}" /></label>
-            <label>{'End date'|i18n( 'extension/git_manager' )}
-                <input type="date" name="filter[end_date]" value="{$filter.end_date|wash}" /></label>
-            <input class="button" type="submit" name="SetCommitsFilter" value="{'Filter'|i18n( 'extension/git_manager' )}" />
-            {if or( $filter.author, $filter.start_date, $filter.end_date )}
-            <button class="button" type="submit" name="SetCommitsFilter" value="1" data-gm-clear="1">{'Clear'|i18n( 'extension/git_manager' )}</button>
-            {/if}
-            <label class="gm-filter-quick">{'Find on this page'|i18n( 'extension/git_manager' )}
-                <input type="search" id="gm-log-find" placeholder="{'Title, author or hash'|i18n( 'extension/git_manager' )|wash}" /></label>
-        </form>
+        {* Closed unless this user opened it; kept as the user preference
+           admin_git_manager_commit_log. The summary says what is waiting to
+           be pushed, open or closed. *}
+        <details class="gm-log-card" id="gm-log-card"{if eq( ezpreference( 'admin_git_manager_commit_log' ), '1' )} open="open"{/if}
+                 data-preference-url={'/user/preferences/set_and_exit/admin_git_manager_commit_log'|ezurl}>
+            <summary class="gm-log-summary">
+                <span class="gm-log-summary-title">{'The latest %count commits'|i18n( 'extension/git_manager',, hash( '%count', $commits|count ) )}</span>
+                {if $local_only_count}<span class="gm-pill is-local">{'%count not pushed anywhere'|i18n( 'extension/git_manager',, hash( '%count', $local_only_count ) )}</span>{/if}
+                {foreach $unpushed_counts as $remote_name => $count}{if $count}<span class="gm-pill is-ahead">{'%count not on %remote'|i18n( 'extension/git_manager',, hash( '%count', $count, '%remote', $remote_name ) )|wash}</span>{/if}{/foreach}
+                {if and( $remotes|count, eq( $unpushed_total, 0 ) )}<span class="gm-pill is-even">{'Everything here is on every remote'|i18n( 'extension/git_manager' )}</span>{/if}
+            </summary>
 
-        {if $commits|count}
-        <ul class="gm-log" id="gm-log">
-        {foreach $commits as $commit}
-            <li{if eq( $commit.hash, $head_commit )} class="is-head"{/if} data-find="{$commit.title|wash} {$commit.author|wash} {$commit.hash|wash}">
-                <span class="gm-avatar" data-name="{$commit.author|wash}" aria-hidden="true"></span>
-                <div class="gm-log-main">
-                    <a class="gm-log-title" href={concat( 'git_manager/commit_details/', $commit.hash )|ezurl} title="{$commit.title|wash}">{$commit.title|wash}</a>
-                    <span class="gm-log-meta">{$commit.author|wash} &middot; <time class="gm-when" datetime="{$commit.date|wash}" title="{$commit.date|wash}">{$commit.date|wash}</time></span>
-                </div>
-                <div class="gm-log-side">
-                    {if eq( $commit.hash, $head_commit )}<span class="gm-tag-head">{'HEAD'|i18n( 'extension/git_manager' )}</span>{/if}
-                    <span class="gm-hash"><a class="gm-mono" href={concat( 'git_manager/commit_details/', $commit.hash )|ezurl}>{$commit.hash|shorten( 10, '' )|wash}</a><button type="button" class="gm-copy" data-copy="{$commit.hash|wash}" title="{'Copy the full hash'|i18n( 'extension/git_manager' )|wash}">{'Copy'|i18n( 'extension/git_manager' )}</button></span>
-                </div>
-            </li>
-        {/foreach}
-        </ul>
-        <p class="gm-empty" id="gm-log-none" hidden="hidden">{'No commit on this page matches.'|i18n( 'extension/git_manager' )}</p>
-        {else}
-        <p class="gm-empty">{'No commits match the filter.'|i18n( 'extension/git_manager' )}</p>
-        {/if}
+            <form class="gm-filter" id="gm-filter" action={'git_manager/dashboard'|ezurl} method="post">
+                <label>{'Author'|i18n( 'extension/git_manager' )}
+                    <input type="text" name="filter[author]" value="{$filter.author|wash}" placeholder="{'Name or e-mail'|i18n( 'extension/git_manager' )|wash}" /></label>
+                <label>{'Start date'|i18n( 'extension/git_manager' )}
+                    <input type="date" name="filter[start_date]" value="{$filter.start_date|wash}" /></label>
+                <label>{'End date'|i18n( 'extension/git_manager' )}
+                    <input type="date" name="filter[end_date]" value="{$filter.end_date|wash}" /></label>
+                <input class="button" type="submit" name="SetCommitsFilter" value="{'Filter'|i18n( 'extension/git_manager' )}" />
+                {if or( $filter.author, $filter.start_date, $filter.end_date )}
+                <button class="button" type="submit" name="SetCommitsFilter" value="1" data-gm-clear="1">{'Clear'|i18n( 'extension/git_manager' )}</button>
+                {/if}
+                <label class="gm-filter-quick">{'Find on this page'|i18n( 'extension/git_manager' )}
+                    <input type="search" id="gm-log-find" placeholder="{'Title, author or hash'|i18n( 'extension/git_manager' )|wash}" /></label>
+            </form>
+
+            {if $remotes|count}
+            <div class="gm-legend">
+                <span><i class="gm-swatch is-local"></i>{'not pushed to any remote'|i18n( 'extension/git_manager' )}</span>
+                <span><i class="gm-swatch is-partial"></i>{'missing on some remotes'|i18n( 'extension/git_manager' )}</span>
+                <span><i class="gm-swatch is-head"></i>{'checked out (HEAD)'|i18n( 'extension/git_manager' )}</span>
+                <label class="gm-check"><input type="checkbox" id="gm-only-unpushed" /> {'Only commits to push'|i18n( 'extension/git_manager' )}</label>
+            </div>
+            {/if}
+
+            {if $commits|count}
+            <ul class="gm-log" id="gm-log">
+            {foreach $commits as $commit}
+                <li class="{if eq( $commit.hash, $head_commit )}is-head {/if}{if $commit.local_only}is-local{elseif $commit.missing|count}is-partial{/if}"
+                    data-find="{$commit.title|wash} {$commit.author|wash} {$commit.hash|wash}"{if $commit.missing|count} data-unpushed="1"{/if}>
+                    <span class="gm-avatar" data-name="{$commit.author|wash}" aria-hidden="true"></span>
+                    <div class="gm-log-main">
+                        <a class="gm-log-title" href={concat( 'git_manager/commit_details/', $commit.hash )|ezurl} title="{$commit.title|wash}">{$commit.title|wash}</a>
+                        <span class="gm-log-meta">{$commit.author|wash} &middot; <time class="gm-when" datetime="{$commit.date|wash}" title="{$commit.date|wash}">{$commit.date|wash}</time></span>
+                    </div>
+                    <div class="gm-log-side">
+                        {if $commit.local_only}
+                            <span class="gm-pill is-local" title="{'No remote has this commit yet'|i18n( 'extension/git_manager' )|wash}">{'not pushed'|i18n( 'extension/git_manager' )}</span>
+                        {else}
+                            {foreach $commit.missing as $remote_name}<span class="gm-pill is-ahead">{'not on %remote'|i18n( 'extension/git_manager',, hash( '%remote', $remote_name ) )|wash}</span>{/foreach}
+                        {/if}
+                        {if eq( $commit.hash, $head_commit )}<span class="gm-tag-head">{'HEAD'|i18n( 'extension/git_manager' )}</span>{/if}
+                        <span class="gm-hash"><a class="gm-mono" href={concat( 'git_manager/commit_details/', $commit.hash )|ezurl}>{$commit.hash|shorten( 10, '' )|wash}</a><button type="button" class="gm-copy" data-copy="{$commit.hash|wash}" title="{'Copy the full hash'|i18n( 'extension/git_manager' )|wash}">{'Copy'|i18n( 'extension/git_manager' )}</button></span>
+                    </div>
+                </li>
+            {/foreach}
+            </ul>
+            <p class="gm-empty" id="gm-log-none" hidden="hidden">{'No commit on this page matches.'|i18n( 'extension/git_manager' )}</p>
+            {else}
+            <p class="gm-empty">{'No commits match the filter.'|i18n( 'extension/git_manager' )}</p>
+            {/if}
+        </details>
     </div>
 </div>
 

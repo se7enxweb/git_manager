@@ -62,6 +62,12 @@ var gmTexts = {ldelim}
         });
     });
 
+    // A button that asks first (Remove a remote), in a form that does not.
+    document.addEventListener('click', function (e) {
+        var button = e.target.closest ? e.target.closest('[data-gm-confirm-button]') : null;
+        if (button && !window.confirm(button.getAttribute('data-gm-confirm-button'))) { e.preventDefault(); }
+    });
+
     // "Clear" empties the filter fields before the form is sent.
     var clear = document.querySelector('[data-gm-clear]');
     if (clear) {
@@ -96,6 +102,29 @@ var gmTexts = {ldelim}
         for (var i = 0; i < name.length; i++) { h = (h * 31 + name.charCodeAt(i)) % 360; }
         el.style.background = 'hsl(' + h + ', 45%, 45%)';
     });
+
+    // The commit log's fold, kept as a user preference.
+    var card = document.getElementById('gm-log-card');
+    if (card && card.getAttribute('data-preference-url')) {
+        card.addEventListener('toggle', function () {
+            var meta = document.querySelector('meta[name="csrf-token"]');
+            var field = document.querySelector('input[name="ezxform_token"]');
+            var request = new XMLHttpRequest();
+            request.open('POST', card.getAttribute('data-preference-url') + '/' + (card.open ? '1' : '0'), true);
+            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            if (meta) { request.setRequestHeader('X-CSRF-Token', meta.getAttribute('content')); }
+            request.send(field ? 'ezxform_token=' + encodeURIComponent(field.value) : '');
+        });
+    }
+
+    // Only the commits some remote does not have yet.
+    var only = document.getElementById('gm-only-unpushed');
+    if (only && document.getElementById('gm-log')) {
+        only.addEventListener('change', function () {
+            document.getElementById('gm-log').classList.toggle('is-only-unpushed', this.checked);
+        });
+    }
 
     // Quick search of the commits on the page.
     var find = document.getElementById('gm-log-find'), log = document.getElementById('gm-log'), none = document.getElementById('gm-log-none');

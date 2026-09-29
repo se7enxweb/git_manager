@@ -300,7 +300,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Push to a remote</source>
+        <source>Remotes and push</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -340,6 +340,34 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove the remote %remote? Its remote-tracking branches go with it; the commits stay.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An address shown without its user name, password or token is left as it is when saved unchanged.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Pushing needs the git_manager/push policy.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -348,7 +376,39 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Add a remote</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>https://, ssh://, git:// or file:// addresses, user@host:path, or an absolute path.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adding, changing and removing remotes needs the git_manager/remotes policy.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Commits log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The latest %count commits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count not pushed anywhere</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count not on %remote</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Everything here is on every remote</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -381,6 +441,34 @@
     </message>
     <message>
         <source>Title, author or hash</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>not pushed to any remote</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>missing on some remotes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>checked out (HEAD)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only commits to push</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No remote has this commit yet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>not pushed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>not on %remote</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -429,6 +517,22 @@
     </message>
     <message>
         <source>Pushing %branch to %remote failed (git exit %exit); see the output.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The remote %remote was added.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The remote %remote was removed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The remote %remote was saved.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The remote was not changed; see the output.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
