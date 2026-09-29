@@ -300,6 +300,54 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Push to a remote</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A push is never forced: when the remote has commits this branch does not, it is refused and the output says so. Fetch first to see where a remote stands.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%branch is up to date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count to push</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count behind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%branch is not on this remote yet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fetch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Push %branch to %remote (%url)? The commits go out to everyone who uses that remote.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Branch to push</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Push</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pushing needs the git_manager/push policy.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This repository has no remotes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Commits log</source>
         <translation type="unfinished"></translation>
     </message>
@@ -352,11 +400,35 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>It is %ahead commits ahead of the remote and %behind behind.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Backup Manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>GIT Manager</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Already up to date.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fetched %remote.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fetching %remote failed (git exit %exit).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%branch was pushed to %remote.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pushing %branch to %remote failed (git exit %exit); see the output.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -4,7 +4,9 @@
 <script type="text/javascript">
 var gmTexts = {ldelim}
     copied: "{'Copied'|i18n( 'extension/git_manager' )|wash( 'javascript' )}",
-    choose: "{'Choose a branch first.'|i18n( 'extension/git_manager' )|wash( 'javascript' )}"
+    choose: "{'Choose a branch first.'|i18n( 'extension/git_manager' )|wash( 'javascript' )}",
+    head: "{if is_set( $git_manager )}{$git_manager.current_branch|wash( 'javascript' )}{/if}",
+    state: "{'It is %ahead commits ahead of the remote and %behind behind.'|i18n( 'extension/git_manager' )|wash( 'javascript' )}"
 {rdelim};
 {literal}
 (function () {
@@ -42,6 +44,20 @@ var gmTexts = {ldelim}
             if (select && !select.value) { e.preventDefault(); window.alert(gmTexts.choose); return; }
             var text = form.getAttribute('data-gm-confirm');
             if (select) { text = select.value + '\n\n' + text; }
+            if (!window.confirm(text)) { e.preventDefault(); }
+        });
+    });
+
+    // A push publishes: say what goes where, and how far apart they are.
+    Array.prototype.forEach.call(document.querySelectorAll('form[data-gm-push]'), function (form) {
+        form.addEventListener('submit', function (e) {
+            var branch = form.querySelector('select[name="branch"]').value;
+            var text = form.getAttribute('data-gm-push').replace('%branch', branch)
+                .replace('%remote', form.getAttribute('data-remote')).replace('%url', form.getAttribute('data-url'));
+            var ahead = form.getAttribute('data-ahead'), behind = form.getAttribute('data-behind');
+            if (ahead !== null && branch === gmTexts.head) {
+                text += '\n\n' + gmTexts.state.replace('%ahead', ahead).replace('%behind', behind);
+            }
             if (!window.confirm(text)) { e.preventDefault(); }
         });
     });

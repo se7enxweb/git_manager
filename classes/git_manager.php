@@ -15,7 +15,8 @@ class GitManager
 		'current_branch'  => 'getCurrentBranch',
 		'current_commit'  => 'getCurrentCommit',
 		'local_branches'  => 'getLocalBranches',
-		'remote_branches' => 'getRemoteBranches'
+		'remote_branches' => 'getRemoteBranches',
+		'remotes'         => 'getRemotes'
 	);
 
 	private function __construct() {
@@ -153,6 +154,83 @@ class GitManager
 		}
 
 		return $return;
+	}
+
+	/**
+	 * The remotes: name => fetch address, with any user name and password or
+	 * token in an address left out, so the page never shows a credential.
+	 */
+	public function getRemotes() {
+		$remotes = array();
+		foreach( $this->cli( 'remote -v', false, true ) as $line ) {
+			if( preg_match( '/^(\S+)\s+(\S+)\s+\(fetch\)$/', trim( $line ), $m ) ) {
+				$remotes[ $m[1] ] = preg_replace( '#^([a-z][a-z0-9+.-]*://)[^/@]*@#i', '$1', $m[2] );
+			}
+		}
+		return $remotes;
+	}
+
+	/**
+	 * How $branch stands against $remote's copy of it, from the refs the last
+	 * fetch left: array( 'ahead' => n, 'behind' => n ), or false when the
+	 * remote has no such branch (yet).
+	 */
+	public function aheadBehind( $remote, $branch ) {
+		if( !isset( $this->getRemotes()[ $remote ] ) || !in_array( $branch, $this->getLocalBranches(), true ) ) {
+			return false;
+		}
+		$counts = $this->cli( 'rev-list --left-right --count ' . escapeshellarg( 'refs/remotes/' . $remote . '/' . $branch . '...refs/heads/' . $branch ) );
+		if( !preg_match( '/^(\d+)\s+(\d+)$/', trim( $counts ), $m ) ) {
+			return false;
+		}
+		return array( 'behind' => (int)$m[1], 'ahead' => (int)$m[2] );
+	}
+
+	/**
+	 * Fetches $remote (with --prune). Returns array( 'exit', 'output' ).
+	 */
+	public function fetch( $remote ) {
+		if( !isset( $this->getRemotes()[ $remote ] ) ) {
+			return array( 'exit' => 1, 'output' => 'Unknown remote' );
+		}
+		return $this->run( 'fetch --prune ' . escapeshellarg( $remote ) );
+	}
+
+	/**
+	 * Pushes the local $branch to the branch of the same name on $remote.
+	 * Never forced: a remote that has commits this branch lacks refuses the
+	 * push, and the output says so. Returns array( 'exit', 'output' ).
+	 */
+	public function push( $remote, $branch ) {
+		if( !isset( $this->getRemotes()[ $remote ] ) ) {
+			return array( 'exit' => 1, 'output' => 'Unknown remote' );
+		}
+		if( !in_array( $branch, $this->getLocalBranches(), true ) ) {
+			return array( 'exit' => 1, 'output' => 'Unknown local branch' );
+		}
+		return $this->run( 'push --porcelain ' . escapeshellarg( $remote ) . ' ' . escapeshellarg( 'refs/heads/' . $branch . ':refs/heads/' . $branch ) );
+	}
+
+	/**
+	 * A git command that talks to a remote, with its exit status. It must not
+	 * wait for anyone: no password prompt (GIT_TERMINAL_PROMPT=0, ssh in
+	 * batch mode), and it is stopped after 90 seconds; a missing credential
+	 * then shows as git's own error instead of a request that never ends.
+	 */
+	private function run( $command ) {
+		$env = 'GIT_TERMINAL_PROMPT=0 GIT_ASKPASS=/bin/false SSH_ASKPASS=/bin/false '
+			. 'GIT_SSH_COMMAND=' . escapeshellarg( 'ssh -o BatchMode=yes -o ConnectTimeout=15' );
+		$cmd = 'cd ' . escapeshellarg( self::$path ) . ' && ' . $env . ' timeout 90 git ' . $command . ' 2>&1; echo "__GITMANAGER_EXIT:$?"';
+		$output = (string)shell_exec( $cmd );
+		$exit = 1;
+		if( preg_match( '/__GITMANAGER_EXIT:(\d+)\s*$/', $output, $m ) ) {
+			$exit = (int)$m[1];
+			$output = substr( $output, 0, -strlen( $m[0] ) );
+		}
+		if( $exit === 124 ) {
+			$output .= "\n(stopped after 90 seconds)";
+		}
+		return array( 'exit' => $exit, 'output' => trim( $output ) );
 	}
 
 	public function checkout( $branch ) {

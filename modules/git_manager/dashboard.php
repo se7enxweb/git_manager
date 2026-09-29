@@ -46,6 +46,30 @@ if(
 	$message = '"' . $hash . '" commit is checked out';
 } elseif( $module->isCurrentAction( 'SetCommitsFilter' ) ) {
 	$filter = array_merge( $filter, $http->postVariable( 'filter', array() ) );
+} elseif( $module->isCurrentAction( 'FetchRemote' ) ) {
+	$remote = (string)$http->postVariable( 'remote', '' );
+	$result = $git->fetch( $remote );
+	$output = $result['output'] !== '' ? $result['output'] : ezpI18n::tr( 'extension/git_manager', 'Already up to date.' );
+	if( $result['exit'] === 0 ) {
+		$message = ezpI18n::tr( 'extension/git_manager', 'Fetched %remote.', null, array( '%remote' => $remote ) );
+	} else {
+		$error = ezpI18n::tr( 'extension/git_manager', 'Fetching %remote failed (git exit %exit).', null, array( '%remote' => $remote, '%exit' => $result['exit'] ) );
+	}
+} elseif( $module->isCurrentAction( 'PushBranch' ) ) {
+	// Publishing: its own policy function, git_manager/push.
+	$access = eZUser::currentUser()->hasAccessTo( 'git_manager', 'push' );
+	if( $access['accessWord'] === 'no' ) {
+		return $module->handleError( eZError::KERNEL_ACCESS_DENIED, 'kernel' );
+	}
+	$remote = (string)$http->postVariable( 'remote', '' );
+	$branch = (string)$http->postVariable( 'branch', '' );
+	$result = $git->push( $remote, $branch );
+	$output = $result['output'];
+	if( $result['exit'] === 0 ) {
+		$message = ezpI18n::tr( 'extension/git_manager', '%branch was pushed to %remote.', null, array( '%branch' => $branch, '%remote' => $remote ) );
+	} else {
+		$error = ezpI18n::tr( 'extension/git_manager', 'Pushing %branch to %remote failed (git exit %exit); see the output.', null, array( '%branch' => $branch, '%remote' => $remote, '%exit' => $result['exit'] ) );
+	}
 } elseif( $module->isCurrentAction( 'CheckoutUpdateSubmodules' ) ) {
         $output = $git->updateSubmodules();
         if( $output == '' )
@@ -65,6 +89,17 @@ $tpl->setVariable( 'message', $message );
 $tpl->setVariable( 'output',  $output );
 $tpl->setVariable( 'filter',  $filter );
 $tpl->setVariable( 'commits',  $commits );
+
+// Push: the remotes, and how the checked out branch stands against each.
+$remotes = $git->attribute( 'remotes' );
+$currentBranch = $git->attribute( 'current_branch' );
+$pushState = array();
+foreach( $remotes as $remoteName => $remoteUrl ) {
+	$pushState[] = array( 'name' => $remoteName, 'url' => $remoteUrl, 'state' => $git->aheadBehind( $remoteName, $currentBranch ) );
+}
+$pushAccess = eZUser::currentUser()->hasAccessTo( 'git_manager', 'push' );
+$tpl->setVariable( 'remotes', $pushState );
+$tpl->setVariable( 'can_push', $pushAccess['accessWord'] !== 'no' );
 
 $Result = array();
 $Result['content'] = $tpl->fetch( 'design:git_manager/dashboard.tpl' );

@@ -300,6 +300,54 @@
         <translation>Update submodules</translation>
     </message>
     <message>
+        <source>Push to a remote</source>
+        <translation>Push to a remote</translation>
+    </message>
+    <message>
+        <source>A push is never forced: when the remote has commits this branch does not, it is refused and the output says so. Fetch first to see where a remote stands.</source>
+        <translation>A push is never forced: when the remote has commits this branch does not, it is refused and the output says so. Fetch first to see where a remote stands.</translation>
+    </message>
+    <message>
+        <source>%branch is up to date</source>
+        <translation>%branch is up to date</translation>
+    </message>
+    <message>
+        <source>%count to push</source>
+        <translation>%count to push</translation>
+    </message>
+    <message>
+        <source>%count behind</source>
+        <translation>%count behind</translation>
+    </message>
+    <message>
+        <source>%branch is not on this remote yet</source>
+        <translation>%branch is not on this remote yet</translation>
+    </message>
+    <message>
+        <source>Fetch</source>
+        <translation>Fetch</translation>
+    </message>
+    <message>
+        <source>Push %branch to %remote (%url)? The commits go out to everyone who uses that remote.</source>
+        <translation>Push %branch to %remote (%url)? The commits go out to everyone who uses that remote.</translation>
+    </message>
+    <message>
+        <source>Branch to push</source>
+        <translation>Branch to push</translation>
+    </message>
+    <message>
+        <source>Push</source>
+        <translation>Push</translation>
+    </message>
+    <message>
+        <source>Pushing needs the git_manager/push policy.</source>
+        <translation>Pushing needs the git_manager/push policy.</translation>
+    </message>
+    <message>
+        <source>This repository has no remotes.</source>
+        <translation>This repository has no remotes.</translation>
+    </message>
+    <message>
         <source>Commits log</source>
         <translation>Commits log</translation>
     </message>
@@ -352,12 +400,36 @@
         <translation>Choose a branch first.</translation>
     </message>
     <message>
+        <source>It is %ahead commits ahead of the remote and %behind behind.</source>
+        <translation>It is %ahead commits ahead of the remote and %behind behind.</translation>
+    </message>
+    <message>
         <source>Backup Manager</source>
         <translation>Backup Manager</translation>
     </message>
     <message>
         <source>GIT Manager</source>
         <translation>GIT Manager</translation>
+    </message>
+    <message>
+        <source>Already up to date.</source>
+        <translation>Already up to date.</translation>
+    </message>
+    <message>
+        <source>Fetched %remote.</source>
+        <translation>Fetched %remote.</translation>
+    </message>
+    <message>
+        <source>Fetching %remote failed (git exit %exit).</source>
+        <translation>Fetching %remote failed (git exit %exit).</translation>
+    </message>
+    <message>
+        <source>%branch was pushed to %remote.</source>
+        <translation>%branch was pushed to %remote.</translation>
+    </message>
+    <message>
+        <source>Pushing %branch to %remote failed (git exit %exit); see the output.</source>
+        <translation>Pushing %branch to %remote failed (git exit %exit); see the output.</translation>
     </message>
 </context>
 </TS>

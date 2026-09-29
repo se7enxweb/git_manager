@@ -88,3 +88,22 @@
     .gm-log-side { grid-column: 2; }
     .gm-filter .gm-filter-quick { margin-left: 0; }
 }
+
+/* Push to a remote. */
+.gm-push { margin: 1em 0 0 0; padding: 0.9em 1em; border: 1px solid var(--gm-line); border-radius: 8px; background: #fff; }
+.gm-push h2 { margin: 0 0 0.3em 0; font-size: 1.02em; color: var(--gm-ink); }
+.gm-push > p { margin: 0 0 0.7em 0; }
+.gm-remotes { margin: 0; padding: 0; list-style: none; }
+.gm-remote { display: grid; grid-template-columns: minmax(12em, 2fr) auto auto; align-items: center; gap: 0.5em 1.2em; padding: 0.6em 0; border-top: 1px solid #edf0f3; }
+.gm-remote:first-child { border-top: 0; }
+.gm-remote-name { display: flex; flex-direction: column; min-width: 0; }
+.gm-remote-url { color: var(--gm-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gm-remote-state { display: flex; flex-wrap: wrap; gap: 0.35em; }
+.gm-pill { padding: 0.1em 0.6em; border-radius: 999px; font-size: 0.85em; font-weight: bold; white-space: nowrap; }
+.gm-pill.is-even { background: #eef2f6; color: #3a4a5c; }
+.gm-pill.is-ahead { background: #e6eefa; color: #1f4a7f; }
+.gm-pill.is-behind { background: #fff4e0; color: #8a5a00; }
+.gm-pill.is-new { background: #f3e8fd; color: #5b2a86; }
+.gm-remote-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5em; justify-content: flex-end; }
+.gm-remote-actions form { display: flex; align-items: center; gap: 0.4em; margin: 0; }
+@media (max-width: 800px) { .gm-remote { grid-template-columns: 1fr; } .gm-remote-actions { justify-content: flex-start; } }

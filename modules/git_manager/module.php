@@ -21,7 +21,9 @@ $ViewList = array(
 			'CheckoutRemoteBranch' => 'CheckoutRemoteBranch',
 			'SetCommitsFilter'     => 'SetCommitsFilter',
 			'CheckoutCommit'       => 'CheckoutCommit',
-                        'CheckoutUpdateSubmodules' => 'CheckoutUpdateSubmodules'
+                        'CheckoutUpdateSubmodules' => 'CheckoutUpdateSubmodules',
+			'FetchRemote'          => 'FetchRemote',
+			'PushBranch'           => 'PushBranch'
 		)
 	),
 	'commit_details' => array(
@@ -64,6 +66,8 @@ $ViewList = array(
 $FunctionList = array(
 	'git_manager' => array(),
 	'backup' => array(),
+	// Pushing a branch to a remote: publishing, so a function of its own.
+	'push' => array(),
 	// Before 2.0.4 the backup function was called dump. Kept so existing roles
 	// stay valid; bin/php/upgrade-policy-dump-to-backup.php renames them.
 	'dump' => array()

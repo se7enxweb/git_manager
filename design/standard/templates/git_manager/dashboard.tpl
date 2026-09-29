@@ -75,6 +75,59 @@
             </form>
         </div>
 
+        {* Push: each remote, how the checked out branch stands against it, fetch and push. *}
+        <section class="gm-push">
+            <h2>{'Push to a remote'|i18n( 'extension/git_manager' )}</h2>
+            <p class="gm-muted">{'A push is never forced: when the remote has commits this branch does not, it is refused and the output says so. Fetch first to see where a remote stands.'|i18n( 'extension/git_manager' )}</p>
+            {if $remotes|count}
+            <ul class="gm-remotes">
+            {foreach $remotes as $remote}
+                <li class="gm-remote">
+                    <div class="gm-remote-name">
+                        <strong>{$remote.name|wash}</strong>
+                        <code class="gm-remote-url">{$remote.url|wash}</code>
+                    </div>
+                    <div class="gm-remote-state">
+                        {if $remote.state}
+                            {if and( eq( $remote.state.ahead, 0 ), eq( $remote.state.behind, 0 ) )}
+                                <span class="gm-pill is-even">{'%branch is up to date'|i18n( 'extension/git_manager',, hash( '%branch', $head_branch ) )|wash}</span>
+                            {else}
+                                {if gt( $remote.state.ahead, 0 )}<span class="gm-pill is-ahead">{'%count to push'|i18n( 'extension/git_manager',, hash( '%count', $remote.state.ahead ) )}</span>{/if}
+                                {if gt( $remote.state.behind, 0 )}<span class="gm-pill is-behind">{'%count behind'|i18n( 'extension/git_manager',, hash( '%count', $remote.state.behind ) )}</span>{/if}
+                            {/if}
+                        {else}
+                            <span class="gm-pill is-new">{'%branch is not on this remote yet'|i18n( 'extension/git_manager',, hash( '%branch', $head_branch ) )|wash}</span>
+                        {/if}
+                    </div>
+                    <div class="gm-remote-actions">
+                        <form action={'git_manager/dashboard'|ezurl} method="post">
+                            <input type="hidden" name="remote" value="{$remote.name|wash}" />
+                            <input class="button" type="submit" name="FetchRemote" value="{'Fetch'|i18n( 'extension/git_manager' )}" />
+                        </form>
+                        {if $can_push}
+                        <form action={'git_manager/dashboard'|ezurl} method="post" class="gm-push-form"
+                              data-gm-push="{'Push %branch to %remote (%url)? The commits go out to everyone who uses that remote.'|i18n( 'extension/git_manager' )|wash}"
+                              data-remote="{$remote.name|wash}" data-url="{$remote.url|wash}"
+                              {if $remote.state}data-ahead="{$remote.state.ahead}" data-behind="{$remote.state.behind}"{/if}>
+                            <input type="hidden" name="remote" value="{$remote.name|wash}" />
+                            <select name="branch" aria-label="{'Branch to push'|i18n( 'extension/git_manager' )|wash}">
+                                {foreach $local_branches as $branch}
+                                <option value="{$branch|wash}"{if eq( $branch, $head_branch )} selected="selected"{/if}>{$branch|wash}</option>
+                                {/foreach}
+                            </select>
+                            <input class="defaultbutton" type="submit" name="PushBranch" value="{'Push'|i18n( 'extension/git_manager' )}" />
+                        </form>
+                        {/if}
+                    </div>
+                </li>
+            {/foreach}
+            </ul>
+            {if $can_push|not}<p class="gm-muted">{'Pushing needs the git_manager/push policy.'|i18n( 'extension/git_manager' )}</p>{/if}
+            {else}
+            <p class="gm-muted">{'This repository has no remotes.'|i18n( 'extension/git_manager' )}</p>
+            {/if}
+        </section>
+
         {if $output}
         <div class="gm-output">
             <div class="gm-output-head">
