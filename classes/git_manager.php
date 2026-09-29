@@ -187,6 +187,25 @@ class GitManager
 	}
 
 	/**
+	 * The commits of HEAD that $remote has in none of its branches, as the
+	 * last fetch knows them: hash => true, the newest $max. A remote nothing
+	 * was fetched from has none of them.
+	 */
+	public function unpushedCommits( $remote, $max = 500 ) {
+		if( !isset( $this->getRemotes()[ $remote ] ) ) {
+			return array();
+		}
+		$hashes = $this->cli( 'rev-list --max-count=' . (int)$max . ' HEAD --not ' . escapeshellarg( '--remotes=' . $remote ), false, true );
+		$result = array();
+		foreach( $hashes as $hash ) {
+			if( preg_match( '/^[0-9a-f]{40}$/', trim( $hash ) ) ) {
+				$result[ trim( $hash ) ] = true;
+			}
+		}
+		return $result;
+	}
+
+	/**
 	 * Fetches $remote (with --prune). Returns array( 'exit', 'output' ).
 	 */
 	public function fetch( $remote ) {
@@ -209,6 +228,91 @@ class GitManager
 			return array( 'exit' => 1, 'output' => 'Unknown local branch' );
 		}
 		return $this->run( 'push --porcelain ' . escapeshellarg( $remote ) . ' ' . escapeshellarg( 'refs/heads/' . $branch . ':refs/heads/' . $branch ) );
+	}
+
+	/**
+	 * A remote name git accepts and a shell cannot misread: letters, digits,
+	 * dot, dash and underscore, not starting with a dash or dot.
+	 */
+	public static function isRemoteName( $name ) {
+		return is_string( $name ) && preg_match( '/^[A-Za-z0-9_][A-Za-z0-9._-]{0,99}$/', $name ) === 1;
+	}
+
+	/**
+	 * A remote address: https://, http://, ssh://, git:// or file:// URL, the
+	 * scp form user@host:path, or an absolute path. No spaces or control
+	 * characters, no leading dash (it would be read as an option).
+	 */
+	public static function isRemoteUrl( $url ) {
+		if( !is_string( $url ) || $url === '' || strlen( $url ) > 1000 || preg_match( '/[\s\x00-\x1f\x7f]/', $url ) || $url[0] === '-' ) {
+			return false;
+		}
+		// No transport helper: "ext::" runs a command of its own, and "x::"
+		// hands the address to a git-remote-x program.
+		if( strpos( $url, '::' ) !== false ) {
+			return false;
+		}
+		return preg_match( '#^(https?|ssh|git)://[^/]#i', $url ) === 1
+			|| preg_match( '#^file:///[^/]#i', $url ) === 1
+			|| preg_match( '#^[A-Za-z0-9._-]+@[A-Za-z0-9._-]+:[^/].*$#', $url ) === 1
+			|| preg_match( '#^[A-Za-z0-9._-]+:[^/]#', $url ) === 1 && strpos( $url, '://' ) === false && preg_match( '#^[A-Za-z]:#', $url ) === 0
+			|| $url[0] === '/';
+	}
+
+	/** Adds a remote. Returns array( 'exit', 'output' ). */
+	public function addRemote( $name, $url ) {
+		if( !self::isRemoteName( $name ) ) {
+			return array( 'exit' => 1, 'output' => 'Not a remote name: letters, digits, dot, dash and underscore' );
+		}
+		if( isset( $this->getRemotes()[ $name ] ) ) {
+			return array( 'exit' => 1, 'output' => 'A remote of that name exists already' );
+		}
+		if( !self::isRemoteUrl( $url ) ) {
+			return array( 'exit' => 1, 'output' => 'Not a remote address' );
+		}
+		return $this->run( 'remote add ' . escapeshellarg( $name ) . ' ' . escapeshellarg( $url ) );
+	}
+
+	/**
+	 * Changes the address of a remote (fetch and push). An address the page
+	 * showed with its credential left out and sent back unchanged changes
+	 * nothing, so editing a remote never drops a token by accident.
+	 */
+	public function setRemoteUrl( $name, $url ) {
+		$remotes = $this->getRemotes();
+		if( !isset( $remotes[ $name ] ) ) {
+			return array( 'exit' => 1, 'output' => 'Unknown remote' );
+		}
+		if( $url === $remotes[ $name ] ) {
+			return array( 'exit' => 0, 'output' => '' );
+		}
+		if( !self::isRemoteUrl( $url ) ) {
+			return array( 'exit' => 1, 'output' => 'Not a remote address' );
+		}
+		return $this->run( 'remote set-url ' . escapeshellarg( $name ) . ' ' . escapeshellarg( $url ) );
+	}
+
+	/** Renames a remote; its remote-tracking branches follow. */
+	public function renameRemote( $name, $newName ) {
+		$remotes = $this->getRemotes();
+		if( !isset( $remotes[ $name ] ) ) {
+			return array( 'exit' => 1, 'output' => 'Unknown remote' );
+		}
+		if( !self::isRemoteName( $newName ) ) {
+			return array( 'exit' => 1, 'output' => 'Not a remote name: letters, digits, dot, dash and underscore' );
+		}
+		if( isset( $remotes[ $newName ] ) ) {
+			return array( 'exit' => 1, 'output' => 'A remote of that name exists already' );
+		}
+		return $this->run( 'remote rename ' . escapeshellarg( $name ) . ' ' . escapeshellarg( $newName ) );
+	}
+
+	/** Removes a remote and its remote-tracking branches. The commits stay. */
+	public function removeRemote( $name ) {
+		if( !isset( $this->getRemotes()[ $name ] ) ) {
+			return array( 'exit' => 1, 'output' => 'Unknown remote' );
+		}
+		return $this->run( 'remote remove ' . escapeshellarg( $name ) );
 	}
 
 	/**

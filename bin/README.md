@@ -106,6 +106,25 @@ php backup-delete.php -a
 
 ---
 
+### remote.php
+
+The remotes of the installation's git repository: the same as the dashboard's
+"Remotes and push" section, with the same checks (names and addresses
+validated, a push never forced, git never waiting for a password).
+
+```bash
+php extension/git_manager/bin/php/remote.php list
+php extension/git_manager/bin/php/remote.php add upstream https://github.com/owner/repository.git
+php extension/git_manager/bin/php/remote.php set-url upstream git@github.com:owner/repository.git
+php extension/git_manager/bin/php/remote.php rename upstream mirror
+php extension/git_manager/bin/php/remote.php remove mirror
+php extension/git_manager/bin/php/remote.php fetch origin
+php extension/git_manager/bin/php/remote.php push origin [branch]
+```
+
+`list` shows each remote's address (without a user name, password or token)
+and how the checked out branch stands against it.
+
 ## Quick Reference
 
 ```bash

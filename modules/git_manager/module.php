@@ -23,7 +23,10 @@ $ViewList = array(
 			'CheckoutCommit'       => 'CheckoutCommit',
                         'CheckoutUpdateSubmodules' => 'CheckoutUpdateSubmodules',
 			'FetchRemote'          => 'FetchRemote',
-			'PushBranch'           => 'PushBranch'
+			'PushBranch'           => 'PushBranch',
+			'AddRemote'            => 'AddRemote',
+			'UpdateRemote'         => 'UpdateRemote',
+			'RemoveRemote'         => 'RemoveRemote'
 		)
 	),
 	'commit_details' => array(
@@ -68,6 +71,8 @@ $FunctionList = array(
 	'backup' => array(),
 	// Pushing a branch to a remote: publishing, so a function of its own.
 	'push' => array(),
+	// Adding, changing and removing remotes: the repository's configuration.
+	'remotes' => array(),
 	// Before 2.0.4 the backup function was called dump. Kept so existing roles
 	// stay valid; bin/php/upgrade-policy-dump-to-backup.php renames them.
 	'dump' => array()
