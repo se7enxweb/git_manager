@@ -636,4 +636,33 @@
         <translation>Das Submodul wurde nicht geändert; siehe die Ausgabe.</translation>
     </message>
 </context>
+<context>
+    <name>design/admin/pagelayout</name>
+    <message>
+        <source>Git</source>
+        <translation>Git</translation>
+    </message>
+    <message>
+        <source>Git Manager dashboard</source>
+        <translation>Übersicht der Git-Verwaltung</translation>
+    </message>
+</context>
+<context>
+    <name>kernel/navigationpart</name>
+    <message>
+        <source>Git</source>
+        <translation>Git</translation>
+    </message>
+</context>
+<context>
+    <name>design/admin/parts/setup/menu</name>
+    <message>
+        <source>Git Manager</source>
+        <translation>Git-Verwaltung</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>Sicherung</translation>
+    </message>
+</context>
 </TS>
