@@ -44,16 +44,14 @@ class Remote extends \Exponential\Runnable\Command
             ${$__name} = &$GLOBALS[$__name];
         unset( $__name );
 
-        $cli = \eZCLI::instance();
-        $script = \eZScript::instance( array(
+        $cli = $this->cli();
+        $script = $this->script( array(
             'description'    => "The remotes of the installation's git repository: list, add, set-url, rename, remove, fetch, push.",
             'use-session'    => false,
             'use-modules'    => true,
             'use-extensions' => true,
         ) );
-        $script->startup();
-        $options = $script->getOptions( '', '[command][name][value]', array() );
-        $script->initialize();
+        $options = $this->startup( '', '[command][name][value]', array() );
 
         $arguments = array_values( $options['arguments'] );
         $command = isset( $arguments[0] ) ? $arguments[0] : 'list';

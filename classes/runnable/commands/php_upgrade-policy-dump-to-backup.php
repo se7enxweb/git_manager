@@ -31,16 +31,14 @@ class UpgradePolicyDumpToBackup extends \Exponential\Runnable\Command
             ${$__name} = &$GLOBALS[$__name];
         unset( $__name );
 
-        $cli = \eZCLI::instance();
-        $script = \eZScript::instance( array(
+        $cli = $this->cli();
+        $script = $this->script( array(
             'description'    => "Renames the role policies git_manager/dump to git_manager/backup.",
             'use-session'    => false,
             'use-modules'    => true,
             'use-extensions' => true,
         ) );
-        $script->startup();
-        $options = $script->getOptions( '[dry-run]', '', array( 'dry-run' => 'show what would change, change nothing' ) );
-        $script->initialize();
+        $options = $this->startup( '[dry-run]', '', array( 'dry-run' => 'show what would change, change nothing' ) );
 
         $db = \eZDB::instance();
         $rows = $db->arrayQuery( "SELECT id, role_id FROM ezpolicy WHERE module_name = 'git_manager' AND function_name = 'dump'" );

@@ -40,8 +40,8 @@ class BackupList extends \Exponential\Runnable\Command
             ${$__name} = &$GLOBALS[$__name];
         unset( $__name );
 
-        $cli = \eZCLI::instance();
-        $script = \eZScript::instance([
+        $cli = $this->cli();
+        $script = $this->script([
             'description' => 'List backup captions',
             'use-session' => false,
             'use-modules' => true,

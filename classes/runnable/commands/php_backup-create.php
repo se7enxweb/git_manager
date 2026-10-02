@@ -52,8 +52,8 @@ class BackupCreate extends \Exponential\Runnable\Command
             ${$__name} = &$GLOBALS[$__name];
         unset( $__name );
 
-        $cli = \eZCLI::instance();
-        $script = \eZScript::instance([
+        $cli = $this->cli();
+        $script = $this->script([
             'description' => 'Create backup captions',
             'use-session' => false,
             'use-modules' => true,
