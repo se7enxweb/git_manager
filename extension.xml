@@ -2,7 +2,7 @@
 <software>
     <metadata>
         <name>Git Manager</name>
-        <version>2.0.12</version>
+        <version>2.0.13</version>
         <copyright>Copyright (C) 1998 - 2026 7x and Serhey Dolgushev</copyright>
         <license>GNU General Public License v2.0 (or any later version)</license>
         <info_url>https://github.com/se7enxweb/git_manager</info_url>
