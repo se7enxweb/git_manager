@@ -1,12 +1,11 @@
 <?php
 /**
- * @package GitManager
- * @author  7x <info@se7enx.com>
- * @date    28 Sep 2026
+ * Entry point of extension/git_manager/modules/git_manager/dump.php
  *
- * git_manager/dump was the address of the backup view before 2.0.4. It now
- * sends every request on to git_manager/backup, so bookmarks and links keep
- * working. It only redirects: forms post to git_manager/backup.
- **/
+ * @copyright Copyright (C) 1998 - 2026 7x and the Exponential Foundation. All rights reserved.
+ * @license GNU General Public License v2.0 (or any later version)
+ * @package GitManager
+ */
 
-return $Params['Module']->redirectTo( 'git_manager/backup' );
+// The code is in extension/git_manager/classes/runnable/views/git_manager/dump.php (#207); this file is the entry point.
+return \Exponential\View\Extension\GitManager\GitManager\Dump::main( __FILE__, get_defined_vars() );
