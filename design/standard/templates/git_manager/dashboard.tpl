@@ -24,6 +24,9 @@
     </div>
     <div class="box-content">
 
+        {* Where the installation stands against its branch on the remote. *}
+        {if $upstream}{include uri='design:git_manager/parts/upstream.tpl'}{/if}
+
         {* Where HEAD is. *}
         <div class="gm-status">
             <div class="gm-status-branch">

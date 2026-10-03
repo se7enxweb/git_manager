@@ -23,6 +23,7 @@ $ViewList = array(
 			'CheckoutCommit'       => 'CheckoutCommit',
                         'CheckoutUpdateSubmodules' => 'CheckoutUpdateSubmodules',
 			'FetchRemote'          => 'FetchRemote',
+			'FetchUpstream'        => 'FetchUpstream',
 			'PushBranch'           => 'PushBranch',
 			'AddRemote'            => 'AddRemote',
 			'UpdateRemote'         => 'UpdateRemote',

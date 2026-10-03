@@ -62,6 +62,23 @@ var gmTexts = {ldelim}
         });
     });
 
+    // "Fetch now" can take a while: say so, and send it once.
+    Array.prototype.forEach.call(document.querySelectorAll('form[data-gm-busy]'), function (form) {
+        form.addEventListener('submit', function (e) {
+            if (form.classList.contains('is-busy')) { e.preventDefault(); return; }
+            form.classList.add('is-busy');
+            var button = form.querySelector('[type="submit"]');
+            if (button) {
+                // The button's name must still reach the server: a hidden copy.
+                var copy = document.createElement('input');
+                copy.type = 'hidden'; copy.name = button.name; copy.value = button.value;
+                form.appendChild(copy);
+                button.value = form.getAttribute('data-gm-busy');
+                setTimeout(function () { button.disabled = true; }, 0);
+            }
+        });
+    });
+
     // A button that asks first (Remove a remote), in a form that does not.
     document.addEventListener('click', function (e) {
         var button = e.target.closest ? e.target.closest('[data-gm-confirm-button]') : null;

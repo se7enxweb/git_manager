@@ -55,6 +55,12 @@ class GitManager
 		return $currentPath;
 	}
 
+	/** The repository's working tree as the commands use it ('./' or the root a .git link points into). */
+	public static function repositoryPath() {
+		self::getInstance();
+		return self::$path;
+	}
+
 	public static function getInstance() {
 		if( self::$instance === null ) {
 			self::$instance = new self();

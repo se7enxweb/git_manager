@@ -143,3 +143,51 @@
 .gm-section-head h2 { margin: 0; }
 .gm-section-head form { margin: 0; }
 .gm-actions { grid-template-columns: repeat(auto-fill, minmax(22em, 1fr)); }
+
+/* Upstream: the installation against its branch on the remote. */
+.gm-upstream { margin: 0 0 1em 0; padding: 0.9em 1.1em 0.7em 1.1em; border: 1px solid var(--gm-line); border-radius: 8px; background: #fff; box-shadow: inset 4px 0 0 var(--gm-up-edge, #9aa7b4); }
+.gm-upstream.is-current { --gm-up-edge: #2f8f46; }
+.gm-upstream.is-behind { --gm-up-edge: #d08a00; }
+.gm-upstream.is-ahead { --gm-up-edge: #3a6ea5; }
+.gm-upstream.is-diverged { --gm-up-edge: #b3261e; }
+.gm-upstream-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5em 1em; }
+.gm-upstream-title { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4em 0.8em; }
+.gm-upstream h2 { margin: 0; font-size: 1.1em; color: var(--gm-ink); }
+.gm-upstream-fetch { margin: 0; }
+.gm-upstream-fetch.is-busy input { cursor: progress; opacity: 0.75; }
+.gm-badge { display: inline-flex; align-items: center; gap: 0.4em; padding: 0.2em 0.75em; border-radius: 999px; font-weight: bold; font-size: 0.92em; white-space: nowrap; }
+.gm-badge::before { content: ""; width: 0.55em; height: 0.55em; border-radius: 50%; background: currentColor; }
+.gm-badge.is-current { background: #e3f1e6; color: #1f5f2c; }
+.gm-badge.is-behind { background: #fff4e0; color: #8a5a00; }
+.gm-badge.is-ahead { background: #e6eefa; color: #1f4a7f; }
+.gm-badge.is-diverged { background: #fde8e8; color: #9b1c1c; }
+.gm-badge.is-new, .gm-badge.is-even { background: #eef2f6; color: #3a4a5c; }
+.gm-upstream-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(15em, 1fr)); gap: 0.5em 1.4em; margin: 0.8em 0 0 0; }
+.gm-upstream-facts > div { min-width: 0; }
+.gm-upstream-facts dt { margin: 0; font-size: 0.82em; font-weight: bold; text-transform: uppercase; letter-spacing: 0.03em; color: var(--gm-muted); }
+.gm-upstream-facts dd { margin: 0.15em 0 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.2em 0.5em; color: var(--gm-ink); min-width: 0; }
+.gm-upstream-facts .gm-remote-url { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+.gm-ext { font-size: 0.88em; }
+.gm-upstream-result { margin: 0.8em 0 0 0; padding: 0.55em 0.8em; border-radius: 6px; border: 1px solid; }
+.gm-upstream-result.is-ok { background: #f1f8f2; border-color: #bfe0c7; color: #1f5f2c; }
+.gm-upstream-result.is-failed { background: #fdf0f0; border-color: #f0c2c2; color: #8c1d1d; }
+.gm-upstream-result pre { margin: 0.4em 0 0 0; padding: 0.5em 0.7em; max-height: 14em; overflow: auto; border-radius: 4px; background: #1d2733; color: #e6edf3; font-size: 0.85em; white-space: pre-wrap; word-break: break-word; }
+.gm-upstream-error { margin: 0.6em 0 0 0; color: #8c1d1d; }
+.gm-upstream-lists { display: grid; grid-template-columns: repeat(auto-fit, minmax(22em, 1fr)); gap: 0.8em 1.2em; margin: 0.9em 0 0 0; }
+.gm-upstream-list { min-width: 0; }
+.gm-upstream-list h3 { display: flex; align-items: center; gap: 0.5em; margin: 0 0 0.4em 0; font-size: 0.95em; color: var(--gm-ink); }
+.gm-count { padding: 0 0.55em; border-radius: 999px; background: #eef2f6; color: #3a4a5c; font-size: 0.85em; }
+#gm-upstream-missing .gm-count { background: #fff4e0; color: #8a5a00; }
+.gm-ucommits { margin: 0; padding: 0; list-style: none; max-height: 24em; overflow: auto; border: 1px solid var(--gm-line); border-radius: 6px; }
+.gm-ucommits li { display: grid; grid-template-columns: auto 1fr; gap: 0 0.7em; padding: 0.4em 0.7em; border-top: 1px solid #edf0f3; }
+.gm-ucommits li:first-child { border-top: 0; }
+.gm-uhash { grid-row: span 2; align-self: start; padding: 0.05em 0.4em; border-radius: 4px; background: #eef2f6; color: var(--gm-ink); text-decoration: none; }
+a.gm-uhash:hover { background: #dfe7f0; }
+.gm-usubject { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; color: var(--gm-ink); }
+.gm-umeta { color: var(--gm-muted); font-size: 0.86em; }
+.gm-upstream-list .gm-empty { margin: 0; padding: 0.7em; border: 1px dashed var(--gm-line); border-radius: 6px; }
+.gm-upstream-foot { margin: 0.7em 0 0 0; font-size: 0.85em; }
+
+/* admin4's dark mode keeps the content card light; the card follows a dark
+   content area if a design gives one (prefers the page's own setting). */
+html[data-a4-theme="dark"] .gm-upstream { box-shadow: inset 4px 0 0 var(--gm-up-edge, #9aa7b4), 0 1px 3px rgba(0, 0, 0, 0.12); }

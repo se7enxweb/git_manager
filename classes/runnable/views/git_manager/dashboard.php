@@ -18,6 +18,17 @@ namespace Exponential\View\Extension\GitManager\GitManager
 
 class Dashboard extends \Exponential\Runnable\ModuleView
 {
+    /**
+     * GitManagerUpstream, loaded from its file when the class map does not
+     * list it yet (a process started before the autoloads were regenerated).
+     */
+    private static function upstreamAvailable()
+    {
+        if ( !class_exists( 'GitManagerUpstream' ) && is_file( __DIR__ . '/../../../gitmanagerupstream.php' ) )
+            require_once __DIR__ . '/../../../gitmanagerupstream.php';
+        return class_exists( 'GitManagerUpstream', false );
+    }
+
     public function run( array $scope )
     {
         // the including function's variables ($Params, $Module, $cli, ...)
@@ -67,6 +78,41 @@ class Dashboard extends \Exponential\Runnable\ModuleView
         	$message = '"' . $hash . '" commit is checked out';
         } elseif( $module->isCurrentAction( 'SetCommitsFilter' ) ) {
         	$filter = array_merge( $filter, $http->postVariable( 'filter', array() ) );
+        } elseif( ( $module->isCurrentAction( 'FetchUpstream' ) || $http->hasPostVariable( 'FetchUpstream' ) ) && self::upstreamAvailable() ) {
+        	// hasPostVariable too: a process that read module.php before FetchUpstream was in it.
+        	// The Upstream card's "Fetch now": git fetch --prune of the upstream
+        	// remote, nothing else. The result goes through the session to the
+        	// page this redirects to, so a reload never fetches again.
+        	$upstream = new \GitManagerUpstream();
+        	$result = $upstream->fetch();
+        	$state = $upstream->status( true );
+        	if( class_exists( 'expAudit' ) && class_exists( 'gitManagerAuditBranch' ) ) {
+        		$data = array(
+        			'object' => array( 'type' => 'remote', 'id' => $upstream->remoteName() ),
+        			'after'  => array(
+        				'via'      => $result['via'],
+        				'user'     => $result['user'],
+        				'seconds'  => round( $result['seconds'], 2 ),
+        				'ahead'    => $state['ahead'],
+        				'behind'   => $state['behind'],
+        				'tracking' => $state['tracking']
+        			)
+        		);
+        		if( $result['exit'] !== 0 ) {
+        			$data['result'] = 'failed';
+        			$data['reason'] = $result['reason'] !== '' ? $result['reason'] : 'git';
+        		}
+        		\expAudit::event( 'system.git_manager.fetch', $data );
+        	}
+        	$http->setSessionVariable( 'git_manager_upstream_fetch', array(
+        		'exit'    => $result['exit'],
+        		'output'  => $result['output'],
+        		'remote'  => $upstream->remoteName(),
+        		'seconds' => round( $result['seconds'], 1 ),
+        		'via'     => $result['via'],
+        		'user'    => $result['user']
+        	) );
+        	return $this->viewResult( isset( $Result ) ? $Result : null, $module->redirectTo( '/git_manager/dashboard' ) );
         } elseif( $module->isCurrentAction( 'FetchRemote' ) ) {
         	$remote = (string)$http->postVariable( 'remote', '' );
         	$result = $git->fetch( $remote );
@@ -182,6 +228,16 @@ class Dashboard extends \Exponential\Runnable\ModuleView
         $tpl->setVariable( 'output',  $output );
         $tpl->setVariable( 'filter',  $filter );
         $tpl->setVariable( 'commits',  $commits );
+
+        // Upstream: where the installation stands against the remote's branch,
+        // from the cache unless something it depends on changed; and the
+        // result of the last "Fetch now", shown once.
+        $tpl->setVariable( 'upstream', self::upstreamAvailable() ? ( new \GitManagerUpstream() )->status() : false );
+        $upstreamFetch = $http->hasSessionVariable( 'git_manager_upstream_fetch' ) ? $http->sessionVariable( 'git_manager_upstream_fetch' ) : null;
+        if( $upstreamFetch !== null ) {
+        	$http->removeSessionVariable( 'git_manager_upstream_fetch' );
+        }
+        $tpl->setVariable( 'upstream_fetch', is_array( $upstreamFetch ) ? $upstreamFetch : false );
 
         // Push: the remotes, and how the checked out branch stands against each.
         $remotes = $git->attribute( 'remotes' );

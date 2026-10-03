@@ -635,6 +635,150 @@
         <source>The submodule was not changed; see the output.</source>
         <translation>Das Submodul wurde nicht geändert; siehe die Ausgabe.</translation>
     </message>
+    <message>
+        <source>%branch not fetched yet</source>
+        <translation>%branch noch nicht geholt</translation>
+    </message>
+    <message>
+        <source>%count staged</source>
+        <translation>%count vorgemerkt</translation>
+    </message>
+    <message>
+        <source>(HEAD is detached)</source>
+        <translation>(HEAD ist losgelöst)</translation>
+    </message>
+    <message>
+        <source>(same name; no upstream is set for %branch)</source>
+        <translation>(gleicher Name; für %branch ist kein Upstream gesetzt)</translation>
+    </message>
+    <message>
+        <source>Ahead / behind</source>
+        <translation>Voraus / zurück</translation>
+    </message>
+    <message>
+        <source>Ahead by %count</source>
+        <translation>%count voraus</translation>
+    </message>
+    <message>
+        <source>As %user, over %via.</source>
+        <translation>Als %user, über %via.</translation>
+    </message>
+    <message>
+        <source>Behind by %count</source>
+        <translation>%count zurück</translation>
+    </message>
+    <message>
+        <source>Compared with</source>
+        <translation>Verglichen mit</translation>
+    </message>
+    <message>
+        <source>Counted from what the last fetch brought; Fetch now to see the remote as it is. Status of %time.</source>
+        <translation>Gezählt nach dem, was das letzte Holen brachte; „Jetzt holen“ zeigt das Remote, wie es ist. Stand von %time.</translation>
+    </message>
+    <message>
+        <source>Diverged: %ahead ahead, %behind behind</source>
+        <translation>Auseinandergelaufen: %ahead voraus, %behind zurück</translation>
+    </message>
+    <message>
+        <source>Fetch now</source>
+        <translation>Jetzt holen</translation>
+    </message>
+    <message>
+        <source>Fetch to see what the remote has.</source>
+        <translation>Holen Sie, um zu sehen, was das Remote hat.</translation>
+    </message>
+    <message>
+        <source>Fetched %remote in %seconds s.</source>
+        <translation>%remote in %seconds s geholt.</translation>
+    </message>
+    <message>
+        <source>Fetching...</source>
+        <translation>Wird geholt ...</translation>
+    </message>
+    <message>
+        <source>Last fetch</source>
+        <translation>Zuletzt geholt</translation>
+    </message>
+    <message>
+        <source>Missing in this installation</source>
+        <translation>Fehlt in dieser Installation</translation>
+    </message>
+    <message>
+        <source>No remote %remote</source>
+        <translation>Kein Remote %remote</translation>
+    </message>
+    <message>
+        <source>None: every commit here is on %branch.</source>
+        <translation>Keine: jeder Commit hier ist auf %branch.</translation>
+    </message>
+    <message>
+        <source>None: everything on %branch is here.</source>
+        <translation>Keine: alles von %branch ist hier.</translation>
+    </message>
+    <message>
+        <source>Not committed</source>
+        <translation>Nicht committet</translation>
+    </message>
+    <message>
+        <source>Only in this installation</source>
+        <translation>Nur in dieser Installation</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Öffnen</translation>
+    </message>
+    <message>
+        <source>Remote</source>
+        <translation>Remote</translation>
+    </message>
+    <message>
+        <source>The newest %shown of %count.</source>
+        <translation>Die neuesten %shown von %count.</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Unbekannt</translation>
+    </message>
+    <message>
+        <source>Up to date</source>
+        <translation>Aktuell</translation>
+    </message>
+    <message>
+        <source>Upstream (%remote)</source>
+        <translation>Upstream (%remote)</translation>
+    </message>
+    <message>
+        <source>git branch --set-upstream-to would make it the branch's upstream</source>
+        <translation>git branch --set-upstream-to würde ihn zum Upstream des Branches machen</translation>
+    </message>
+    <message>
+        <source>git fetch --prune %remote: updates what the page knows of the remote, never the installation's files</source>
+        <translation>git fetch --prune %remote: aktualisiert, was die Seite vom Remote weiß, nie die Dateien der Installation</translation>
+    </message>
+    <message>
+        <source>in conflict</source>
+        <translation>im Konflikt</translation>
+    </message>
+    <message>
+        <source>local commits / commits to get</source>
+        <translation>lokale Commits / zu holende Commits</translation>
+    </message>
+    <message>
+        <source>modified</source>
+        <translation>geändert</translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation>nie</translation>
+    </message>
+    <message>
+        <source>nothing, the working tree is clean</source>
+        <translation>nichts, das Arbeitsverzeichnis ist sauber</translation>
+    </message>
+    <message>
+        <source>untracked</source>
+        <translation>nicht verfolgt</translation>
+    </message>
 </context>
 <context>
     <name>design/admin/pagelayout</name>

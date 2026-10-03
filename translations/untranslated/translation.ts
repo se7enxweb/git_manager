@@ -635,6 +635,150 @@
         <source>The submodule was not changed; see the output.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>%branch not fetched yet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count staged</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(HEAD is detached)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(same name; no upstream is set for %branch)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ahead / behind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ahead by %count</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>As %user, over %via.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Behind by %count</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Compared with</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Counted from what the last fetch brought; Fetch now to see the remote as it is. Status of %time.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Diverged: %ahead ahead, %behind behind</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fetch now</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fetch to see what the remote has.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fetched %remote in %seconds s.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fetching...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last fetch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Missing in this installation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No remote %remote</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None: every commit here is on %branch.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None: everything on %branch is here.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not committed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only in this installation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The newest %shown of %count.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Up to date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upstream (%remote)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>git branch --set-upstream-to would make it the branch's upstream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>git fetch --prune %remote: updates what the page knows of the remote, never the installation's files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>in conflict</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>local commits / commits to get</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>modified</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>never</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>nothing, the working tree is clean</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>untracked</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>design/admin/pagelayout</name>

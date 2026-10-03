@@ -29,4 +29,29 @@ EnableEncryption=enabled
 # Delete unencrypted files after encryption (if encryption is used)
 DeleteUnencryptedAfterEncryption=enabled
 
+# The dashboard's "Upstream" card: the checked out branch against its branch
+# on a remote, the commits that are missing either way, and "Fetch now".
+[UpstreamSettings]
+# The remote to compare with and fetch.
+Remote=origin
+# The branch on that remote. Empty: the checked out branch's upstream when it
+# is on Remote, else the branch of the same name there.
+Branch=
+# Seconds a fetch may take before it is stopped.
+FetchTimeout=60
+# When the remote's SSH address does not work for the user the site runs as
+# (a host alias of another user's ~/.ssh/config, no key) and the repository
+# is on GitHub: fetch it anonymously over HTTPS into the same remote-tracking
+# branches (enabled/disabled). A private repository then still fails.
+HttpsFallback=enabled
+# The repository's address in a browser, for the links to the commits.
+# Empty: derived from the remote's address (GitHub, GitLab and other hosts).
+WebUrl=
+# The most commits listed each way.
+MaxCommits=100
+# Seconds the computed status is kept at most. It is computed again at once
+# when HEAD, the branch, the remote-tracking branch, FETCH_HEAD or the index
+# change; this limit is for the counts of uncommitted files only.
+StatusCacheTTL=60
+
 */ ?>
