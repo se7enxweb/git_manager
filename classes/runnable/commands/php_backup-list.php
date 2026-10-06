@@ -58,6 +58,19 @@ class BackupList extends \Exponential\Runnable\Command
         $backup = new \BackupManager();
         $captions = $backup->listCaptions();
 
+        // How fresh the backups are, from the newest one (as on the Backup page).
+        $status = (new \GitManagerBackupMessages())->status($backup->freshness()->evaluate($captions, time()));
+        $line = '[' . $status['state'] . '] ' . $status['title'] . ' - ' . $status['text'];
+        if ($status['severity'] === 'ok') {
+            $cli->output($line);
+        } else {
+            $cli->warning($line);
+        }
+        foreach ($status['notes'] as $note) {
+            $cli->output('  ' . $note);
+        }
+        $cli->output('');
+
         if (empty($captions)) {
             $cli->warning("No backups found");
             $script->shutdown(0);

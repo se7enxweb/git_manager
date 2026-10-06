@@ -150,7 +150,7 @@ class BackupCreate extends \Exponential\Runnable\Command
 
         // Create backup
         $backup = new \BackupManager();
-        $timestamp = date('Y-m-d_H-i-s');
+        $timestamp = '';
 
         $cli->output("Creating {$type} backup...");
         if ($encrypt) {
@@ -162,109 +162,41 @@ class BackupCreate extends \Exponential\Runnable\Command
                 case 'full':
                     $result = $backup->createFullCaption($description, $encrypt, $passphrase);
                     break;
-                    
+
                 case 'db':
-                    $ini = \eZINI::instance('git_manager.ini');
-                    $backupPath = $ini->variable('GitManagerSettings', 'BackupPath');
-                    
-                    // Resolve installation path
-                    $realPath = getcwd();
-                    $gitDir = $realPath . '/.git';
-                    if (is_link($gitDir)) {
-                        $symlinkTarget = readlink($gitDir);
-                        if ($symlinkTarget[0] !== '/') {
-                            $symlinkTarget = realpath('./' . $symlinkTarget);
-                        }
-                        if (substr($symlinkTarget, -5) === '/.git') {
-                            $realPath = substr($symlinkTarget, 0, -5);
-                        }
-                    }
-                    
-                    $captionDir = $realPath . '/' . $backupPath . '/' . $timestamp;
-                    if (!is_dir($captionDir)) {
-                        mkdir($captionDir, 0700, true);
-                    }
-                    
-                    if (!empty($description)) {
-                        file_put_contents($captionDir . '/description.txt', $description);
-                    }
-                    
-                    $result = $backup->createDatabaseDump($captionDir, $encrypt, $passphrase);
-                    break;
-                    
                 case 'var':
-                    $ini = \eZINI::instance('git_manager.ini');
-                    $backupPath = $ini->variable('GitManagerSettings', 'BackupPath');
-                    
-                    // Resolve installation path
-                    $realPath = getcwd();
-                    $gitDir = $realPath . '/.git';
-                    if (is_link($gitDir)) {
-                        $symlinkTarget = readlink($gitDir);
-                        if ($symlinkTarget[0] !== '/') {
-                            $symlinkTarget = realpath('./' . $symlinkTarget);
-                        }
-                        if (substr($symlinkTarget, -5) === '/.git') {
-                            $realPath = substr($symlinkTarget, 0, -5);
-                        }
+                    // A caption folder named after this moment (the same name the
+                    // Backup page and createFullCaption() give).
+                    $dir = $backup->newCaptionDir();
+                    if ($dir === false) {
+                        $result = array('success' => false, 'message' => 'Failed to create caption directory');
+                        break;
                     }
-                    
-                    $captionDir = $realPath . '/' . $backupPath . '/' . $timestamp;
-                    if (!is_dir($captionDir)) {
-                        mkdir($captionDir, 0700, true);
-                    }
-                    
+                    list($timestamp, $captionDir) = $dir;
                     if (!empty($description)) {
                         file_put_contents($captionDir . '/description.txt', $description);
                     }
-                    
-                    $result = $backup->createVarBackup($captionDir, $encrypt, $passphrase);
+                    $result = $type === 'db'
+                        ? $backup->createDatabaseDump($captionDir, $encrypt, $passphrase)
+                        : $backup->createVarBackup($captionDir, $encrypt, $passphrase);
                     break;
-                    
+
                 case 'fullsite':
-                    // First create full caption (DB + var)
+                    // First the full caption (DB + var), then the site archive in
+                    // that same caption: by its name, not a second date().
                     $result = $backup->createFullCaption($description, $encrypt, $passphrase);
-                    
                     if ($result['success']) {
-                        // Now add site backup
-                        $ini = \eZINI::instance('git_manager.ini');
-                        $backupPath = $ini->variable('GitManagerSettings', 'BackupPath');
-                        
-                        $realPath = getcwd();
-                        $gitDir = $realPath . '/.git';
-                        if (is_link($gitDir)) {
-                            $symlinkTarget = readlink($gitDir);
-                            if ($symlinkTarget[0] !== '/') {
-                                $symlinkTarget = realpath('./' . $symlinkTarget);
-                            }
-                            if (substr($symlinkTarget, -5) === '/.git') {
-                                $realPath = substr($symlinkTarget, 0, -5);
-                            }
-                        }
-                        
-                        $captionDir = $realPath . '/' . $backupPath . '/' . $timestamp;
-                        $siteFile = $captionDir . '/site_' . $timestamp . '.tar.gz';
-                        $excludes = '--exclude=\'./var/*\' --exclude=\'./.git\' --exclude=\'./vendor/composer\' --exclude=\'./autoload/*\'';
-                        $siteCmd = 'cd ' . escapeshellarg($realPath) . ' && tar -czf ' . escapeshellarg($siteFile) . ' ' . $excludes . ' ./extension ./settings ./config.php ./config.php-RECOMMENDED 2>&1';
-                        
-                        exec($siteCmd, $siteOutput, $siteReturn);
-                        
-                        if ($siteReturn === 0 && file_exists($siteFile)) {
-                            if ($encrypt && !empty($passphrase)) {
-                                $gpg = new \GPGEncryption();
-                                $deleteOriginal = $ini->variable('GitManagerSettings', 'DeleteUnencryptedAfterEncryption') === 'enabled';
-                                $encResult = $gpg->encryptFile($siteFile, $passphrase, $deleteOriginal);
-                                
-                                if (!$encResult['success']) {
-                                    $cli->warning("Site backup created but encryption failed");
-                                }
-                            }
+                        $site = $backup->createSiteArchive($result['timestamp'], $encrypt, $passphrase);
+                        if ($site['success']) {
                             $result['message'] = 'Full site backup (DB + var + site files) created successfully';
                         } else {
-                            $cli->warning("Full caption created but site archive failed: " . implode("\n", $siteOutput));
+                            $cli->warning("Full caption created but site archive failed: " . $site['message']);
                         }
                     }
                     break;
+            }
+            if (isset($result['timestamp'])) {
+                $timestamp = $result['timestamp'];
             }
             
             if ($result['success']) {

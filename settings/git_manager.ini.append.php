@@ -29,6 +29,25 @@ EnableEncryption=enabled
 # Delete unencrypted files after encryption (if encryption is used)
 DeleteUnencryptedAfterEncryption=enabled
 
+# The largest backup file the download sends through a persistent PHP
+# server (Exponential Velocity), in megabytes. Such a server keeps the whole
+# response in memory before it sends it, so a larger file is refused there
+# with a message naming the size; download it through Apache or PHP-FPM, which
+# stream it. 0 = no limit.
+PersistentServerDownloadLimitMB=128
+
+# How old the NEWEST backup may be before the Backup page warns. Only the
+# newest backup counts: older ones next to it are no reason for a warning.
+[BackupFreshnessSettings]
+# Older than this (days, decimals allowed): "ageing", an orange warning.
+WarnAfterDays=7
+# Older than this (days): "stale", a red warning. At least WarnAfterDays.
+StaleAfterDays=30
+# A backup dated this many minutes or more ahead of the server clock does
+# not count as the newest (a wrong clock or time zone must not hide that the
+# real backups are old); the page says so.
+FutureToleranceMinutes=5
+
 # The dashboard's "Upstream" card: the checked out branch against its branch
 # on a remote, the commits that are missing either way, and "Fetch now".
 [UpstreamSettings]

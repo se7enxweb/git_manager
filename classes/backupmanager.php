@@ -89,7 +89,7 @@ class BackupManager
     }
 
     private function createFullCaptionUnguarded( $description = '', $encrypt = false, $passphrase = '', $agplCompatible = false ) {
-        $timestamp = date('Y-m-d_H-i-s');
+        $timestamp = $this->catalogue()->nameFor( time() );
         $captionDir = $this->backupPath . '/' . $timestamp;
         
         // Create caption directory
@@ -364,89 +364,141 @@ class BackupManager
             'encrypted' => false
         );
     }
-    
+
     /**
-     * List all existing captions/backups
-     * 
-     * @return array List of captions with details
+     * The archive of the site's own files (extension/, settings/, config.php)
+     * in the caption $name, encrypted when asked. Part of a full site backup.
+     *
+     * @return array( 'success' => bool, 'message' => string, 'file' => string )
      */
-    public function listCaptions() {
-        if( !is_dir($this->backupPath) ) {
-            return array();
-        }
-        
-        $captions = array();
-        $dirs = scandir( $this->backupPath, SCANDIR_SORT_DESCENDING );
-        
-        foreach( $dirs as $dir ) {
-            if( $dir === '.' || $dir === '..' ) {
-                continue;
+    public function createSiteArchive( $name, $encrypt = false, $passphrase = '' ) {
+        return $this->withPrivateFiles( function () use ( $name, $encrypt, $passphrase ) {
+            $captionDir = $this->catalogue()->captionPath( $name );
+            if( $captionDir === null || !is_dir( $captionDir ) ) {
+                return array( 'success' => false, 'message' => 'Caption not found: ' . $name );
             }
-            
-            $captionPath = $this->backupPath . '/' . $dir;
-            if( !is_dir($captionPath) ) {
-                continue;
-            }
-            
-            $caption = array(
-                'timestamp' => $dir,
-                'date' => $this->formatTimestamp($dir),
-                'description' => '',
-                'files' => array(),
-                'total_size' => 0,
-                'time_ago' => $this->calculateTimeAgo($dir),
-                'agpl_compatible' => file_exists($captionPath . '/agpl_compatible.txt')
-            );
-            
-            // Read description if exists
-            $descFile = $captionPath . '/description.txt';
-            if( file_exists($descFile) ) {
-                $caption['description'] = file_get_contents($descFile);
-            }
-            
-            // List files in caption
-            $files = scandir($captionPath);
-            foreach( $files as $file ) {
-                if( $file === '.' || $file === '..' || $file === 'description.txt' ) {
-                    continue;
-                }
-                
-                $filePath = $captionPath . '/' . $file;
-                if( is_file($filePath) ) {
-                    $isEncrypted = substr($file, -4) === '.gpg';
-                    $baseFile = $isEncrypted ? substr($file, 0, -4) : $file;
-                    
-                    // Determine file type
-                    $type = 'var';
-                    if( strpos($baseFile, 'sql_agpl_') === 0 ) {
-                        $type = 'agpl';
-                    } elseif( strpos($baseFile, 'sql_') === 0 ) {
-                        $type = 'database';
-                    } elseif( strpos($baseFile, 'var_') === 0 ) {
-                        $type = 'var';
-                    } elseif( strpos($baseFile, 'site_') === 0 ) {
-                        $type = 'site';
-                    }
-                    
-                    $fileInfo = array(
-                        'name' => $file,
-                        'size' => filesize($filePath),
-                        'size_formatted' => $this->formatBytes(filesize($filePath)),
-                        'type' => $type,
-                        'encrypted' => $isEncrypted
-                    );
-                    $caption['files'][] = $fileInfo;
-                    $caption['total_size'] += $fileInfo['size'];
+            $siteFile = $captionDir . '/site_' . $name . '.tar.gz';
+            $excludes = '--exclude=\'./var/*\' --exclude=\'./.git\' --exclude=\'./vendor/composer\' --exclude=\'./autoload/*\'';
+            $paths = array();
+            foreach( array( './extension', './settings', './config.php', './config.php-RECOMMENDED' ) as $path ) {
+                if( file_exists( $this->realInstallPath . '/' . $path ) ) {
+                    $paths[] = $path;
                 }
             }
-            
-            $caption['total_size_formatted'] = $this->formatBytes($caption['total_size']);
-            $captions[] = $caption;
+            $cmd = 'cd ' . escapeshellarg( $this->realInstallPath ) . ' && tar -czf ' . escapeshellarg( $siteFile ) . ' ' . $excludes . ' ' . implode( ' ', $paths ) . ' 2>&1';
+            exec( $cmd, $output, $return );
+            if( $return !== 0 || !file_exists( $siteFile ) ) {
+                return array( 'success' => false, 'message' => 'Failed to create site archive: ' . implode( "\n", $output ) );
+            }
+            if( $encrypt && $passphrase !== '' ) {
+                $gpg = new GPGEncryption();
+                $deleteOriginal = eZINI::instance( 'git_manager.ini' )->variable( 'GitManagerSettings', 'DeleteUnencryptedAfterEncryption' ) === 'enabled';
+                $enc = $gpg->encryptFile( $siteFile, $passphrase, $deleteOriginal );
+                if( !$enc['success'] ) {
+                    return array( 'success' => false, 'message' => 'Site backup created but encryption failed: ' . $enc['message'] );
+                }
+                return array( 'success' => true, 'message' => '', 'file' => basename( $enc['file'] ) );
+            }
+            return array( 'success' => true, 'message' => '', 'file' => basename( $siteFile ) );
+        } );
+    }
+
+    /**
+     * Whether this request is served by a persistent PHP server (Exponential
+     * Velocity), which keeps a response in memory until the script ends.
+     */
+    public static function isPersistentServer() {
+        return defined( 'QBIX_WEBSERVER' ) || isset( $_SERVER['QBIX_WORKER'] ) || isset( $_SERVER['VELOCITY'] )
+            || class_exists( 'Q_WebServer', false );
+    }
+
+    /** PersistentServerDownloadLimitMB of git_manager.ini in bytes; 0 = no limit. */
+    public static function downloadLimitBytes() {
+        $ini = eZINI::instance( 'git_manager.ini' );
+        if( !$ini->hasVariable( 'GitManagerSettings', 'PersistentServerDownloadLimitMB' ) ) {
+            return 128 * 1048576;
         }
-        
+        $mb = trim( (string)$ini->variable( 'GitManagerSettings', 'PersistentServerDownloadLimitMB' ) );
+        return is_numeric( $mb ) && (float)$mb > 0 ? (int)round( (float)$mb * 1048576 ) : 0;
+    }
+
+    /** The backup folder, absolute. */
+    public function backupPath() {
+        return $this->backupPath;
+    }
+
+    /** The backups on disk (GitManagerBackupCatalogue), in the installation's time zone. */
+    public function catalogue() {
+        return new GitManagerBackupCatalogue( $this->backupPath );
+    }
+
+    /** How fresh the backups must be, from [BackupFreshnessSettings] of git_manager.ini. */
+    public function freshness() {
+        return GitManagerBackupFreshness::fromIni( eZINI::instance( 'git_manager.ini' ) );
+    }
+
+    /**
+     * The folder of a new caption made now, created (owner only). Returns
+     * array( name, path ) or false when it could not be created.
+     */
+    public function newCaptionDir() {
+        $name = $this->catalogue()->nameFor( time() );
+        $path = $this->backupPath . '/' . $name;
+        if( !$this->withPrivateFiles( function () use ( $path ) { return $this->createDirectory( $path ); } ) ) {
+            return false;
+        }
+        return array( $name, $path );
+    }
+
+    /**
+     * Every caption, newest first, with the keys the page and the scripts
+     * have used since 1.0: timestamp, date, description, files (name, size,
+     * size_formatted, type, encrypted), total_size, total_size_formatted,
+     * time_ago (value, unit, display, color) and agpl_compatible. Since 2.0.15
+     * also created, created_source, readable, valid_name and per file archive
+     * (whether it can be downloaded). See GitManagerBackupCatalogue::captions().
+     *
+     * @param int|null $now the moment the ages are taken at; default now
+     * @return array
+     */
+    public function listCaptions( $now = null ) {
+        $now = $now === null ? time() : (int)$now;
+        $catalogue = $this->catalogue();
+        $freshness = $this->freshness();
+        $captions = $catalogue->captions();
+        foreach( $captions as &$caption ) {
+            $caption['date'] = self::formatCreated( $caption['created'], $catalogue->timeZone(), $caption['timestamp'] );
+            $caption['time_ago'] = $freshness->timeAgo( $caption['created'], $now );
+            foreach( $caption['files'] as &$file ) {
+                $file['size_formatted'] = $file['size'] === null ? '?' : self::formatBytes( $file['size'] );
+            }
+            unset( $file );
+            $caption['total_size_formatted'] = self::formatBytes( $caption['total_size'] );
+        }
+        unset( $caption );
         return $captions;
     }
-    
+
+    /** A moment as the list shows it, in the installation's time zone. */
+    public static function formatCreated( $created, DateTimeZone $timeZone, $fallback = '' ) {
+        if( $created === null ) {
+            return (string)$fallback;
+        }
+        $dt = new DateTime( '@' . (int)$created );
+        $dt->setTimezone( $timeZone );
+        return $dt->format( 'F j, Y g:i:s A T' );
+    }
+
+    /** A size in bytes as text: 1.5 KB, 7.32 GB. */
+    public static function formatBytes( $bytes ) {
+        $units = array( 'B', 'KB', 'MB', 'GB', 'TB' );
+        $bytes = max( (float)$bytes, 0 );
+        $pow = (int)floor( ( $bytes ? log( $bytes ) : 0 ) / log( 1024 ) );
+        $pow = min( $pow, count( $units ) - 1 );
+        $bytes /= pow( 1024, $pow );
+        return round( $bytes, 2 ) . ' ' . $units[$pow];
+    }
+
     /**
      * Delete a caption and all its files
      * 
@@ -455,7 +507,7 @@ class BackupManager
      */
     public function deleteCaption( $timestamp ) {
         // Validate timestamp format to prevent directory traversal
-        if( !preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$/', $timestamp) ) {
+        if( !GitManagerBackupCatalogue::isValidName( $timestamp ) ) {
             return array(
                 'success' => false,
                 'message' => 'Invalid timestamp format'
@@ -464,7 +516,7 @@ class BackupManager
         
         $captionPath = $this->backupPath . '/' . $timestamp;
         
-        if( !is_dir($captionPath) ) {
+        if( !is_dir($captionPath) || is_link($captionPath) ) {
             return array(
                 'success' => false,
                 'message' => 'Caption not found: ' . $timestamp
@@ -640,121 +692,6 @@ class BackupManager
                             array( escapeshellarg( (string)$db['database'] ), escapeshellarg( $outputFile ) ), $command );
     }
     
-    /**
-     * Format timestamp for display
-     * 
-     * @param string $timestamp Timestamp string (Y-m-d_H-i-s)
-     * @return string Formatted date
-     */
-    private function formatTimestamp( $timestamp ) {
-        $dt = DateTime::createFromFormat('Y-m-d_H-i-s', $timestamp);
-        if( $dt ) {
-            return $dt->format('F j, Y g:i:s A');
-        }
-        return $timestamp;
-    }
-    
-    /**
-     * Format bytes to human readable size
-     * 
-     * @param int $bytes Bytes
-     * @return string Formatted size
-     */
-    private function formatBytes( $bytes ) {
-        $units = array('B', 'KB', 'MB', 'GB', 'TB');
-        $bytes = max($bytes, 0);
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-        $pow = min($pow, count($units) - 1);
-        $bytes /= pow(1024, $pow);
-        return round($bytes, 2) . ' ' . $units[$pow];
-    }
-    
-    /**
-     * Calculate time ago from timestamp
-     * 
-     * @param string $timestamp Timestamp string (Y-m-d_H-i-s)
-     * @return array Time ago details with value, unit, and color
-     */
-    private function calculateTimeAgo( $timestamp ) {
-        $dt = DateTime::createFromFormat('Y-m-d_H-i-s', $timestamp);
-        if( !$dt ) {
-            return array(
-                'value' => 0,
-                'unit' => 'unknown',
-                'display' => 'unknown age',
-                'color' => '#999'
-            );
-        }
-        
-        $now = new DateTime();
-        $diff = $now->getTimestamp() - $dt->getTimestamp();
-        
-        // Calculate appropriate unit
-        $seconds = abs($diff);
-        $minutes = floor($seconds / 60);
-        $hours = floor($seconds / 3600);
-        $days = floor($seconds / 86400);
-        $months = floor($days / 30);
-        $years = floor($days / 365);
-        
-        // Determine color based on age (green for fresh, yellow/orange for older)
-        $color = '#27ae60'; // Green - fresh
-        if( $days > 7 ) $color = '#f39c12'; // Orange - week old
-        if( $days > 30 ) $color = '#e67e22'; // Dark orange - month old
-        if( $days > 90 ) $color = '#e74c3c'; // Red - 3+ months old
-        
-        // Format display
-        if( $years > 1 ) {
-            return array(
-                'value' => $years,
-                'unit' => 'years',
-                'display' => ">{$years} years old",
-                'color' => '#c0392b' // Dark red
-            );
-        } elseif( $years === 1 ) {
-            return array(
-                'value' => 1,
-                'unit' => 'year',
-                'display' => '1 year old',
-                'color' => '#c0392b'
-            );
-        } elseif( $months > 0 ) {
-            return array(
-                'value' => $months,
-                'unit' => $months === 1 ? 'month' : 'months',
-                'display' => "{$months} " . ($months === 1 ? 'month' : 'months') . ' old',
-                'color' => $color
-            );
-        } elseif( $days > 0 ) {
-            return array(
-                'value' => $days,
-                'unit' => $days === 1 ? 'day' : 'days',
-                'display' => "{$days} " . ($days === 1 ? 'day' : 'days') . ' old',
-                'color' => $color
-            );
-        } elseif( $hours > 0 ) {
-            return array(
-                'value' => $hours,
-                'unit' => $hours === 1 ? 'hour' : 'hours',
-                'display' => "{$hours} " . ($hours === 1 ? 'hour' : 'hours') . ' old',
-                'color' => $color
-            );
-        } elseif( $minutes > 0 ) {
-            return array(
-                'value' => $minutes,
-                'unit' => $minutes === 1 ? 'minute' : 'minutes',
-                'display' => "{$minutes} " . ($minutes === 1 ? 'minute' : 'minutes') . ' old',
-                'color' => $color
-            );
-        } else {
-            return array(
-                'value' => $seconds,
-                'unit' => $seconds === 1 ? 'second' : 'seconds',
-                'display' => "{$seconds} " . ($seconds === 1 ? 'second' : 'seconds') . ' old',
-                'color' => $color
-            );
-        }
-    }
 }
 
 ?>
