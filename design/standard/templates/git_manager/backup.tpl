@@ -1,1036 +1,208 @@
-
-<style>
-{literal}   
-.backup-manager {
-    max-width: 1200px;
-}
-
-.backup-actions {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-}
-
-.backup-action-card {
-    flex: 1;
-    min-width: 280px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    background: #f9f9f9;
-    transition: all 0.3s ease;
-}
-
-.backup-action-card:hover {
-    border-color: #4a90e2;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.backup-action-card.primary {
-    border-color: #4a90e2;
-    background: #e8f4fd;
-}
-
-.backup-action-icon {
-    font-size: 48px;
-    margin-bottom: 15px;
-    color: #4a90e2;
-}
-
-.backup-action-icon.database { color: #e74c3c; }
-.backup-action-icon.files { color: #f39c12; }
-.backup-action-icon.full { color: #27ae60; }
-
-.backup-action-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.backup-action-description {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 15px;
-    line-height: 1.5;
-}
-
-.backup-action-help {
-    font-size: 12px;
-    color: #999;
-    font-style: italic;
-    margin-bottom: 15px;
-    padding: 8px;
-    background: #fff;
-    border-left: 3px solid #4a90e2;
-}
-
-.backup-description-input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 13px;
-}
-
-.backup-encryption-box {
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 12px;
-    margin-bottom: 15px;
-}
-
-.backup-encryption-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #2c3e50;
-}
-
-.backup-passphrase-input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 13px;
-    display: none;
-}
-
-.backup-passphrase-input.active {
-    display: block;
-}
-
-.encryption-note {
-    font-size: 11px;
-    color: #666;
-    margin-top: 5px;
-    font-style: italic;
-}
-
-.backup-list-header {
-    background: #f5f5f5;
-    padding: 15px;
-    border-radius: 6px 6px 0 0;
-    border: 1px solid #ddd;
-    border-bottom: none;
-}
-
-.backup-list-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-    margin: 0;
-}
-
-.caption-item {
-    border: 1px solid #ddd;
-    border-top: none;
-    padding: 20px;
-    background: #fff;
-    transition: background 0.2s;
-}
-
-.caption-item:hover {
-    background: #f9f9f9;
-}
-
-.caption-item:last-child {
-    border-radius: 0 0 6px 6px;
-}
-
-.caption-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.caption-timestamp {
-    font-size: 16px;
-    font-weight: bold;
-    color: #2c3e50;
-}
-
-.caption-date {
-    font-size: 13px;
-    color: #7f8c8d;
-    margin-left: 10px;
-}
-
-.caption-age {
-    font-size: 13px;
-    font-weight: 600;
-    margin-left: 10px;
-}
-
-.caption-description {
-    font-size: 13px;
-    color: #555;
-    margin-bottom: 10px;
-    font-style: italic;
-}
-
-.caption-files {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-}
-
-.caption-file {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: #f0f0f0;
-    border-radius: 4px;
-    font-size: 13px;
-}
-
-.caption-file.database {
-    background: #ffe6e6;
-    color: #c0392b;
-}
-
-.caption-file.var {
-    background: #fff3cd;
-    color: #856404;
-}
-
-.caption-file.site {
-    background: #d4edda;
-    color: #155724;
-}
-
-.caption-file.agpl {
-    background: #fff3e0;
-    color: #7d4e00;
-    border: 1px solid #f0c040;
-}
-
-.badge-agpl {
-    display: inline-block;
-    background: #e67e22;
-    color: white;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 3px;
-    letter-spacing: 0.5px;
-    vertical-align: middle;
-    margin-left: 8px;
-}
-
-.agpl-box {
-    background: #fff8e1;
-    border: 1px solid #f0c040;
-    border-left: 3px solid #e67e22;
-    border-radius: 4px;
-    padding: 10px 12px;
-    margin-bottom: 12px;
-    font-size: 12px;
-}
-
-.agpl-box label {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    font-weight: 600;
-    color: #7d4e00;
-    cursor: pointer;
-    margin: 0;
-}
-
-.agpl-box input[type="checkbox"] {
-    margin-top: 2px;
-    flex-shrink: 0;
-}
-
-.agpl-note {
-    font-size: 11px;
-    color: #856404;
-    margin-top: 6px;
-    font-style: italic;
-    line-height: 1.4;
-    padding-left: 24px;
-}
-
-.caption-file-icon {
-    font-size: 16px;
-}
-
-.caption-actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.caption-actions-downloads {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    flex: 1;
-}
-
-.caption-actions-delete {
-    margin-left: auto;
-}
-
-.btn-download {
-    background: #27ae60;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 13px;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.btn-download:hover {
-    background: #229954;
-}
-
-.btn-delete {
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 13px;
-}
-
-.btn-delete:hover {
-    background: #c0392b;
-}
-
-.no-captions {
-    text-align: center;
-    padding: 40px;
-    color: #999;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    border-top: none;
-    border-radius: 0 0 6px 6px;
-    background: #fafafa;
-}
-
-.processing-indicator {
-    padding: 15px;
-    background: #fff3cd;
-    border: 1px solid #ffc107;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    font-size: 14px;
-    color: #856404;
-}
-
-.bulk-actions-bar {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 12px 15px;
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-bottom: none;
-    border-radius: 6px 6px 0 0;
-}
-
-.bulk-actions-bar label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    color: #333;
-    cursor: pointer;
-}
-
-.bulk-actions-bar input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    margin: 0;
-    flex-shrink: 0;
-}
-
-.btn-delete-selected {
-    background: #e74c3c;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: background 0.2s;
-}
-
-.btn-delete-selected:hover:not(:disabled) {
-    background: #c0392b;
-}
-
-.btn-delete-selected:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.caption-checkbox {
-    display: flex;
-    align-items: flex-start;
-    gap: 0;
-    padding-left: 12px;
-    padding-top: 22px;
-    min-width: 42px;
-    justify-content: flex-start;
-}
-
-.caption-checkbox input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    margin: 0;
-    flex-shrink: 0;
-}
-
-.caption-item-wrapper {
-    display: flex;
-    gap: 0;
-    align-items: flex-start;
-}
-
-.selected-count {
-    color: #27ae60;
-    font-weight: 600;
-    margin-left: auto;
-}
-
-.backup-outdated-warning {
-    margin: 15px 0 20px 0;
-    padding: 18px 24px;
-    background: linear-gradient(135deg, #fff3cd 0%, #ffe5a0 100%);
-    border: 4px solid #ff9800;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.25);
-    animation: pulse-warning 2s ease-in-out infinite;
-}
-
-@keyframes pulse-warning {
-    0%, 100% { box-shadow: 0 4px 12px rgba(255, 152, 0, 0.25); }
-    50% { box-shadow: 0 4px 20px rgba(255, 152, 0, 0.45); }
-}
-
-.backup-outdated-warning-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
-}
-
-.backup-outdated-warning-icon {
-    font-size: 32px;
-    line-height: 1;
-    animation: shake 3s ease-in-out infinite;
-}
-
-@keyframes shake {
-    0%, 90%, 100% { transform: rotate(0deg); }
-    92%, 96% { transform: rotate(-15deg); }
-    94%, 98% { transform: rotate(15deg); }
-}
-
-.backup-outdated-warning-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #d84315;
-    margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.backup-outdated-warning-message {
-    font-size: 15px;
-    line-height: 1.6;
-    color: #5d4037;
-    margin: 0;
-    padding-left: 44px;
-}
-
-.backup-outdated-warning-message strong {
-    color: #d84315;
-    font-weight: 700;
-}
-
-.backup-critical-warning {
-    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-    border-color: #d32f2f;
-    animation: pulse-critical 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse-critical {
-    0%, 100% { 
-        box-shadow: 0 4px 12px rgba(211, 47, 47, 0.35);
-        border-color: #d32f2f;
-    }
-    50% { 
-        box-shadow: 0 4px 24px rgba(211, 47, 47, 0.65);
-        border-color: #c62828;
-    }
-}
-
-.backup-critical-warning .backup-outdated-warning-icon {
-    animation: shake-urgent 2s ease-in-out infinite;
-}
-
-@keyframes shake-urgent {
-    0%, 85%, 100% { transform: rotate(0deg); }
-    87%, 91%, 95%, 99% { transform: rotate(-20deg); }
-    89%, 93%, 97% { transform: rotate(20deg); }
-}
-
-.backup-critical-warning .backup-outdated-warning-title {
-    color: #b71c1c;
-}
-
-.backup-critical-warning .backup-outdated-warning-message strong {
-    color: #b71c1c;
-}
-
-/* Mobile Responsive Styles */
-@media (max-width: 768px) {
-    .backup-actions {
-        flex-direction: column;
-    }
-    
-    .backup-action-card {
-        min-width: 100%;
-    }
-    
-    .caption-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-    
-    .caption-timestamp {
-        font-size: 14px;
-        word-break: break-all;
-    }
-    
-    .caption-date,
-    .caption-age {
-        display: block;
-        margin-left: 0;
-        margin-top: 4px;
-    }
-    
-    .caption-date {
-        display: block;
-        margin-left: 0;
-    }
-    
-    .caption-files {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .caption-file {
-        width: 100%;
-        font-size: 11px;
-        padding: 6px 8px;
-        word-break: break-all;
-        overflow-wrap: break-word;
-    }
-    
-    .caption-file span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    .caption-actions {
-        flex-direction: column;
-        gap: 8px;
-        width: 100%;
-    }
-    
-    .btn-download,
-    .btn-delete {
-        width: 100%;
-        text-align: center;
-        font-size: 12px;
-        padding: 10px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    .backup-outdated-warning {
-        padding: 16px 20px;
-        margin: 12px 0 18px 0;
-    }
-    
-    .backup-outdated-warning-message {
-        padding-left: 44px;
-    }
-    
-    .bulk-actions-bar {
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    
-    .selected-count {
-        width: 100%;
-        margin-left: 0;
-        text-align: center;
-    }
-    
-    .caption-item-wrapper {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .caption-checkbox {
-        margin-bottom: 8px;
-    }
-    
-    .backup-manager {
-        padding: 10px;
-    }
-    
-    .caption-item {
-        padding: 12px;
-    }
-}
-
-@media (max-width: 480px) {
-    .backup-action-title {
-        font-size: 16px;
-    }
-    
-    .backup-action-description,
-    .backup-action-help {
-        font-size: 12px;
-    }
-    
-    .caption-timestamp {
-        font-size: 12px;
-    }
-    
-    .caption-file {
-        font-size: 10px;
-    }
-    
-    .btn-download,
-    .btn-delete {
-        font-size: 11px;
-        padding: 8px;
-    }
-    
-    .backup-outdated-warning {
-        padding: 14px 16px;
-        margin: 12px 0 16px 0;
-        border-width: 3px;
-    }
-    
-    .backup-outdated-warning-icon {
-        font-size: 28px;
-    }
-    
-    .backup-outdated-warning-title {
-        font-size: 15px;
-    }
-    
-    .backup-outdated-warning-message {
-        font-size: 13px;
-        padding-left: 40px;
-    }
-}
-{/literal}
-</style>
-
-<script type="text/javascript">
-var gitManagerMessages = {ldelim}
-    selectedCount: '{'%count selected'|i18n( 'extension/git_manager' )|wash( javascript )}',
-    selectOne: '{'Please select at least one caption to delete.'|i18n( 'extension/git_manager' )|wash( javascript )}',
-    deleteOne: '{'Delete 1 selected caption? This cannot be undone.'|i18n( 'extension/git_manager' )|wash( javascript )}',
-    deleteMany: '{'Delete %count selected captions? This cannot be undone.'|i18n( 'extension/git_manager' )|wash( javascript )}',
-    deleteSingle: '{'Delete caption %timestamp? This cannot be undone.'|i18n( 'extension/git_manager' )|wash( javascript )}'
-{rdelim};
-{literal}
-$(document).ready(function() {
-    // Toggle passphrase input visibility
-    $('.encrypt-checkbox').on('change', function() {
-        var $form = $(this).closest('form');
-        var $passphraseInput = $form.find('.backup-passphrase-input');
-        
-        if($(this).is(':checked')) {
-            $passphraseInput.addClass('active');
-            $passphraseInput.prop('required', true);
-        } else {
-            $passphraseInput.removeClass('active');
-            $passphraseInput.prop('required', false);
-            $passphraseInput.val('');
-        }
-    });
-    
-    // Multi-selection functionality
-    function updateSelectedCount() {
-        var count = $('.caption-select:checked').length;
-        $('.selected-count').text(gitManagerMessages.selectedCount.replace('%count', count));
-        $('.btn-delete-selected').prop('disabled', count === 0);
-    }
-    
-    // Select all checkbox
-    $('#select-all-captions').on('change', function() {
-        $('.caption-select').prop('checked', $(this).is(':checked'));
-        updateSelectedCount();
-    });
-    
-    // Individual caption checkboxes
-    $('.caption-select').on('change', function() {
-        var total = $('.caption-select').length;
-        var checked = $('.caption-select:checked').length;
-        $('#select-all-captions').prop('checked', total === checked);
-        updateSelectedCount();
-    });
-    
-    // Delete selected captions
-    $('#delete-selected-form').on('submit', function(e) {
-        var count = $('.caption-select:checked').length;
-        if(count === 0) {
-            e.preventDefault();
-            alert(gitManagerMessages.selectOne);
-            return false;
-        }
-        
-        // Collect selected timestamps
-        var timestamps = [];
-        $('.caption-select:checked').each(function() {
-            timestamps.push($(this).val());
-        });
-        $('#selected-timestamps-input').val(timestamps.join(','));
-        
-        var confirmMsg = count === 1 
-            ? gitManagerMessages.deleteOne
-            : gitManagerMessages.deleteMany.replace('%count', count);
-        
-        if(!confirm(confirmMsg)) {
-            e.preventDefault();
-            return false;
-        }
-    });
-    
-    // Individual delete button confirmation
-    $('.btn-delete-single').on('click', function(e) {
-        var timestamp = $(this).data('timestamp');
-        if(!confirm(gitManagerMessages.deleteSingle.replace('%timestamp', timestamp))) {
-            e.preventDefault();
-            return false;
-        }
-    });
-    
-    // Initialize count
-    updateSelectedCount();
-});
-{/literal}
-</script>
+{* git_manager/backup: how fresh the backups are, making a backup, and the backups with their archives.
+
+   The status at the top is taken from the NEWEST backup (GitManagerBackupFreshness); its words come from
+   GitManagerBackupMessages and are washed here. Every form posts to git_manager/backup (ezformtoken adds its
+   token) and the view redirects back, so a reload repeats nothing. Without javascript everything works:
+   the confirmations and "select all" are the only parts that need it.
+
+   Variables: captions, backup_status, error, message, persistent_server, download_limit_text.
+   Kept from 1.x for overridden templates: oldest_warning (since 2.0.15 the age of the newest backup),
+   no_backups_warning, processing. Look: design/standard/stylesheets/git_manager.css (.gm-backup). *}
+{ezcss_require( 'git_manager.css' )}
+{def $status = first_set( $backup_status, false() )
+     $action = 'git_manager/backup'|ezurl( 'no' )
+     $type_names = hash( 'database', 'Database'|i18n( 'extension/git_manager' ),
+                         'agpl', 'Database, AGPL compatible'|i18n( 'extension/git_manager' ),
+                         'var', 'var directory'|i18n( 'extension/git_manager' ),
+                         'site', 'Site files'|i18n( 'extension/git_manager' ),
+                         'other', 'Other file'|i18n( 'extension/git_manager' ) )}
+
+<div class="context-block gm-backup"
+     data-gm-confirm-delete-one="{'Remove the backup %name and all its files? This cannot be undone.'|i18n( 'extension/git_manager' )|wash}"
+     data-gm-confirm-delete-many="{'Remove %count selected backups and all their files? This cannot be undone.'|i18n( 'extension/git_manager' )|wash}"
+     data-gm-confirm-create="{'Create this backup now? It can take several minutes; keep the page open.'|i18n( 'extension/git_manager' )|wash}"
+     data-gm-selected="{'%count selected'|i18n( 'extension/git_manager' )|wash}">
+
+<div class="box-header"><div class="box-ml">
+<h1 class="context-title">{'Backups'|i18n( 'extension/git_manager' )}</h1>
+</div></div>
+
+<div class="box-bc"><div class="box-ml"><div class="box-content">
+
+<p class="gm-intro">{'Backups of this site: the database, the var directory with the uploaded files, and the site\'s own extensions and settings. Each backup is a folder of archives you can download, and only the site\'s owner on the server can read it.'|i18n( 'extension/git_manager' )}</p>
 
 {if $error}
-<div class="message-error">
-    <h2><strong>{'Error:'|i18n( 'extension/git_manager' )}</strong> {$error|wash}</h2>
-</div>
+<div class="gm-feedback is-bad" role="alert"><strong>{'Not done:'|i18n( 'extension/git_manager' )}</strong> {$error|wash}</div>
 {/if}
-
 {if $message}
-<div class="message-feedback">
-    <h2><strong>{'Success:'|i18n( 'extension/git_manager' )}</strong> {$message|wash}</h2>
-</div>	
+<div class="gm-feedback is-ok" role="status"><strong>{'Done:'|i18n( 'extension/git_manager' )}</strong> {$message|wash}</div>
 {/if}
 
-{if $processing}
-<div class="processing-indicator">
-    {'<strong>⏳ Processing...</strong> Creating backup, please wait. This may take several minutes depending on your database and file sizes.'|i18n( 'extension/git_manager' )}
-</div>
+{if $status}
+<section class="gm-health is-{$status.severity|wash}" data-gm-backup-state="{$status.state|wash}" aria-labelledby="gm-health-title">
+    <div class="gm-health-mark" aria-hidden="true">{if eq( $status.severity, 'ok' )}&#10003;{else}!{/if}</div>
+    <div class="gm-health-body">
+        <h2 class="gm-health-title" id="gm-health-title">{$status.title|wash}</h2>
+        <p>{$status.text|wash}</p>
+        {foreach $status.notes as $note}<p class="gm-health-note">{$note|wash}</p>{/foreach}
+    </div>
+    <p class="gm-health-count">{$status.count_text|wash}</p>
+</section>
 {/if}
 
-<div class="backup-manager">
-    <div class="context-block">
-        <div class="box-header">
-            <h1 class="context-title">{'Backup & Caption Manager'|i18n( 'extension/git_manager' )}</h1>
-            <div class="header-mainline"></div>
-        </div>
-        
-        {if $no_backups_warning}
-        <div class="backup-outdated-warning backup-critical-warning">
-            <div class="backup-outdated-warning-header">
-                <div class="backup-outdated-warning-icon">🚨</div>
-                <h3 class="backup-outdated-warning-title">{'No Backups Found — System Unprotected!'|i18n( 'extension/git_manager' )}</h3>
-            </div>
-            <p class="backup-outdated-warning-message">
-                {'<strong>Your website has ZERO backup captions.</strong> Take a backup caption <strong>right now</strong> to protect your site database and var directory files from data loss!'|i18n( 'extension/git_manager' )}
-            </p>
-        </div>
-        {elseif $oldest_warning}
-        <div class="backup-outdated-warning">
-            <div class="backup-outdated-warning-header">
-                <div class="backup-outdated-warning-icon">⚠️</div>
-                <h3 class="backup-outdated-warning-title">{'Backup Outdated Warning'|i18n( 'extension/git_manager' )}</h3>
-            </div>
-            <p class="backup-outdated-warning-message">
-                {'Your site backup captions are <strong>%age old</strong> and outdated. Please create a new caption now to protect your site database and var directory.'|i18n( 'extension/git_manager',, hash( '%age', $oldest_warning.age ) )}
-            </p>
-        </div>
-        {/if}
-
-        <div class="box-content">
-            <div class="backup-actions">
-                <!-- Full Site Backup Card -->
-                <div class="backup-action-card primary">
-                    <div class="backup-action-icon full">🌐</div>
-                    <div class="backup-action-title">{'Full Site Backup'|i18n( 'extension/git_manager' )}</div>
-                    <div class="backup-action-description">
-                        <strong>{'Includes: SQL database dump + var directory files + extensions + settings + config.php'|i18n( 'extension/git_manager' )}</strong>
-                    </div>
-                    <div class="backup-action-help">
-                        ⭐ {'<strong>Most Complete:</strong> Creates 3 archives — (1) SQL dump of entire database, (2) var/ directory including uploaded files, (3) site files: extensions/, settings/, config.php. Use this to fully restore the site from scratch.'|i18n( 'extension/git_manager' )}
-                    </div>
-                    <form action="{'git_manager/backup'|ezurl( 'no' )}" method="post">
-                        <input type="text" name="description" class="backup-description-input" placeholder="{'Optional: Add description...'|i18n( 'extension/git_manager' )}" />
-                        
-                        <div class="backup-encryption-box">
-                            <div class="backup-encryption-header">
-                                <input type="checkbox" name="encrypt" value="yes" class="encrypt-checkbox" id="encrypt-fullsite" />
-                                <label for="encrypt-fullsite">{'🔒 Encrypt backup files'|i18n( 'extension/git_manager' )}</label>
-                            </div>
-                            <input type="password" name="passphrase" class="backup-passphrase-input" placeholder="{'Enter encryption passphrase...'|i18n( 'extension/git_manager' )}" />
-                            <div class="encryption-note">
-                                ⚠️ {'<strong>Important:</strong> Remember your passphrase! Encrypted files cannot be recovered without it.'|i18n( 'extension/git_manager' )}
-                            </div>
-                        </div>
-                        
-                        <div class="agpl-box">
-                            <label>
-                                <input type="checkbox" name="agpl_compatible" value="yes" />
-                                {'🔓 AGPL Compatible Release'|i18n( 'extension/git_manager' )}
-                            </label>
-                            <div class="agpl-note">
-                                {'Creates an additional sanitized SQL dump with all private data removed (user passwords, emails, API keys, GA IDs, disk paths, credentials). Safe to share with other developers per AGPL/GPL obligations. Marked in caption history.'|i18n( 'extension/git_manager' )}
-                            </div>
-                        </div>
-                        
-                        <input class="button defaultbutton" type="submit" name="CreateFullSiteBackup" value="{'Create Full Site Backup'|i18n( 'extension/git_manager' )}" onclick="return confirm('Create full site backup (DB + var + site files)? This may take several minutes.');" />
-                    </form>
-                </div>
-
-                <!-- Full Caption Card -->
-                <div class="backup-action-card">
-                    <div class="backup-action-icon full">📦</div>
-                    <div class="backup-action-title">{'DB + Files Caption'|i18n( 'extension/git_manager' )}</div>
-                    <div class="backup-action-description">
-                        <strong>{'Includes: SQL database dump + var directory files'|i18n( 'extension/git_manager' )}</strong>
-                    </div>
-                    <div class="backup-action-help">
-                        💡 {'<strong>Recommended daily backup:</strong> Creates 2 archives — (1) SQL dump of entire database (schema + data), (2) var/ directory with all uploaded files. Does <em>not</em> include extensions or settings.'|i18n( 'extension/git_manager' )}
-                    </div>
-                    <form action="{'git_manager/backup'|ezurl( 'no' )}" method="post">
-                        <input type="text" name="description" class="backup-description-input" placeholder="{'Optional: Add description...'|i18n( 'extension/git_manager' )}" />
-                        
-                        <div class="backup-encryption-box">
-                            <div class="backup-encryption-header">
-                                <input type="checkbox" name="encrypt" value="yes" class="encrypt-checkbox" id="encrypt-full" />
-                                <label for="encrypt-full">{'🔒 Encrypt backup files'|i18n( 'extension/git_manager' )}</label>
-                            </div>
-                            <input type="password" name="passphrase" class="backup-passphrase-input" placeholder="{'Enter encryption passphrase...'|i18n( 'extension/git_manager' )}" />
-                            <div class="encryption-note">
-                                ⚠️ {'<strong>Important:</strong> Remember your passphrase! Encrypted files cannot be recovered without it.'|i18n( 'extension/git_manager' )}
-                            </div>
-                        </div>
-                        
-                        <div class="agpl-box">
-                            <label>
-                                <input type="checkbox" name="agpl_compatible" value="yes" />
-                                {'🔓 AGPL Compatible Release'|i18n( 'extension/git_manager' )}
-                            </label>
-                            <div class="agpl-note">
-                                {'Creates an additional sanitized SQL dump with all private data removed (user passwords, emails, API keys, GA IDs, disk paths, credentials). Safe to share with other developers per AGPL/GPL obligations. Marked in caption history.'|i18n( 'extension/git_manager' )}
-                            </div>
-                        </div>
-                        
-                        <input class="button defaultbutton" type="submit" name="CreateFullCaption" value="{'Create Full Caption'|i18n( 'extension/git_manager' )}" onclick="return confirm('Create full caption (DB + var)? This may take several minutes.');" />
-                    </form>
-                </div>
-
-                <!-- Database Caption Card -->
-                <div class="backup-action-card">
-                    <div class="backup-action-icon database">🗄️</div>
-                    <div class="backup-action-title">{'Database Only'|i18n( 'extension/git_manager' )}</div>
-                    <div class="backup-action-description">
-                        <strong>{'Includes: SQL database dump only — no files'|i18n( 'extension/git_manager' )}</strong>
-                    </div>
-                    <div class="backup-action-help">
-                        {'💾 Creates a single SQL archive with the full database (schema + data). No var/ directory or site files are included. Use before database changes or migrations.'|i18n( 'extension/git_manager' )}
-                    </div>
-                    <form action="{'git_manager/backup'|ezurl( 'no' )}" method="post">
-                        <input type="text" name="description" class="backup-description-input" placeholder="{'Optional: Add description...'|i18n( 'extension/git_manager' )}" />
-                        
-                        <div class="backup-encryption-box">
-                            <div class="backup-encryption-header">
-                                <input type="checkbox" name="encrypt" value="yes" class="encrypt-checkbox" id="encrypt-db" />
-                                <label for="encrypt-db">{'🔒 Encrypt backup file'|i18n( 'extension/git_manager' )}</label>
-                            </div>
-                            <input type="password" name="passphrase" class="backup-passphrase-input" placeholder="{'Enter encryption passphrase...'|i18n( 'extension/git_manager' )}" />
-                            <div class="encryption-note">
-                                ⚠️ {'<strong>Important:</strong> Remember your passphrase! Encrypted files cannot be recovered without it.'|i18n( 'extension/git_manager' )}
-                            </div>
-                        </div>
-                        
-                        <div class="agpl-box">
-                            <label>
-                                <input type="checkbox" name="agpl_compatible" value="yes" />
-                                {'🔓 AGPL Compatible Release'|i18n( 'extension/git_manager' )}
-                            </label>
-                            <div class="agpl-note">
-                                {'Creates an additional sanitized SQL dump with all private data removed (user passwords, emails, API keys, GA IDs, disk paths, credentials). Safe to share with other developers per AGPL/GPL obligations. Marked in caption history.'|i18n( 'extension/git_manager' )}
-                            </div>
-                        </div>
-                        
-                        <input class="button" type="submit" name="CreateDatabaseCaption" value="{'Capture Database'|i18n( 'extension/git_manager' )}" onclick="return confirm('Create database caption?');" />
-                    </form>
-                </div>
-
-                <!-- Var Directory Caption Card -->
-                <div class="backup-action-card">
-                    <div class="backup-action-icon files">📁</div>
-                    <div class="backup-action-title">{'Files Only (var/)'|i18n( 'extension/git_manager' )}</div>
-                    <div class="backup-action-description">
-                        <strong>{'Includes: var/ directory only — no database'|i18n( 'extension/git_manager' )}</strong>
-                    </div>
-                    <div class="backup-action-help">
-                        {'📂 Archives the var/ directory containing uploaded images, files, and user content. Cache, logs, and existing backups are excluded. No SQL dump is included.'|i18n( 'extension/git_manager' )}
-                    </div>
-                    <form action="{'git_manager/backup'|ezurl( 'no' )}" method="post">
-                        <input type="text" name="description" class="backup-description-input" placeholder="{'Optional: Add description...'|i18n( 'extension/git_manager' )}" />
-                        
-                        <div class="backup-encryption-box">
-                            <div class="backup-encryption-header">
-                                <input type="checkbox" name="encrypt" value="yes" class="encrypt-checkbox" id="encrypt-var" />
-                                <label for="encrypt-var">{'🔒 Encrypt backup file'|i18n( 'extension/git_manager' )}</label>
-                            </div>
-                            <input type="password" name="passphrase" class="backup-passphrase-input" placeholder="{'Enter encryption passphrase...'|i18n( 'extension/git_manager' )}" />
-                            <div class="encryption-note">
-                                ⚠️ {'<strong>Important:</strong> Remember your passphrase! Encrypted files cannot be recovered without it.'|i18n( 'extension/git_manager' )}
-                            </div>
-                        </div>
-                        
-                        <input class="button" type="submit" name="CreateVarCaption" value="{'Capture Files'|i18n( 'extension/git_manager' )}" onclick="return confirm('Create var directory caption?');" />
-                    </form>
-                </div>
-            </div>
-        </div>
+<section class="gm-section" aria-labelledby="gm-create-title">
+<h2 class="gm-h2" id="gm-create-title">{'Create a backup'|i18n( 'extension/git_manager' )}</h2>
+<div class="gm-create-grid">
+{foreach array(
+    hash( 'action', 'CreateFullSiteBackup', 'id', 'fullsite', 'primary', true(), 'agpl', true(),
+          'title', 'Full site backup'|i18n( 'extension/git_manager' ),
+          'what', 'Database, var directory, extensions, settings and config.php: three archives, enough to set the site up again from nothing.'|i18n( 'extension/git_manager' ),
+          'button', 'Create full site backup'|i18n( 'extension/git_manager' ) ),
+    hash( 'action', 'CreateFullCaption', 'id', 'full', 'primary', false(), 'agpl', true(),
+          'title', 'Database and files'|i18n( 'extension/git_manager' ),
+          'what', 'Database and var directory: two archives. The regular backup; extensions and settings are not included.'|i18n( 'extension/git_manager' ),
+          'button', 'Create backup'|i18n( 'extension/git_manager' ) ),
+    hash( 'action', 'CreateDatabaseCaption', 'id', 'db', 'primary', false(), 'agpl', true(),
+          'title', 'Database only'|i18n( 'extension/git_manager' ),
+          'what', 'The whole database, schema and data, in one archive. Before an upgrade or a change to the database.'|i18n( 'extension/git_manager' ),
+          'button', 'Back up the database'|i18n( 'extension/git_manager' ) ),
+    hash( 'action', 'CreateVarCaption', 'id', 'var', 'primary', false(), 'agpl', false(),
+          'title', 'Files only'|i18n( 'extension/git_manager' ),
+          'what', 'The var directory with the uploaded images and files, without caches, logs, sessions and earlier backups.'|i18n( 'extension/git_manager' ),
+          'button', 'Back up the files'|i18n( 'extension/git_manager' ) ) ) as $card}
+<form class="gm-create{if $card.primary} is-primary{/if}" action="{$action|wash}" method="post">
+    <h3>{$card.title|wash}</h3>
+    <p class="gm-muted">{$card.what|wash}</p>
+    <div class="gm-field">
+        <label for="gm-desc-{$card.id}">{'Description'|i18n( 'extension/git_manager' )} <span class="gm-muted">{'(optional)'|i18n( 'extension/git_manager' )}</span></label>
+        <input type="text" id="gm-desc-{$card.id}" name="description" maxlength="200" autocomplete="off" />
     </div>
-
-    <div class="context-block" style="margin-top: 30px;">
-        <div class="backup-list-header">
-            <h2 class="backup-list-title">{'📋 Existing Captions'|i18n( 'extension/git_manager' )}</h2>
-        </div>
-
-        {if $captions|count()}
-            <div class="bulk-actions-bar">
-                <label>
-                    <input type="checkbox" id="select-all-captions" />
-                    {'Select All'|i18n( 'extension/git_manager' )}
-                </label>
-                
-                <form id="delete-selected-form" action="{'git_manager/backup'|ezurl('no')}" method="post" style="margin: 0;">
-                    <button type="submit" name="DeleteSelectedCaptions" class="btn-delete-selected" disabled>
-                        {'🗑️ Delete Selected'|i18n( 'extension/git_manager' )}
-                    </button>
-                    <input type="hidden" name="selected_timestamps" id="selected-timestamps-input" value="" />
-                </form>
-                
-                <span class="selected-count">{'%count selected'|i18n( 'extension/git_manager',, hash( '%count', 0 ) )}</span>
-            </div>
-            
-            {foreach $captions as $caption}
-            <div class="caption-item-wrapper">
-                <div class="caption-checkbox">
-                    <input type="checkbox" class="caption-select" name="timestamps[]" value="{$caption.timestamp|wash}" />
-                </div>
-                <div class="caption-item" style="flex: 1;">
-                <div class="caption-header">
-                    <div>
-                        <span class="caption-timestamp">🕐 {$caption.timestamp|wash}</span>
-                        <span class="caption-date">({$caption.date})</span>
-                        <span class="caption-age" style="color:{$caption.time_ago.color};font-weight:600;margin-left:10px;">
-                            ⏱ {$caption.time_ago.display}
-                        </span>
-                        {if $caption.agpl_compatible}<span class="badge-agpl" title="{'Includes AGPL-compatible sanitized SQL dump — safe for public sharing'|i18n( 'extension/git_manager' )}">{'🔓 AGPL COMPATIBLE'|i18n( 'extension/git_manager' )}</span>{/if}
-                    </div>
-                    <div>
-                        <strong>{'Total Size:'|i18n( 'extension/git_manager' )}</strong> {$caption.total_size_formatted}
-                    </div>
-                </div>
-
-                {if $caption.description}
-                <div class="caption-description">
-                    📝 {$caption.description|wash}
-                </div>
-                {/if}
-
-                <div class="caption-files">
-                    {foreach $caption.files as $file}
-                    <div class="caption-file {$file.type}">
-                        {if $file.type|eq('database')}
-                            <span class="caption-file-icon">🗄️</span>
-                        {elseif $file.type|eq('site')}
-                            <span class="caption-file-icon">🌐</span>
-                        {elseif $file.type|eq('agpl')}
-                            <span class="caption-file-icon">🔓</span>
-                        {else}
-                            <span class="caption-file-icon">📁</span>
-                        {/if}
-                        <span><strong>{$file.name|wash}</strong> ({$file.size_formatted})</span>
-                        {if $file.encrypted}
-                            <span style="color:#d35400;margin-left:5px;" title="{'Encrypted file - passphrase required'|i18n( 'extension/git_manager' )}">🔒</span>
-                        {/if}
-                    </div>
-                    {/foreach}
-                </div>
-
-                <div class="caption-actions">
-                    <div class="caption-actions-downloads">
-                    {foreach $caption.files as $file}
-                    <a href="{concat('git_manager/download/', $caption.timestamp, '/', $file.name)|ezurl('no')}" class="btn-download">
-                        {'⬇️ Download %name'|i18n( 'extension/git_manager',, hash( '%name', $file.name|wash ) )}
-                    </a>
-                    {/foreach}
-                    </div>
-                    
-                    <div class="caption-actions-delete">
-                    <form action="{'git_manager/backup'|ezurl( 'no' )}" method="post" style="display: inline;">
-                        <input type="hidden" name="timestamp" value="{$caption.timestamp|wash}" />
-                        <button type="submit" name="DeleteCaption" class="btn-delete btn-delete-single" data-timestamp="{$caption.timestamp|wash}">
-                            {'🗑️ Delete Caption'|i18n( 'extension/git_manager' )}
-                        </button>
-                    </form>
-                    </div>
-                </div>
-                </div>
-            </div>
-            {/foreach}
-        {else}
-            <div class="no-captions">
-                <p><strong>{'📭 No captions found'|i18n( 'extension/git_manager' )}</strong></p>
-                <p>{'Create your first caption using the action cards above.'|i18n( 'extension/git_manager' )}</p>
-            </div>
-        {/if}
+    <label class="gm-check"><input type="checkbox" name="encrypt" value="yes" /> <span>{'Encrypt the archives (GPG, AES-256)'|i18n( 'extension/git_manager' )}</span></label>
+    <div class="gm-field">
+        <label for="gm-pass-{$card.id}">{'Passphrase for encryption'|i18n( 'extension/git_manager' )}</label>
+        <input type="password" id="gm-pass-{$card.id}" name="passphrase" autocomplete="new-password" aria-describedby="gm-pass-help-{$card.id}" />
+        <span class="gm-help" id="gm-pass-help-{$card.id}">{'Only used when encrypting. Without it an encrypted archive cannot be opened, by anyone.'|i18n( 'extension/git_manager' )}</span>
     </div>
+    {if $card.agpl}
+    <label class="gm-check"><input type="checkbox" name="agpl_compatible" value="yes" /> <span>{'Also an AGPL compatible database dump: passwords, e-mail addresses, keys and paths removed, safe to share.'|i18n( 'extension/git_manager' )}</span></label>
+    {/if}
+    <div class="gm-create-foot">
+        <button type="submit" class="gm-btn{if $card.primary} gm-btn-primary{/if}" name="{$card.action}" value="1" data-gm-confirm="create">{$card.button|wash}</button>
+    </div>
+</form>
+{/foreach}
 </div>
+</section>
+
+<section class="gm-section" aria-labelledby="gm-list-title">
+<h2 class="gm-h2" id="gm-list-title">{'Existing backups'|i18n( 'extension/git_manager' )}</h2>
+
+{if $captions|count|eq( 0 )}
+<p class="gm-empty">{'There is no backup yet. Create one with one of the forms above.'|i18n( 'extension/git_manager' )}</p>
+{else}
+{if $persistent_server}
+<p class="gm-help gm-list-note">{'This page is served by a persistent PHP server, which sends files up to %limit. Larger archives are marked; download them through the address served by Apache or PHP-FPM.'|i18n( 'extension/git_manager',, hash( '%limit', $download_limit_text ) )|wash}</p>
+{/if}
+<form class="gm-list" action="{$action|wash}" method="post">
+<div class="gm-bulkbar">
+    <label class="gm-check"><input type="checkbox" class="gm-select-all" /> <span>{'Select all'|i18n( 'extension/git_manager' )}</span></label>
+    <span class="gm-muted gm-selected-count" aria-live="polite"></span>
+    <button type="submit" class="gm-btn gm-btn-outline-danger" name="DeleteSelectedCaptions" value="1" data-gm-confirm="delete-many">{'Remove selected'|i18n( 'extension/git_manager' )}</button>
+</div>
+
+<ul class="gm-captions">
+{foreach $captions as $caption}
+<li class="gm-caption is-{$caption.time_ago.state|wash}{if $caption.is_newest} is-newest{/if}">
+    <div class="gm-caption-head">
+        {if $caption.valid_name}
+        <label class="gm-select"><input type="checkbox" class="gm-caption-select" name="timestamps[]" value="{$caption.timestamp|wash}" aria-label="{'Select %name'|i18n( 'extension/git_manager',, hash( '%name', $caption.timestamp ) )|wash}" /></label>
+        {/if}
+        <div class="gm-caption-title">
+            <h3>{$caption.timestamp|wash}</h3>
+            <ul class="gm-badges">
+                <li class="gm-badge is-{$caption.time_ago.state|wash}">{$caption.age_text|wash}</li>
+                {if $caption.is_newest}<li class="gm-badge is-info">{'Newest'|i18n( 'extension/git_manager' )}</li>{/if}
+                {if $caption.agpl_compatible}<li class="gm-badge">{'AGPL compatible dump'|i18n( 'extension/git_manager' )}</li>{/if}
+                {if $caption.readable|not}<li class="gm-badge is-bad">{'Cannot be read'|i18n( 'extension/git_manager' )}</li>{/if}
+            </ul>
+            <p class="gm-muted">{$caption.date|wash}{if eq( $caption.created_source, 'mtime' )} &middot; {'dated by the folder, the name is not a date'|i18n( 'extension/git_manager' )}{/if} &middot; {$caption.total_size_formatted|wash}</p>
+            {if $caption.description}<p class="gm-caption-desc">{$caption.description|wash}</p>{/if}
+        </div>
+        {if $caption.valid_name}
+        <button type="submit" class="gm-btn gm-btn-small gm-btn-outline-danger" name="DeleteCaption" value="{$caption.timestamp|wash}" data-gm-confirm="delete-one" data-gm-name="{$caption.timestamp|wash}">{'Remove'|i18n( 'extension/git_manager' )}</button>
+        {/if}
+    </div>
+    {if $caption.files|count}
+    <div class="gm-table-wrap">
+    <table class="gm-table">
+        <caption class="gm-sr">{'Archives of %name'|i18n( 'extension/git_manager',, hash( '%name', $caption.timestamp ) )|wash}</caption>
+        <thead><tr><th scope="col">{'Archive'|i18n( 'extension/git_manager' )}</th><th scope="col">{'Contents'|i18n( 'extension/git_manager' )}</th><th scope="col" class="gm-num">{'Size'|i18n( 'extension/git_manager' )}</th><th scope="col"><span class="gm-sr">{'Download'|i18n( 'extension/git_manager' )}</span></th></tr></thead>
+        <tbody>
+        {foreach $caption.files as $file}
+        <tr>
+            <td class="gm-arch"><code>{$file.name|wash}</code>{if $file.encrypted} <span class="gm-badge is-info">{'Encrypted'|i18n( 'extension/git_manager' )}</span>{/if}</td>
+            <td>{first_set( $type_names[$file.type], $file.type )|wash}</td>
+            <td class="gm-num">{$file.size_formatted|wash}</td>
+            <td class="gm-dl">
+            {if $file.archive|not}
+                <span class="gm-muted">&ndash;</span>
+            {elseif $file.too_large_here}
+                <span class="gm-muted">{'Too large for this server'|i18n( 'extension/git_manager' )}</span>
+            {else}
+                <a class="gm-btn gm-btn-small" href="{concat( 'git_manager/download/', $caption.timestamp, '/', $file.name )|ezurl( 'no' )}" download>{'Download'|i18n( 'extension/git_manager' )}<span class="gm-sr"> {$file.name|wash}</span></a>
+            {/if}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    </div>
+    {elseif $caption.readable}
+    <p class="gm-muted">{'This backup holds no archive.'|i18n( 'extension/git_manager' )}</p>
+    {/if}
+</li>
+{/foreach}
+</ul>
+</form>
+{/if}
+</section>
+
+</div></div></div>
+</div>
+
+<script>
+{literal}
+(function () {
+    var page = document.querySelector('.gm-backup');
+    if (!page) return;
+    var all = page.querySelector('.gm-select-all');
+    var boxes = page.querySelectorAll('.gm-caption-select');
+    var count = page.querySelector('.gm-selected-count');
+    function selected() { var n = 0; for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) n++; return n; }
+    function update() {
+        var n = selected();
+        if (count) count.textContent = page.getAttribute('data-gm-selected').replace('%count', n);
+        if (all) { all.checked = n > 0 && n === boxes.length; all.indeterminate = n > 0 && n < boxes.length; }
+    }
+    if (all) all.addEventListener('change', function () { for (var i = 0; i < boxes.length; i++) boxes[i].checked = all.checked; update(); });
+    for (var i = 0; i < boxes.length; i++) boxes[i].addEventListener('change', update);
+    update();
+    page.addEventListener('click', function (e) {
+        var b = e.target.closest ? e.target.closest('[data-gm-confirm]') : null;
+        if (!b) return;
+        var kind = b.getAttribute('data-gm-confirm'), text;
+        if (kind === 'delete-many') {
+            var n = selected();
+            if (n === 0) { e.preventDefault(); return; }
+            text = page.getAttribute('data-gm-confirm-delete-many').replace('%count', n);
+        } else if (kind === 'delete-one') {
+            text = page.getAttribute('data-gm-confirm-delete-one').replace('%name', b.getAttribute('data-gm-name'));
+        } else {
+            text = page.getAttribute('data-gm-confirm-create');
+        }
+        if (!window.confirm(text)) e.preventDefault();
+    });
+})();
+{/literal}
+</script>
+{undef}
