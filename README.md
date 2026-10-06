@@ -10,7 +10,7 @@ Git Manager provides a complete web-based git management and site backup toolset
 - No shell/SSH access to the server — manage git branches and deployments via web UI
 - Hosting environments where only web/FTP access is available
 - Teams needing a simple web UI to switch branches without CLI knowledge
-- Automated site backup and download without needing server access
+- Site backup and download from the browser, without needing server access
 - Secure encrypted offsite backup via browser download
 
 Features
@@ -31,9 +31,8 @@ Features
 - **GPL v2 + AGPL v3 license files** bundled in every caption archive for legal compliance
 - Multi-select delete of old captions
 - Age indicators (green/orange/red) showing how old each backup is
-- **Prominent backup age warnings** — visual alerts when backups are outdated (>7 days)
-- **Critical "No Backups" warning** — red alert box when zero captions exist
-- Secure download of backup files via authenticated controller
+- **A status taken from the newest backup** — fresh, ageing (older than `WarnAfterDays`, 7), stale (older than `StaleAfterDays`, 30) or none, see "Backup Status and Age Warnings"
+- Secure download of backup files via authenticated controller, streamed (archives of any size)
 - Automatic cleanup of old captions based on `MaxBackups` setting
 
 **CLI Tools** (requires shell access)
@@ -92,27 +91,49 @@ Every caption directory and compressed archive includes a `licenses/` folder wit
 This ensures anyone receiving your backup archive has the full license terms as required by open source distribution obligations.
 
 
-Backup Age Warnings
--------------------
+Backup Status and Age Warnings
+------------------------------
 
-The Backup Manager dashboard displays prominent visual warnings to remind you when backups need attention:
+The top of the Backup page says in one block how fresh the backups are. It is taken from the
+**newest** backup only: an old backup next to a recent one is no reason for a warning. (Before
+2.0.15 the page took the age of the *oldest* backup, so it kept warning about a backup from
+months ago however recent the newest was.)
 
-**🚨 Critical Warning (Red Box)** — Shown when **zero captions exist**:
-- Red gradient background with pulsing red border
-- Animated 🚨 icon with urgent shake
-- Message: "Your website has ZERO backup captions. Take a backup caption right now..."
-- Purpose: Prevents leaving the site completely unprotected
+| State | When | Colour |
+|-------|------|--------|
+| none | there is no backup | red |
+| fresh | the newest backup is at most `WarnAfterDays` old | green |
+| ageing | older than `WarnAfterDays`, at most `StaleAfterDays` | orange |
+| stale | older than `StaleAfterDays` | red |
+| future | every backup is dated more than `FutureToleranceMinutes` ahead of the server clock | orange |
 
-**⚠️ Outdated Warning (Orange Box)** — Shown when **newest caption is >7 days old**:
-- Amber/yellow gradient background with pulsing orange border
-- Animated ⚠️ icon with periodic shake
-- Shows exact age: "Your site backup captions are 2 weeks old and outdated..."
-- Purpose: Encourages regular backup refresh to minimize data loss risk
+The thresholds are in `git_manager.ini`:
 
-Both warnings are:
-- Positioned directly below the page heading for maximum visibility
-- Responsive (adjust padding/sizing on mobile)
-- Dismissible by creating a new backup
+```ini
+[BackupFreshnessSettings]
+WarnAfterDays=7
+StaleAfterDays=30
+FutureToleranceMinutes=5
+```
+
+How the age is found:
+
+- A backup's time is its folder name, `Y-m-d_H-i-s`, read in the installation's time zone (the one
+  `config.php` sets; the names are written in that zone too). The folder's mtime is used only for a
+  folder whose name is not such a date (made or renamed by hand), and the list says so. Copying,
+  restoring or adding a file to a backup does not change its age.
+- The backups are listed newest first, by that time, then by name.
+- The age is the number of seconds between that time and now, shown in the largest whole unit
+  (1 day, 22 days, 3 months, 1 year), singular and plural each with its own translatable text.
+- A backup dated in the future does not count as the newest: a wrong clock or time zone must not
+  hide that the real backups are old. The page names such backups in a note.
+
+The texts are chosen from the state alone (`GitManagerBackupMessages`), the state from the ages
+(`GitManagerBackupFreshness`), and the backups are read from the disk by
+`GitManagerBackupCatalogue`. `bin/php/backup-list.php` prints the same status line.
+
+Nothing makes backups on its own: the warning stays until someone creates a backup (on the page or
+with `bin/php/backup-create.php`, which a crontab can run; see below).
 
 > **Best Practice:** Create a full caption weekly, and a database-only caption before any CMS upgrades or major content changes.
 
@@ -121,20 +142,28 @@ Using the Backup Manager (Web)
 -------------------------------
 
 1. Open **Setup → Backup** in the admin interface (`/git_manager/backup`; the address before 2.0.4, `/git_manager/dump`, redirects there)
-2. Choose a backup type card
+2. Choose one of the four forms under **Create a backup**
 3. Optionally add a description
-4. Optionally check **Encrypt backup files** and enter a passphrase
-5. Optionally check **🔓 AGPL Compatible Release** to create a sanitized SQL dump for public sharing
-6. Click the create button — backup runs server-side, page reloads on completion
-7. In **Existing Captions**, download individual archive files using the green Download buttons
-8. Captions marked with 🔓 **AGPL COMPATIBLE** badge contain both private and public-shareable SQL dumps
-9. Delete outdated captions using the red Delete button (right-aligned) or use **Select All + Delete Selected** for bulk removal
+4. Optionally check **Encrypt the archives** and enter a passphrase
+5. Optionally check the **AGPL compatible database dump** to create a sanitized SQL dump for public sharing
+6. Click the create button — the backup runs on the server; the page comes back with the result
+7. In **Existing backups**, download each archive with its **Download** button (the AGPL compatible dumps too)
+8. Remove a backup with its **Remove** button, or several with the check boxes and **Remove selected**
 
-> ⚠️ The age indicator (⏱) next to each caption timestamp shows how old it is:
-> - 🟢 Green = fresh (< 7 days)
-> - 🟠 Orange = aging (7–90 days)
-> - 🔴 Red = outdated (90+ days or 1+ year)
+Every form is a POST with the form token of ezformtoken and ends in a redirect to the page, so
+reloading it repeats nothing; the result is shown once.
 
+**Downloads** are streamed in pieces with the session closed, so an archive of several gigabytes
+needs no memory and does not block the user's other pages. A persistent PHP server (Exponential
+Velocity) keeps a whole response in memory before sending it; there an archive larger than
+`PersistentServerDownloadLimitMB` (git_manager.ini, default 128) is marked *Too large for this
+server* and refused with a message. Download it through the address served by Apache or PHP-FPM,
+or copy it from the server.
+
+**Tests:** `php ../../vendor/bin/phpunit` in `extension/git_manager` (or `phpunit -c phpunit.xml.dist`
+in a checkout) runs the unit tests of the catalogue, the freshness and the texts. They need no
+database and make their throwaway backup folders under `tests/.tmp` (or `GIT_MANAGER_TEST_TMP`).
+Run them as the site user as well: two tests about unreadable backups are skipped as root.
 
 Access
 ------
@@ -178,6 +207,14 @@ php extension/git_manager/bin/php/backup-create.php var
 # With encryption
 php extension/git_manager/bin/php/backup-create.php full -e -p "yourPassphrase" -d "Encrypted"
 ```
+
+**Scheduled backups:** nothing in git_manager makes backups on its own. A crontab line of the
+site's user makes them regularly, for example a database backup every night:
+```bash
+30 3 * * * cd /path/to/exponential && php extension/git_manager/bin/php/backup-create.php db -d "Nightly" >> var/log/git_manager_backup.log 2>&1
+```
+`MaxBackups` in git_manager.ini limits how many are kept (the oldest are removed after a full
+backup).
 
 **Inspect a caption:**
 ```bash
