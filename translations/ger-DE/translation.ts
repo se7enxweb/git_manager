@@ -779,6 +779,346 @@
         <source>untracked</source>
         <translation>nicht verfolgt</translation>
     </message>
+    <message>
+        <source>%count second</source>
+        <translation>%count Sekunde</translation>
+    </message>
+    <message>
+        <source>%count seconds</source>
+        <translation>%count Sekunden</translation>
+    </message>
+    <message>
+        <source>%count minute</source>
+        <translation>%count Minute</translation>
+    </message>
+    <message>
+        <source>%count minutes</source>
+        <translation>%count Minuten</translation>
+    </message>
+    <message>
+        <source>%count hour</source>
+        <translation>%count Stunde</translation>
+    </message>
+    <message>
+        <source>%count hours</source>
+        <translation>%count Stunden</translation>
+    </message>
+    <message>
+        <source>%count day</source>
+        <translation>%count Tag</translation>
+    </message>
+    <message>
+        <source>%count days</source>
+        <translation>%count Tage</translation>
+    </message>
+    <message>
+        <source>%count month</source>
+        <translation>%count Monat</translation>
+    </message>
+    <message>
+        <source>%count months</source>
+        <translation>%count Monate</translation>
+    </message>
+    <message>
+        <source>%count year</source>
+        <translation>%count Jahr</translation>
+    </message>
+    <message>
+        <source>%count years</source>
+        <translation>%count Jahre</translation>
+    </message>
+    <message>
+        <source>%count backup</source>
+        <translation>%count Sicherung</translation>
+    </message>
+    <message>
+        <source>%count backups</source>
+        <translation>%count Sicherungen</translation>
+    </message>
+    <message>
+        <source>%age old</source>
+        <translation>%age alt</translation>
+    </message>
+    <message>
+        <source>%age ahead of the clock</source>
+        <translation>%age der Uhr voraus</translation>
+    </message>
+    <message>
+        <source>Made just now</source>
+        <translation>Gerade eben erstellt</translation>
+    </message>
+    <message>
+        <source>Age unknown</source>
+        <translation>Alter unbekannt</translation>
+    </message>
+    <message>
+        <source>There is no backup of this site</source>
+        <translation>Von dieser Website gibt es keine Sicherung</translation>
+    </message>
+    <message>
+        <source>Nothing could be restored if the site were lost. Create a full site backup now: it holds the database, the var directory and the site's own files.</source>
+        <translation>Ginge die Website verloren, ließe sich nichts wiederherstellen. Erstellen Sie jetzt eine vollständige Sicherung: Sie enthält die Datenbank, das var-Verzeichnis und die eigenen Dateien der Website.</translation>
+    </message>
+    <message>
+        <source>The backups are dated ahead of the server clock</source>
+        <translation>Die Sicherungen sind der Serveruhr voraus datiert</translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, is dated %ahead ahead of the clock, so its age cannot be judged. Check the server's time and time zone, then create a new backup.</source>
+        <translation>Die neueste Sicherung, %name, ist %ahead der Uhr voraus datiert, ihr Alter lässt sich daher nicht beurteilen. Prüfen Sie Uhrzeit und Zeitzone des Servers und erstellen Sie dann eine neue Sicherung.</translation>
+    </message>
+    <message>
+        <source>The newest backup is %age old</source>
+        <translation>Die neueste Sicherung ist %age alt</translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, is older than %limit. Everything changed since then would be lost. Create a new backup now.</source>
+        <translation>Die neueste Sicherung, %name, ist älter als %limit. Alles, was sich seitdem geändert hat, ginge verloren. Erstellen Sie jetzt eine neue Sicherung.</translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, is older than %limit. Create a new backup soon.</source>
+        <translation>Die neueste Sicherung, %name, ist älter als %limit. Erstellen Sie bald eine neue Sicherung.</translation>
+    </message>
+    <message>
+        <source>The backups are up to date</source>
+        <translation>Die Sicherungen sind aktuell</translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, was made just now.</source>
+        <translation>Die neueste Sicherung, %name, wurde gerade eben erstellt.</translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, is %age old.</source>
+        <translation>Die neueste Sicherung, %name, ist %age alt.</translation>
+    </message>
+    <message>
+        <source>%backups dated ahead of the server clock: not counted as the newest. Check the server's time and time zone.</source>
+        <translation>%backups der Serveruhr voraus datiert: nicht als neueste gezählt. Prüfen Sie Uhrzeit und Zeitzone des Servers.</translation>
+    </message>
+    <message>
+        <source>%backups without a date: not counted.</source>
+        <translation>%backups ohne Datum: nicht gezählt.</translation>
+    </message>
+    <message>
+        <source>A passphrase is needed to encrypt the backup. Nothing was created.</source>
+        <translation>Zum Verschlüsseln der Sicherung wird eine Passphrase gebraucht. Es wurde nichts erstellt.</translation>
+    </message>
+    <message>
+        <source>No backup was selected. Nothing was removed.</source>
+        <translation>Es wurde keine Sicherung ausgewählt. Es wurde nichts entfernt.</translation>
+    </message>
+    <message>
+        <source>None of the selected backups could be removed.</source>
+        <translation>Keine der ausgewählten Sicherungen konnte entfernt werden.</translation>
+    </message>
+    <message>
+        <source>Backups removed: %count.</source>
+        <translation>Entfernte Sicherungen: %count.</translation>
+    </message>
+    <message>
+        <source>Not removed: %count.</source>
+        <translation>Nicht entfernt: %count.</translation>
+    </message>
+    <message>
+        <source>%file is %size, more than this server sends (%limit). Download it through the address served by Apache or PHP-FPM, or copy it from the server.</source>
+        <translation>%file ist %size groß, mehr als dieser Server sendet (%limit). Laden Sie die Datei über die Adresse herunter, die Apache oder PHP-FPM bedient, oder kopieren Sie sie vom Server.</translation>
+    </message>
+    <message>
+        <source>Database</source>
+        <translation>Datenbank</translation>
+    </message>
+    <message>
+        <source>Database, AGPL compatible</source>
+        <translation>Datenbank, AGPL-kompatibel</translation>
+    </message>
+    <message>
+        <source>var directory</source>
+        <translation>var-Verzeichnis</translation>
+    </message>
+    <message>
+        <source>Site files</source>
+        <translation>Dateien der Website</translation>
+    </message>
+    <message>
+        <source>Other file</source>
+        <translation>Andere Datei</translation>
+    </message>
+    <message>
+        <source>Remove the backup %name and all its files? This cannot be undone.</source>
+        <translation>Die Sicherung %name mit allen ihren Dateien entfernen? Das lässt sich nicht rückgängig machen.</translation>
+    </message>
+    <message>
+        <source>Remove %count selected backups and all their files? This cannot be undone.</source>
+        <translation>%count ausgewählte Sicherungen mit allen ihren Dateien entfernen? Das lässt sich nicht rückgängig machen.</translation>
+    </message>
+    <message>
+        <source>Create this backup now? It can take several minutes; keep the page open.</source>
+        <translation>Diese Sicherung jetzt erstellen? Das kann einige Minuten dauern; lassen Sie die Seite geöffnet.</translation>
+    </message>
+    <message>
+        <source>Backups</source>
+        <translation>Sicherungen</translation>
+    </message>
+    <message>
+        <source>Backups of this site: the database, the var directory with the uploaded files, and the site's own extensions and settings. Each backup is a folder of archives you can download, and only the site's owner on the server can read it.</source>
+        <translation>Sicherungen dieser Website: die Datenbank, das var-Verzeichnis mit den hochgeladenen Dateien und die eigenen Erweiterungen und Einstellungen der Website. Jede Sicherung ist ein Ordner mit Archiven, die Sie herunterladen können, und auf dem Server kann ihn nur der Eigentümer der Website lesen.</translation>
+    </message>
+    <message>
+        <source>Not done:</source>
+        <translation>Nicht ausgeführt:</translation>
+    </message>
+    <message>
+        <source>Done:</source>
+        <translation>Erledigt:</translation>
+    </message>
+    <message>
+        <source>Create a backup</source>
+        <translation>Sicherung erstellen</translation>
+    </message>
+    <message>
+        <source>Full site backup</source>
+        <translation>Vollständige Sicherung</translation>
+    </message>
+    <message>
+        <source>Database, var directory, extensions, settings and config.php: three archives, enough to set the site up again from nothing.</source>
+        <translation>Datenbank, var-Verzeichnis, Erweiterungen, Einstellungen und config.php: drei Archive, genug, um die Website von Grund auf neu einzurichten.</translation>
+    </message>
+    <message>
+        <source>Create full site backup</source>
+        <translation>Vollständige Sicherung erstellen</translation>
+    </message>
+    <message>
+        <source>Database and files</source>
+        <translation>Datenbank und Dateien</translation>
+    </message>
+    <message>
+        <source>Database and var directory: two archives. The regular backup; extensions and settings are not included.</source>
+        <translation>Datenbank und var-Verzeichnis: zwei Archive. Die regelmäßige Sicherung; Erweiterungen und Einstellungen sind nicht enthalten.</translation>
+    </message>
+    <message>
+        <source>Create backup</source>
+        <translation>Sicherung erstellen</translation>
+    </message>
+    <message>
+        <source>Database only</source>
+        <translation>Nur die Datenbank</translation>
+    </message>
+    <message>
+        <source>The whole database, schema and data, in one archive. Before an upgrade or a change to the database.</source>
+        <translation>Die ganze Datenbank, Schema und Daten, in einem Archiv. Vor einem Upgrade oder einer Änderung an der Datenbank.</translation>
+    </message>
+    <message>
+        <source>Back up the database</source>
+        <translation>Datenbank sichern</translation>
+    </message>
+    <message>
+        <source>Files only</source>
+        <translation>Nur die Dateien</translation>
+    </message>
+    <message>
+        <source>The var directory with the uploaded images and files, without caches, logs, sessions and earlier backups.</source>
+        <translation>Das var-Verzeichnis mit den hochgeladenen Bildern und Dateien, ohne Caches, Protokolle, Sitzungen und frühere Sicherungen.</translation>
+    </message>
+    <message>
+        <source>Back up the files</source>
+        <translation>Dateien sichern</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation>Beschreibung</translation>
+    </message>
+    <message>
+        <source>(optional)</source>
+        <translation>(optional)</translation>
+    </message>
+    <message>
+        <source>Encrypt the archives (GPG, AES-256)</source>
+        <translation>Archive verschlüsseln (GPG, AES-256)</translation>
+    </message>
+    <message>
+        <source>Passphrase for encryption</source>
+        <translation>Passphrase für die Verschlüsselung</translation>
+    </message>
+    <message>
+        <source>Only used when encrypting. Without it an encrypted archive cannot be opened, by anyone.</source>
+        <translation>Wird nur beim Verschlüsseln verwendet. Ohne sie kann niemand ein verschlüsseltes Archiv öffnen.</translation>
+    </message>
+    <message>
+        <source>Also an AGPL compatible database dump: passwords, e-mail addresses, keys and paths removed, safe to share.</source>
+        <translation>Zusätzlich ein AGPL-kompatibler Datenbankauszug: ohne Passwörter, E-Mail-Adressen, Schlüssel und Pfade, sicher weiterzugeben.</translation>
+    </message>
+    <message>
+        <source>Existing backups</source>
+        <translation>Vorhandene Sicherungen</translation>
+    </message>
+    <message>
+        <source>There is no backup yet. Create one with one of the forms above.</source>
+        <translation>Es gibt noch keine Sicherung. Erstellen Sie eine mit einem der Formulare oben.</translation>
+    </message>
+    <message>
+        <source>This page is served by a persistent PHP server, which sends files up to %limit. Larger archives are marked; download them through the address served by Apache or PHP-FPM.</source>
+        <translation>Diese Seite liefert ein dauerhaft laufender PHP-Server aus, der Dateien bis %limit sendet. Größere Archive sind gekennzeichnet; laden Sie sie über die Adresse herunter, die Apache oder PHP-FPM bedient.</translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation>Alle auswählen</translation>
+    </message>
+    <message>
+        <source>Remove selected</source>
+        <translation>Ausgewählte entfernen</translation>
+    </message>
+    <message>
+        <source>Select %name</source>
+        <translation>%name auswählen</translation>
+    </message>
+    <message>
+        <source>Newest</source>
+        <translation>Neueste</translation>
+    </message>
+    <message>
+        <source>AGPL compatible dump</source>
+        <translation>AGPL-kompatibler Auszug</translation>
+    </message>
+    <message>
+        <source>Cannot be read</source>
+        <translation>Nicht lesbar</translation>
+    </message>
+    <message>
+        <source>dated by the folder, the name is not a date</source>
+        <translation>nach dem Ordner datiert, der Name ist kein Datum</translation>
+    </message>
+    <message>
+        <source>Archives of %name</source>
+        <translation>Archive von %name</translation>
+    </message>
+    <message>
+        <source>Archive</source>
+        <translation>Archiv</translation>
+    </message>
+    <message>
+        <source>Contents</source>
+        <translation>Inhalt</translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation>Größe</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Herunterladen</translation>
+    </message>
+    <message>
+        <source>Encrypted</source>
+        <translation>Verschlüsselt</translation>
+    </message>
+    <message>
+        <source>Too large for this server</source>
+        <translation>Zu groß für diesen Server</translation>
+    </message>
+    <message>
+        <source>This backup holds no archive.</source>
+        <translation>Diese Sicherung enthält kein Archiv.</translation>
+    </message>
 </context>
 <context>
     <name>design/admin/pagelayout</name>

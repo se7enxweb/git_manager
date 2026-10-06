@@ -779,6 +779,346 @@
         <source>untracked</source>
         <translation>untracked</translation>
     </message>
+    <message>
+        <source>%count second</source>
+        <translation>%count second</translation>
+    </message>
+    <message>
+        <source>%count seconds</source>
+        <translation>%count seconds</translation>
+    </message>
+    <message>
+        <source>%count minute</source>
+        <translation>%count minute</translation>
+    </message>
+    <message>
+        <source>%count minutes</source>
+        <translation>%count minutes</translation>
+    </message>
+    <message>
+        <source>%count hour</source>
+        <translation>%count hour</translation>
+    </message>
+    <message>
+        <source>%count hours</source>
+        <translation>%count hours</translation>
+    </message>
+    <message>
+        <source>%count day</source>
+        <translation>%count day</translation>
+    </message>
+    <message>
+        <source>%count days</source>
+        <translation>%count days</translation>
+    </message>
+    <message>
+        <source>%count month</source>
+        <translation>%count month</translation>
+    </message>
+    <message>
+        <source>%count months</source>
+        <translation>%count months</translation>
+    </message>
+    <message>
+        <source>%count year</source>
+        <translation>%count year</translation>
+    </message>
+    <message>
+        <source>%count years</source>
+        <translation>%count years</translation>
+    </message>
+    <message>
+        <source>%count backup</source>
+        <translation>%count backup</translation>
+    </message>
+    <message>
+        <source>%count backups</source>
+        <translation>%count backups</translation>
+    </message>
+    <message>
+        <source>%age old</source>
+        <translation>%age old</translation>
+    </message>
+    <message>
+        <source>%age ahead of the clock</source>
+        <translation>%age ahead of the clock</translation>
+    </message>
+    <message>
+        <source>Made just now</source>
+        <translation>Made just now</translation>
+    </message>
+    <message>
+        <source>Age unknown</source>
+        <translation>Age unknown</translation>
+    </message>
+    <message>
+        <source>There is no backup of this site</source>
+        <translation>There is no backup of this site</translation>
+    </message>
+    <message>
+        <source>Nothing could be restored if the site were lost. Create a full site backup now: it holds the database, the var directory and the site's own files.</source>
+        <translation>Nothing could be restored if the site were lost. Create a full site backup now: it holds the database, the var directory and the site's own files.</translation>
+    </message>
+    <message>
+        <source>The backups are dated ahead of the server clock</source>
+        <translation>The backups are dated ahead of the server clock</translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, is dated %ahead ahead of the clock, so its age cannot be judged. Check the server's time and time zone, then create a new backup.</source>
+        <translation>The newest backup, %name, is dated %ahead ahead of the clock, so its age cannot be judged. Check the server's time and time zone, then create a new backup.</translation>
+    </message>
+    <message>
+        <source>The newest backup is %age old</source>
+        <translation>The newest backup is %age old</translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, is older than %limit. Everything changed since then would be lost. Create a new backup now.</source>
+        <translation>The newest backup, %name, is older than %limit. Everything changed since then would be lost. Create a new backup now.</translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, is older than %limit. Create a new backup soon.</source>
+        <translation>The newest backup, %name, is older than %limit. Create a new backup soon.</translation>
+    </message>
+    <message>
+        <source>The backups are up to date</source>
+        <translation>The backups are up to date</translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, was made just now.</source>
+        <translation>The newest backup, %name, was made just now.</translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, is %age old.</source>
+        <translation>The newest backup, %name, is %age old.</translation>
+    </message>
+    <message>
+        <source>%backups dated ahead of the server clock: not counted as the newest. Check the server's time and time zone.</source>
+        <translation>%backups dated ahead of the server clock: not counted as the newest. Check the server's time and time zone.</translation>
+    </message>
+    <message>
+        <source>%backups without a date: not counted.</source>
+        <translation>%backups without a date: not counted.</translation>
+    </message>
+    <message>
+        <source>A passphrase is needed to encrypt the backup. Nothing was created.</source>
+        <translation>A passphrase is needed to encrypt the backup. Nothing was created.</translation>
+    </message>
+    <message>
+        <source>No backup was selected. Nothing was removed.</source>
+        <translation>No backup was selected. Nothing was removed.</translation>
+    </message>
+    <message>
+        <source>None of the selected backups could be removed.</source>
+        <translation>None of the selected backups could be removed.</translation>
+    </message>
+    <message>
+        <source>Backups removed: %count.</source>
+        <translation>Backups removed: %count.</translation>
+    </message>
+    <message>
+        <source>Not removed: %count.</source>
+        <translation>Not removed: %count.</translation>
+    </message>
+    <message>
+        <source>%file is %size, more than this server sends (%limit). Download it through the address served by Apache or PHP-FPM, or copy it from the server.</source>
+        <translation>%file is %size, more than this server sends (%limit). Download it through the address served by Apache or PHP-FPM, or copy it from the server.</translation>
+    </message>
+    <message>
+        <source>Database</source>
+        <translation>Database</translation>
+    </message>
+    <message>
+        <source>Database, AGPL compatible</source>
+        <translation>Database, AGPL compatible</translation>
+    </message>
+    <message>
+        <source>var directory</source>
+        <translation>var directory</translation>
+    </message>
+    <message>
+        <source>Site files</source>
+        <translation>Site files</translation>
+    </message>
+    <message>
+        <source>Other file</source>
+        <translation>Other file</translation>
+    </message>
+    <message>
+        <source>Remove the backup %name and all its files? This cannot be undone.</source>
+        <translation>Remove the backup %name and all its files? This cannot be undone.</translation>
+    </message>
+    <message>
+        <source>Remove %count selected backups and all their files? This cannot be undone.</source>
+        <translation>Remove %count selected backups and all their files? This cannot be undone.</translation>
+    </message>
+    <message>
+        <source>Create this backup now? It can take several minutes; keep the page open.</source>
+        <translation>Create this backup now? It can take several minutes; keep the page open.</translation>
+    </message>
+    <message>
+        <source>Backups</source>
+        <translation>Backups</translation>
+    </message>
+    <message>
+        <source>Backups of this site: the database, the var directory with the uploaded files, and the site's own extensions and settings. Each backup is a folder of archives you can download, and only the site's owner on the server can read it.</source>
+        <translation>Backups of this site: the database, the var directory with the uploaded files, and the site's own extensions and settings. Each backup is a folder of archives you can download, and only the site's owner on the server can read it.</translation>
+    </message>
+    <message>
+        <source>Not done:</source>
+        <translation>Not done:</translation>
+    </message>
+    <message>
+        <source>Done:</source>
+        <translation>Done:</translation>
+    </message>
+    <message>
+        <source>Create a backup</source>
+        <translation>Create a backup</translation>
+    </message>
+    <message>
+        <source>Full site backup</source>
+        <translation>Full site backup</translation>
+    </message>
+    <message>
+        <source>Database, var directory, extensions, settings and config.php: three archives, enough to set the site up again from nothing.</source>
+        <translation>Database, var directory, extensions, settings and config.php: three archives, enough to set the site up again from nothing.</translation>
+    </message>
+    <message>
+        <source>Create full site backup</source>
+        <translation>Create full site backup</translation>
+    </message>
+    <message>
+        <source>Database and files</source>
+        <translation>Database and files</translation>
+    </message>
+    <message>
+        <source>Database and var directory: two archives. The regular backup; extensions and settings are not included.</source>
+        <translation>Database and var directory: two archives. The regular backup; extensions and settings are not included.</translation>
+    </message>
+    <message>
+        <source>Create backup</source>
+        <translation>Create backup</translation>
+    </message>
+    <message>
+        <source>Database only</source>
+        <translation>Database only</translation>
+    </message>
+    <message>
+        <source>The whole database, schema and data, in one archive. Before an upgrade or a change to the database.</source>
+        <translation>The whole database, schema and data, in one archive. Before an upgrade or a change to the database.</translation>
+    </message>
+    <message>
+        <source>Back up the database</source>
+        <translation>Back up the database</translation>
+    </message>
+    <message>
+        <source>Files only</source>
+        <translation>Files only</translation>
+    </message>
+    <message>
+        <source>The var directory with the uploaded images and files, without caches, logs, sessions and earlier backups.</source>
+        <translation>The var directory with the uploaded images and files, without caches, logs, sessions and earlier backups.</translation>
+    </message>
+    <message>
+        <source>Back up the files</source>
+        <translation>Back up the files</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation>Description</translation>
+    </message>
+    <message>
+        <source>(optional)</source>
+        <translation>(optional)</translation>
+    </message>
+    <message>
+        <source>Encrypt the archives (GPG, AES-256)</source>
+        <translation>Encrypt the archives (GPG, AES-256)</translation>
+    </message>
+    <message>
+        <source>Passphrase for encryption</source>
+        <translation>Passphrase for encryption</translation>
+    </message>
+    <message>
+        <source>Only used when encrypting. Without it an encrypted archive cannot be opened, by anyone.</source>
+        <translation>Only used when encrypting. Without it an encrypted archive cannot be opened, by anyone.</translation>
+    </message>
+    <message>
+        <source>Also an AGPL compatible database dump: passwords, e-mail addresses, keys and paths removed, safe to share.</source>
+        <translation>Also an AGPL compatible database dump: passwords, e-mail addresses, keys and paths removed, safe to share.</translation>
+    </message>
+    <message>
+        <source>Existing backups</source>
+        <translation>Existing backups</translation>
+    </message>
+    <message>
+        <source>There is no backup yet. Create one with one of the forms above.</source>
+        <translation>There is no backup yet. Create one with one of the forms above.</translation>
+    </message>
+    <message>
+        <source>This page is served by a persistent PHP server, which sends files up to %limit. Larger archives are marked; download them through the address served by Apache or PHP-FPM.</source>
+        <translation>This page is served by a persistent PHP server, which sends files up to %limit. Larger archives are marked; download them through the address served by Apache or PHP-FPM.</translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation>Select all</translation>
+    </message>
+    <message>
+        <source>Remove selected</source>
+        <translation>Remove selected</translation>
+    </message>
+    <message>
+        <source>Select %name</source>
+        <translation>Select %name</translation>
+    </message>
+    <message>
+        <source>Newest</source>
+        <translation>Newest</translation>
+    </message>
+    <message>
+        <source>AGPL compatible dump</source>
+        <translation>AGPL compatible dump</translation>
+    </message>
+    <message>
+        <source>Cannot be read</source>
+        <translation>Cannot be read</translation>
+    </message>
+    <message>
+        <source>dated by the folder, the name is not a date</source>
+        <translation>dated by the folder, the name is not a date</translation>
+    </message>
+    <message>
+        <source>Archives of %name</source>
+        <translation>Archives of %name</translation>
+    </message>
+    <message>
+        <source>Archive</source>
+        <translation>Archive</translation>
+    </message>
+    <message>
+        <source>Contents</source>
+        <translation>Contents</translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation>Size</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Download</translation>
+    </message>
+    <message>
+        <source>Encrypted</source>
+        <translation>Encrypted</translation>
+    </message>
+    <message>
+        <source>Too large for this server</source>
+        <translation>Too large for this server</translation>
+    </message>
+    <message>
+        <source>This backup holds no archive.</source>
+        <translation>This backup holds no archive.</translation>
+    </message>
 </context>
 <context>
     <name>design/admin/pagelayout</name>

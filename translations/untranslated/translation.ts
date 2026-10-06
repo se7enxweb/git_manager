@@ -779,6 +779,346 @@
         <source>untracked</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>%count second</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count hour</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count hours</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count day</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count days</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count month</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count months</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count years</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%count backups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%age old</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%age ahead of the clock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Made just now</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Age unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>There is no backup of this site</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Nothing could be restored if the site were lost. Create a full site backup now: it holds the database, the var directory and the site's own files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The backups are dated ahead of the server clock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, is dated %ahead ahead of the clock, so its age cannot be judged. Check the server's time and time zone, then create a new backup.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The newest backup is %age old</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, is older than %limit. Everything changed since then would be lost. Create a new backup now.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, is older than %limit. Create a new backup soon.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The backups are up to date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, was made just now.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The newest backup, %name, is %age old.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%backups dated ahead of the server clock: not counted as the newest. Check the server's time and time zone.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%backups without a date: not counted.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A passphrase is needed to encrypt the backup. Nothing was created.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No backup was selected. Nothing was removed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None of the selected backups could be removed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backups removed: %count.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not removed: %count.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%file is %size, more than this server sends (%limit). Download it through the address served by Apache or PHP-FPM, or copy it from the server.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Database, AGPL compatible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>var directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Site files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Other file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove the backup %name and all its files? This cannot be undone.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove %count selected backups and all their files? This cannot be undone.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create this backup now? It can take several minutes; keep the page open.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backups of this site: the database, the var directory with the uploaded files, and the site's own extensions and settings. Each backup is a folder of archives you can download, and only the site's owner on the server can read it.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not done:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Done:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create a backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full site backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Database, var directory, extensions, settings and config.php: three archives, enough to set the site up again from nothing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create full site backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Database and files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Database and var directory: two archives. The regular backup; extensions and settings are not included.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Create backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Database only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The whole database, schema and data, in one archive. Before an upgrade or a change to the database.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Back up the database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Files only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The var directory with the uploaded images and files, without caches, logs, sessions and earlier backups.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Back up the files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(optional)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Encrypt the archives (GPG, AES-256)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Passphrase for encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only used when encrypting. Without it an encrypted archive cannot be opened, by anyone.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Also an AGPL compatible database dump: passwords, e-mail addresses, keys and paths removed, safe to share.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Existing backups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>There is no backup yet. Create one with one of the forms above.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This page is served by a persistent PHP server, which sends files up to %limit. Larger archives are marked; download them through the address served by Apache or PHP-FPM.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select %name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Newest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AGPL compatible dump</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot be read</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>dated by the folder, the name is not a date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Archives of %name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Archive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Contents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Encrypted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Too large for this server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This backup holds no archive.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>design/admin/pagelayout</name>
