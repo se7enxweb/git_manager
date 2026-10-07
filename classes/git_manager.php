@@ -119,7 +119,7 @@ class GitManager
 		return $branches;
 	}
 
-	public function getCommits( array $params = null ) {
+	public function getCommits( ?array $params = null ) {
 		$separator = ',|.';
 		$filter    = null;
 		$limit     = 50;
