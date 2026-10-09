@@ -521,7 +521,7 @@ class GitManagerUpstream
 		if( @file_put_contents( $tmp, json_encode( $data ) ) === false ) {
 			return false;
 		}
-		@chmod( $tmp, 0666 );
+		@chmod( $tmp, self::fileMode( 0666 ) );
 		if( !@rename( $tmp, $file ) ) {
 			@unlink( $tmp );
 			return false;
@@ -565,6 +565,14 @@ class GitManagerUpstream
 			$output = substr( $output, 0, -strlen( $m[0] ) );
 		}
 		return array( 'exit' => $exit, 'output' => $output );
+	}
+
+	/**
+	 * The mode $mode within the limit EZP_FILE_MODE_MAX of the kernel (eZFile::fileMode()); on a kernel without
+	 * that helper $mode as it is.
+	 */
+	private static function fileMode( $mode ) {
+		return method_exists( 'eZFile', 'fileMode' ) ? eZFile::fileMode( $mode ) : (int)$mode;
 	}
 }
 

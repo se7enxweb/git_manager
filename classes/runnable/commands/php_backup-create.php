@@ -146,7 +146,7 @@ class BackupCreate extends \Exponential\Runnable\Command
         }
 
         // Every file the backup writes is its owner's only.
-        umask(0077);
+        umask(self::creationUmask(0077));
 
         // Create backup
         $backup = new \BackupManager();
@@ -221,6 +221,14 @@ class BackupCreate extends \Exponential\Runnable\Command
         }
 
         $script->shutdown();
+    }
+
+    /**
+     * The umask $umask, narrowed further by the limits EZP_FILE_MODE_MAX / EZP_DIR_MODE_MAX of the kernel
+     * (eZFile::creationUmask()); on a kernel without that helper $umask as it is.
+     */
+    private static function creationUmask( $umask ) {
+        return method_exists( 'eZFile', 'creationUmask' ) ? \eZFile::creationUmask( $umask ) : (int)$umask & 0777;
     }
 }
 

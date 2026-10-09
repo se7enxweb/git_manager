@@ -614,7 +614,7 @@ class BackupManager
             return true;
         }
         
-        return mkdir($dir, 0700, true);
+        return mkdir($dir, self::dirMode( 0700 ), true);
     }
 
     /**
@@ -626,7 +626,7 @@ class BackupManager
      * Velocity) share this installation's cache and run as different users.
      */
     private function withPrivateFiles( $work ) {
-        $old = umask( 0077 );
+        $old = umask( self::creationUmask( 0077 ) );
         try {
             $this->protectBackupRoot();
             return $work();
@@ -640,7 +640,7 @@ class BackupManager
      * case the web server's rules ever let a request through to var/.
      */
     public function protectBackupRoot() {
-        if( !is_dir( $this->backupPath ) && !mkdir( $this->backupPath, 0700, true ) ) {
+        if( !is_dir( $this->backupPath ) && !mkdir( $this->backupPath, self::dirMode( 0700 ), true ) ) {
             return false;
         }
         $htaccess = $this->backupPath . '/.htaccess';
@@ -664,7 +664,7 @@ class BackupManager
         if( $file === false ) {
             return false;
         }
-        chmod( $file, 0600 );
+        chmod( $file, self::fileMode( 0600 ) );
         $quote = function ( $value ) {
             return '"' . str_replace( array( '\\', '"' ), array( '\\\\', '\\"' ), (string)$value ) . '"';
         };
@@ -691,7 +691,30 @@ class BackupManager
         return str_replace( array( '{database}', '{output_file}' ),
                             array( escapeshellarg( (string)$db['database'] ), escapeshellarg( $outputFile ) ), $command );
     }
-    
+
+    /**
+     * The mode $mode within the limit EZP_FILE_MODE_MAX of the kernel (eZFile::fileMode()); on a kernel without
+     * that helper $mode as it is.
+     */
+    private static function fileMode( $mode ) {
+        return method_exists( 'eZFile', 'fileMode' ) ? eZFile::fileMode( $mode ) : (int)$mode;
+    }
+
+    /**
+     * The mode $mode within the limit EZP_DIR_MODE_MAX of the kernel (eZDir::dirMode()); on a kernel without that
+     * helper $mode as it is.
+     */
+    private static function dirMode( $mode ) {
+        return method_exists( 'eZDir', 'dirMode' ) ? eZDir::dirMode( $mode ) : (int)$mode;
+    }
+
+    /**
+     * The umask $umask, narrowed further by the limits EZP_FILE_MODE_MAX / EZP_DIR_MODE_MAX of the kernel
+     * (eZFile::creationUmask()); on a kernel without that helper $umask as it is.
+     */
+    private static function creationUmask( $umask ) {
+        return method_exists( 'eZFile', 'creationUmask' ) ? eZFile::creationUmask( $umask ) : (int)$umask & 0777;
+    }
 }
 
 ?>

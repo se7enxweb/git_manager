@@ -45,7 +45,7 @@ class Backup extends \Exponential\Runnable\ModuleView
         // Every file an action writes (captions, archives, descriptions) is its
         // owner's only: backups hold the database and the settings with their
         // passwords. Put back before the page is drawn.
-        $oldUmask = umask( 0077 );
+        $oldUmask = umask( self::creationUmask( 0077 ) );
         try
         {
             $backup->protectBackupRoot();
@@ -246,6 +246,14 @@ class Backup extends \Exponential\Runnable\ModuleView
             $text .= ' ' . \ezpI18n::tr( 'extension/git_manager', 'Not removed: %count.', null, array( '%count' => $failed ) );
         }
         return array( 'ok' => true, 'text' => $text );
+    }
+
+    /**
+     * The umask $umask, narrowed further by the limits EZP_FILE_MODE_MAX / EZP_DIR_MODE_MAX of the kernel
+     * (eZFile::creationUmask()); on a kernel without that helper $umask as it is.
+     */
+    private static function creationUmask( $umask ) {
+        return method_exists( 'eZFile', 'creationUmask' ) ? \eZFile::creationUmask( $umask ) : (int)$umask & 0777;
     }
 }
 
