@@ -4,6 +4,16 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
+2.0.17 (2026-10-08)
+-------------------
+
+- Updated: Backups, the mysqldump option file and the upstream status cache keep to the limits
+  EZP_FILE_MODE_MAX and EZP_DIR_MODE_MAX of Exponential 6.0.15 (config.php). The backup folder
+  (0700), the option file (0600), the status cache (0666) and the umask 077 of the backup command
+  and the backup page go through the kernel helpers, which only narrow them: the private 0700 /
+  0600 modes stay as they are, the status cache becomes 0660 under 0770 / 0660. Without the
+  limits, or on a kernel without the helpers, every mode is that of before.
+
 Unreleased (next release)
 -------------------------
 
