@@ -4,6 +4,13 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
+Unreleased
+----------
+
+- Updated: The Git Manager dashboard and its commit details select the Git tab of the top menu,
+  which the extension adds for them; they highlighted Setup. The left menu stays the Setup menu,
+  where Git Manager and Backup are listed. The Backup pages stay under Setup.
+
 2.0.17 (2026-10-08)
 -------------------
 

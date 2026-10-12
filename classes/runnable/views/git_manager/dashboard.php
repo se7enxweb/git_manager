@@ -288,6 +288,8 @@ class Dashboard extends \Exponential\Runnable\ModuleView
 
         $Result = array();
         $Result['content'] = $tpl->fetch( 'design:git_manager/dashboard.tpl' );
+        // The Git tab has no left menu of its own: the Setup menu, where Git Manager and Backup are listed
+        $Result['left_menu'] = 'design:parts/setup/menu.tpl';
         $Result['path']    = array(
         	array(
         		'text' => \ezpI18n::tr( 'extension/git_manager', 'Git Manager' ),

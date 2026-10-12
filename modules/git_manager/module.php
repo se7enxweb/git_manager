@@ -15,7 +15,8 @@ $ViewList = array(
 		'script'                  => 'dashboard.php',
 		'functions'               => array( 'git_manager' ),
 		'params'                  => array(),
-		'default_navigation_part' => 'ezsetupnavigationpart',
+		// The Git tab of the top menu ([Topmenu_gitmanager] in menu.ini.append); backup stays under Setup.
+		'default_navigation_part' => 'gitmanagernavigationpart',
 		'single_post_actions'     => array(
 			'CheckoutLocalBranch'  => 'CheckoutLocalBranch',
 			'CheckoutRemoteBranch' => 'CheckoutRemoteBranch',
@@ -38,7 +39,7 @@ $ViewList = array(
 		'script'                  => 'commit_details.php',
 		'functions'               => array( 'git_manager' ),
 		'params'                  => array( 'Hash' ),
-		'default_navigation_part' => 'ezsetupnavigationpart'
+		'default_navigation_part' => 'gitmanagernavigationpart'
 	),
 	'backup' => array(
 		'script'                  => 'backup.php',
