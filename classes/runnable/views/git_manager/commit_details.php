@@ -96,7 +96,7 @@ class CommitDetails extends \Exponential\Runnable\ModuleView
         $hash    = $Params['Hash'];
         $output  = null;
 
-        if( strlen( $hash ) == 0  ) {
+        if( strlen( (string) $hash ) == 0  ) {
         	return $this->viewResult( isset( $Result ) ? $Result : null,  $module->redirectTo( 'git_manager/dashboard' ) );
         }
 

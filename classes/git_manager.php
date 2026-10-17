@@ -583,11 +583,12 @@ class GitManager
                 }
 
 		$cmd    = $cdCmd . ' && git ' . $command . ' 2>&1';
-		$result = trim( shell_exec( $cmd ) );
+		// shell_exec() returns null when the command prints nothing (or false when it cannot run)
+		$result = trim( (string) shell_exec( $cmd ) );
 
                 if( $regenerateAutoloads === true )
                 {
-                    $result .= trim( shell_exec( $cdCmd . ' && ./bin/php/ezpgenerateautoloads.php 2>&1' ) );
+                    $result .= trim( (string) shell_exec( $cdCmd . ' && ./bin/php/ezpgenerateautoloads.php 2>&1' ) );
                     // clean up results for display within the browser for easy readability
                     $result = str_replace( '[0m', '', str_replace( '[31m', '', str_replace( "of them to the autoload array.\n", 'of them to the autoload array.', str_replace('Scanning for PHP-files', "\n\nScanning for PHP-files", $result ) ) ) );
                 }
