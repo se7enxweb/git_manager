@@ -50,7 +50,7 @@
         <div class="a4-card-head"><h2 class="a4-h3">{'Local branch'|i18n( 'extension/git_manager' )}</h2></div>
         <div class="a4-card-body a4-stack">
             <div class="a4-field">
-                <label for="gm-local-branch">{'Local branch'|i18n( 'extension/git_manager' )}</label>
+                <label for="gm-local-branch">{'Branch'|i18n( 'extension/git_manager' )}</label>
                 <select id="gm-local-branch" name="branch" required="required">
                     <option value="">{'- Select -'|i18n( 'extension/git_manager' )}</option>
                     {foreach $local_branches as $branch}
@@ -69,7 +69,7 @@
         <div class="a4-card-head"><h2 class="a4-h3">{'Remote branch'|i18n( 'extension/git_manager' )}</h2></div>
         <div class="a4-card-body a4-stack">
             <div class="a4-field">
-                <label for="gm-remote-branch">{'Remote branch'|i18n( 'extension/git_manager' )}</label>
+                <label for="gm-remote-branch">{'Branch'|i18n( 'extension/git_manager' )}</label>
                 <select id="gm-remote-branch" name="branch" required="required">
                     <option value="">{'- Select -'|i18n( 'extension/git_manager' )}</option>
                     {foreach $remote_branches as $branch}

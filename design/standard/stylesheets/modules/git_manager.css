@@ -46,7 +46,8 @@
 .a4-gm-item:first-child { border-top: 0; padding-top: 0; }
 .a4-gm-item-name { display: flex; flex-direction: column; min-width: 0; }
 .a4-gm-item-actions { justify-content: flex-end; }
-.a4-gm-item-actions form { display: flex; flex-wrap: wrap; align-items: center; gap: var(--a4-space-2); margin: 0; }
+.a4-gm-item-actions form { display: flex; flex-wrap: wrap; align-items: center; gap: var(--a4-space-2); min-width: 0; max-width: 100%; margin: 0; }
+.a4-gm-push-form .a4-input { flex: 1 1 8em; min-width: 0; max-width: 100%; }
 .a4-gm-item-edit { grid-column: 1 / -1; }
 
 /* ---- Dashboard: the commit log ---------------------------------------------------------------------------------- */
@@ -122,6 +123,8 @@
 .a4-gm-health-body p { max-width: 80ch; overflow-wrap: anywhere; }
 .a4-gm-health-note { margin-top: var(--a4-space-1); font-size: var(--a4-text-s); }
 .a4-gm-health-count { flex: 0 0 auto; margin: 0; margin-inline-start: auto; }
+.a4-gm-create { display: flex; flex-direction: column; }
+.a4-gm-create > .a4-card-body { flex: 1 1 auto; }
 .a4-gm-create .a4-card-head > p { min-height: 3em; }
 .a4-gm-list-note { margin: 0 0 var(--a4-space-3); }
 .a4-gm-list .a4-toolbar { margin-bottom: var(--a4-space-3); }
