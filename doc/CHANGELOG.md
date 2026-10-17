@@ -4,6 +4,13 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
+2.0.19 (2026-10-17)
+-------------------
+
+- Fixed: The dashboard and the commit details page no longer write PHP 8.1 deprecations to the
+  log: the output of a git command that prints nothing (null) and a missing Hash parameter are
+  cast to a string before trim() and strlen().
+
 Unreleased
 ----------
 
