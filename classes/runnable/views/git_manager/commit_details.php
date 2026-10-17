@@ -109,8 +109,8 @@ class CommitDetails extends \Exponential\Runnable\ModuleView
 
         $Result = array();
         $Result['content'] = $tpl->fetch( 'design:git_manager/commit_details.tpl' );
-        // The Git tab has no left menu of its own: the Setup menu, where Git Manager and Backup are listed
-        $Result['left_menu'] = 'design:parts/setup/menu.tpl';
+        // The Git tab's own left menu (menu.ini [Leftmenu_gitmanager]): Git Manager and Backup, with the width switch
+        $Result['left_menu'] = 'design:parts/gitmanager/menu.tpl';
         $Result['path']    = array(
         	array(
         		'text' => \ezpI18n::tr( 'extension/git_manager', 'GIT Manager' ),

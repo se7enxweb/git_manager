@@ -1,0 +1,155 @@
+/*
+ * git_manager: what the administration's shared components (components.css: .a4-card, .a4-btn, .a4-badge,
+ * .a4-notice, .a4-table, .a4-filterbar, .a4-fold, .a4-facts ...) cannot do for the dashboard, the commit details and
+ * the Backup page. Loaded on admin pages through design.ini [StylesheetSettings] BackendCSSFileList, so the ezjscore
+ * packer bundles it.
+ *
+ * Rules (doc/bc/6.0/admin4-styling.md): only .a4-gm-* classes; colours, radius, spacing and fonts only from the
+ * --a4-* tokens, which have their dark values in components.css (admin4, admin4l) and the light ones in the copy of
+ * design/admin, so the pages follow light and dark mode with no rule of their own here.
+ */
+
+/* ---- Shared parts ---------------------------------------------------------------------------------------------- */
+
+.a4-gm-hash { display: inline-flex; align-items: center; gap: var(--a4-space-1); }
+.a4-gm-hash .a4-code { padding: 0 var(--a4-space-1); border-radius: var(--a4-radius-s); background-color: var(--a4-soft); color: var(--a4-ink); text-decoration: none; }
+.a4-gm-hash a.a4-code:hover { background-color: var(--a4-info-bg); color: var(--a4-accent-text); }
+.a4-gm-copy.is-done { color: var(--a4-ok); }
+.a4-gm-url { display: block; overflow: hidden; color: var(--a4-muted); font-family: var(--a4-mono); font-size: var(--a4-text-xs); text-overflow: ellipsis; white-space: nowrap; }
+.a4-gm-section { margin-top: var(--a4-space-4); }
+.a4-gm-form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--a4-space-2) var(--a4-space-3); margin: var(--a4-space-2) 0; }
+.a4-gm-form .a4-field { flex: 0 1 auto; }
+.a4-gm-form .a4-gm-form-url { flex: 1 1 280px; }
+.a4-gm-form-url input { font-family: var(--a4-mono); }
+.a4-gm-add { margin-top: var(--a4-space-3); }
+
+/* The output of the last action, as a terminal. */
+.a4-gm-output { margin: var(--a4-space-4) 0 0; overflow: hidden; border: 1px solid var(--a4-line-strong); border-radius: var(--a4-radius-s); background-color: var(--a4-code-bg); }
+.a4-gm-output-head { display: flex; align-items: center; justify-content: space-between; gap: var(--a4-space-2); padding: var(--a4-space-1) var(--a4-space-3); border-bottom: 1px solid var(--a4-line-strong); }
+.a4-gm-output-head .a4-h3 { margin: 0; color: var(--a4-code-ink); }
+.a4-gm-output pre,
+.a4-gm-pre { max-height: 26em; margin: 0; padding: var(--a4-space-3); overflow: auto; background-color: var(--a4-code-bg); color: var(--a4-code-ink); font-family: var(--a4-mono); font-size: var(--a4-text-s); line-height: var(--a4-leading); white-space: pre-wrap; word-break: break-word; }
+.a4-gm-pre { max-height: 14em; margin-top: var(--a4-space-2); border-radius: var(--a4-radius-s); }
+
+/* ---- Dashboard: HEAD -------------------------------------------------------------------------------------------- */
+
+.a4-gm-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--a4-space-2) var(--a4-space-5); margin: var(--a4-space-4) 0; }
+.a4-gm-status-branch { display: flex; flex-wrap: wrap; align-items: center; gap: var(--a4-space-2); font-size: var(--a4-text-m); }
+.a4-gm-branch { overflow-wrap: anywhere; }
+.a4-gm-facts { display: flex; flex-wrap: wrap; gap: var(--a4-space-1) var(--a4-space-5); margin: 0; color: var(--a4-muted); }
+.a4-gm-facts strong { color: var(--a4-ink); }
+
+/* ---- Dashboard: remotes and submodules -------------------------------------------------------------------------- */
+
+.a4-gm-items { margin: 0; padding: 0; list-style: none; }
+.a4-gm-item { display: grid; grid-template-columns: minmax(12em, 2fr) auto auto; align-items: center; gap: var(--a4-space-2) var(--a4-space-4); padding: var(--a4-space-3) 0; border-top: 1px solid var(--a4-line); }
+.a4-gm-item:first-child { border-top: 0; padding-top: 0; }
+.a4-gm-item-name { display: flex; flex-direction: column; min-width: 0; }
+.a4-gm-item-actions { justify-content: flex-end; }
+.a4-gm-item-actions form { display: flex; flex-wrap: wrap; align-items: center; gap: var(--a4-space-2); margin: 0; }
+.a4-gm-item-edit { grid-column: 1 / -1; }
+
+/* ---- Dashboard: the commit log ---------------------------------------------------------------------------------- */
+
+.a4-gm-log-section { margin-top: var(--a4-space-5); }
+.a4-gm-log-card > summary { flex-wrap: wrap; }
+.a4-gm-log-summary-title { margin-inline-end: var(--a4-space-1); }
+.a4-gm-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--a4-space-2) var(--a4-space-5); margin: 0 0 var(--a4-space-3); color: var(--a4-muted); font-size: var(--a4-text-s); }
+.a4-gm-legend-check { margin-inline-start: auto; color: var(--a4-ink); }
+.a4-gm-swatch { display: inline-block; width: 0.9em; height: 0.9em; margin-inline-end: var(--a4-space-1); border-radius: var(--a4-radius-s); vertical-align: -0.1em; }
+.a4-gm-swatch.is-local { background-color: var(--a4-warn); }
+.a4-gm-swatch.is-partial { background-color: var(--a4-info); }
+.a4-gm-swatch.is-head { background-color: var(--a4-ok); }
+.a4-gm-log { margin: 0; padding: 0; overflow: hidden; list-style: none; border: 1px solid var(--a4-line); border-radius: var(--a4-radius-s); }
+.a4-gm-log > li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--a4-space-1) var(--a4-space-3); padding: var(--a4-space-2) var(--a4-space-3); border-top: 1px solid var(--a4-line); background-color: var(--a4-card); box-shadow: inset 4px 0 0 transparent; }
+.a4-gm-log > li:first-child { border-top: 0; }
+.a4-gm-log > li:hover { background-color: var(--a4-zebra); }
+.a4-gm-log > li.is-local { box-shadow: inset 4px 0 0 var(--a4-warn); }
+.a4-gm-log > li.is-partial { box-shadow: inset 4px 0 0 var(--a4-info); }
+.a4-gm-log > li.is-head { background-color: var(--a4-ok-bg); box-shadow: inset 4px 0 0 var(--a4-ok); }
+.a4-gm-log > li.is-head.is-local { box-shadow: inset 4px 0 0 var(--a4-ok), inset 8px 0 0 var(--a4-warn); }
+.a4-gm-log.is-only-unpushed > li:not([data-unpushed]) { display: none; }
+.a4-gm-avatar { display: inline-flex; align-items: center; justify-content: center; width: 2.2em; height: 2.2em; border-radius: 50%; background-color: var(--a4-soft); box-shadow: inset 0 0 0 2px var(--a4-line-strong); color: var(--a4-ink); font-size: var(--a4-text-xs); font-weight: 700; }
+.a4-gm-avatar.is-c1 { box-shadow: inset 0 0 0 3px var(--a4-chart-1); }
+.a4-gm-avatar.is-c2 { box-shadow: inset 0 0 0 3px var(--a4-chart-2); }
+.a4-gm-avatar.is-c3 { box-shadow: inset 0 0 0 3px var(--a4-chart-3); }
+.a4-gm-avatar.is-c4 { box-shadow: inset 0 0 0 3px var(--a4-chart-4); }
+.a4-gm-avatar.is-c5 { box-shadow: inset 0 0 0 3px var(--a4-chart-5); }
+.a4-gm-avatar.is-c6 { box-shadow: inset 0 0 0 3px var(--a4-chart-6); }
+.a4-gm-avatar.is-c7 { box-shadow: inset 0 0 0 3px var(--a4-chart-7); }
+.a4-gm-avatar.is-c8 { box-shadow: inset 0 0 0 3px var(--a4-chart-8); }
+.a4-gm-log-main { display: flex; flex-direction: column; min-width: 0; }
+.a4-gm-log-title { overflow: hidden; color: var(--a4-ink); font-weight: 650; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
+.a4-gm-log-title:hover { color: var(--a4-accent-text); text-decoration: underline; }
+.a4-gm-log-side { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--a4-space-2); }
+
+/* ---- Dashboard: Upstream ---------------------------------------------------------------------------------------- */
+
+.a4-gm-upstream { margin-top: var(--a4-space-3); }
+.a4-gm-upstream .a4-card-actions form { margin: 0; }
+.a4-gm-upstream-fetch.is-busy .a4-btn { cursor: progress; }
+.a4-gm-upstream-facts { margin-bottom: var(--a4-space-3); }
+.a4-gm-upstream-facts dd { display: flex; flex-wrap: wrap; align-items: center; gap: var(--a4-space-1) var(--a4-space-2); }
+.a4-gm-upstream-lists { margin-top: var(--a4-space-3); }
+.a4-gm-upstream-list { min-width: 0; }
+.a4-gm-upstream-list .a4-h3 { display: flex; align-items: center; gap: var(--a4-space-2); margin: 0 0 var(--a4-space-2); }
+.a4-gm-commits { max-height: 24em; margin: 0; padding: 0; overflow: auto; list-style: none; border: 1px solid var(--a4-line); border-radius: var(--a4-radius-s); }
+.a4-gm-commits > li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 var(--a4-space-2); padding: var(--a4-space-2) var(--a4-space-3); border-top: 1px solid var(--a4-line); }
+.a4-gm-commits > li:first-child { border-top: 0; }
+.a4-gm-uhash { grid-row: span 2; align-self: start; padding: 0 var(--a4-space-1); border-radius: var(--a4-radius-s); background-color: var(--a4-soft); color: var(--a4-ink); text-decoration: none; }
+.a4-gm-usubject { min-width: 0; overflow: hidden; color: var(--a4-ink); font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.a4-gm-upstream-foot { margin: var(--a4-space-3) 0 0; }
+
+/* ---- Commit details --------------------------------------------------------------------------------------------- */
+
+.a4-gm-commit-body { margin: var(--a4-space-3) 0 0; color: var(--a4-ink); font-family: inherit; white-space: pre-wrap; }
+.a4-gm-files { margin-top: var(--a4-space-4); }
+.a4-gm-file > summary { flex-wrap: wrap; }
+.a4-gm-file-name { word-break: break-all; }
+.a4-gm-file-stats { margin-inline-start: auto; font-size: var(--a4-text-s); white-space: nowrap; }
+.a4-gm-diff { margin: 0; overflow: auto; border-top: 1px solid var(--a4-line); font-family: var(--a4-mono); font-size: var(--a4-text-xs); line-height: var(--a4-leading); }
+.a4-gm-diff > div { min-height: 1.5em; padding: 0 var(--a4-space-3); color: var(--a4-ink); white-space: pre; }
+.a4-gm-diff > .is-add { background-color: var(--a4-ok-bg); color: var(--a4-ok); }
+.a4-gm-diff > .is-del { background-color: var(--a4-bad-bg); color: var(--a4-bad); }
+.a4-gm-diff > .is-hunk { background-color: var(--a4-info-bg); color: var(--a4-info); }
+.a4-gm-diff > .is-meta { color: var(--a4-muted); }
+.a4-gm-truncated { margin: 0; border-radius: 0; }
+
+/* ---- Backup page ------------------------------------------------------------------------------------------------ */
+
+.a4-gm-health { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--a4-space-2) var(--a4-space-4); margin-bottom: var(--a4-space-5); }
+.a4-gm-health-body { flex: 1 1 320px; min-width: 0; }
+.a4-gm-health-body p { max-width: 80ch; overflow-wrap: anywhere; }
+.a4-gm-health-note { margin-top: var(--a4-space-1); font-size: var(--a4-text-s); }
+.a4-gm-health-count { flex: 0 0 auto; margin: 0; margin-inline-start: auto; }
+.a4-gm-create .a4-card-head > p { min-height: 3em; }
+.a4-gm-list-note { margin: 0 0 var(--a4-space-3); }
+.a4-gm-list .a4-toolbar { margin-bottom: var(--a4-space-3); }
+.a4-gm-caption-head { flex-wrap: nowrap; align-items: flex-start; }
+.a4-gm-caption-title { display: flex; flex: 1 1 auto; flex-direction: column; gap: var(--a4-space-1); min-width: 0; }
+.a4-gm-caption-title .a4-h3 { overflow-wrap: anywhere; }
+.a4-gm-caption-desc { color: var(--a4-ink); overflow-wrap: anywhere; }
+.a4-gm-arch { overflow-wrap: anywhere; }
+
+/* ---- Narrow windows --------------------------------------------------------------------------------------------- */
+
+@media (max-width: 800px) {
+  .a4-gm-item { grid-template-columns: minmax(0, 1fr); }
+  .a4-gm-item-actions { justify-content: flex-start; }
+  .a4-gm-log > li { grid-template-columns: auto minmax(0, 1fr); }
+  .a4-gm-log-side { grid-column: 2; justify-content: flex-start; }
+  .a4-gm-legend-check { margin-inline-start: 0; }
+}
+@media (max-width: 640px) {
+  .a4-gm-caption-head { flex-wrap: wrap; }
+  .a4-gm-arch .a4-code { word-break: break-all; }
+}
+
+/* Forced colors drop backgrounds and box-shadows: the log's edge marks and the HEAD row keep an outline. */
+@media (forced-colors: active) {
+  .a4-gm-log > li.is-head,
+  .a4-gm-log > li.is-local,
+  .a4-gm-log > li.is-partial { outline: 2px solid Highlight; outline-offset: -2px; }
+  .a4-gm-swatch,
+  .a4-gm-avatar { forced-color-adjust: none; }
+}

@@ -26,6 +26,19 @@ Shown[navigation]=true
 Shown[browse]=true
 PolicyList[]=git_manager/dashboard
 
+# The left menu of the Git tab (the dashboard and the commit details): parts/gitmanager/menu.tpl.
+# A link is shown only to a user who may follow it (PolicyList_<key>[]).
+[Leftmenu_gitmanager]
+Name=Git
+Links[]
+Links[dashboard]=git_manager/dashboard
+Links[backup]=git_manager/backup
+LinkNames[]
+LinkNames[dashboard]=Git Manager
+LinkNames[backup]=Backup
+PolicyList_dashboard[]=git_manager/git_manager
+PolicyList_backup[]=git_manager/backup
+
 [Leftmenu_setup]
 Links[git_manager]=git_manager/dashboard
 LinkNames[git_manager]=Git Manager

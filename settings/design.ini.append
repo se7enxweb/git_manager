@@ -3,4 +3,9 @@
 [ExtensionSettings]
 DesignExtensions[]=git_manager
 
+[StylesheetSettings]
+# The dashboard, commit details and Backup pages: what the shared components (components.css) cannot do,
+# as .a4-gm-* classes on the --a4-* tokens (light and dark). Packed with the admin's other stylesheets.
+BackendCSSFileList[]=modules/git_manager.css
+
 */ ?>

@@ -4,6 +4,14 @@
 <context>
     <name>extension/git_manager</name>
     <message>
+        <source>Git</source>
+        <translation>Git</translation>
+    </message>
+    <message>
+        <source>Backup</source>
+        <translation>Sicherung</translation>
+    </message>
+    <message>
         <source>%count selected</source>
         <translation>%count ausgewählt</translation>
     </message>
