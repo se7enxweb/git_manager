@@ -4,6 +4,26 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
+2.0.20 (2026-10-17)
+-------------------
+
+- Updated: The dashboard, the commit details and the Backup page are built from the
+  administration's shared components (cards, buttons, badges, notices, tables, filter bar, folds,
+  facts, empty states) and its --a4-* tokens, so they follow admin4's dark mode: no more white
+  cards and unreadable text on a dark page. What the components cannot do is
+  design/standard/stylesheets/modules/git_manager.css (.a4-gm-* classes on the tokens only), loaded
+  through design.ini [StylesheetSettings] BackendCSSFileList. The old git_manager.css is removed;
+  a site that overrides one of the templates and uses its .gm-* classes keeps the markup but needs
+  the new classes for the look.
+- Updated: No inline script and no inline style is left in the templates. The behaviours are
+  design/standard/javascript/git_manager.js (ezscript_require), with their texts as data-gm-*
+  attributes of the page; the author initials take one of the chart colors by class.
+- Added: The Git tab has its own left menu, menu.ini [Leftmenu_gitmanager] (Git Manager, Backup),
+  on the dashboard and the commit details, with admin4's width switch like every other module
+  (parts/gitmanager/menu.tpl). The Backup page stays under Setup.
+- Updated: Every form, button name and confirmation is kept. New strings are translated in eng-US
+  and ger-DE. tests/unit/AdminStylingTest.php checks the rules on the files.
+
 2.0.19 (2026-10-17)
 -------------------
 
