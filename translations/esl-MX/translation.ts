@@ -472,6 +472,58 @@
         <translation>Registro de commits</translation>
     </message>
     <message>
+        <source>Commits in the log with these filters</source>
+        <translation>Commits del registro con estos filtros</translation>
+    </message>
+    <message>
+        <source>Showing %from–%to of %total commits</source>
+        <translation>Mostrando %from–%to de %total commits</translation>
+    </message>
+    <message>
+        <source>No commits</source>
+        <translation>Ningún commit</translation>
+    </message>
+    <message>
+        <source>This repository has no branch or tag %ref; the log shows HEAD.</source>
+        <translation>Este repositorio no tiene ninguna rama ni etiqueta %ref; el registro muestra HEAD.</translation>
+    </message>
+    <message>
+        <source>HEAD (checked out)</source>
+        <translation>HEAD (activo)</translation>
+    </message>
+    <message>
+        <source>Local branches</source>
+        <translation>Ramas locales</translation>
+    </message>
+    <message>
+        <source>Remote branches</source>
+        <translation>Ramas remotas</translation>
+    </message>
+    <message>
+        <source>Message contains</source>
+        <translation>El mensaje contiene</translation>
+    </message>
+    <message>
+        <source>Text, any case</source>
+        <translation>Texto, sin distinguir mayúsculas</translation>
+    </message>
+    <message>
+        <source>Per page</source>
+        <translation>Por página</translation>
+    </message>
+    <message>
+        <source>Show %count commits per page.</source>
+        <translation>Mostrar %count commits por página.</translation>
+    </message>
+    <message>
+        <source>First</source>
+        <translation>Primera</translation>
+    </message>
+    <message>
+        <source>Last</source>
+        <translation>Última</translation>
+    </message>
+    <message>
         <source>The latest %count commits</source>
         <translation>Los %count commits más recientes</translation>
     </message>

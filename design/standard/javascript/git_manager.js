@@ -5,7 +5,7 @@
  * (.a4-gm), written and translated by the templates.
  *
  * Dashboard and commit details: copy buttons, confirmation before a checkout or a push, "Fetch now" busy state,
- * relative dates, author initials, the quick search of the commit log, clearing the filter, the folds kept as
+ * relative dates, author initials, the quick search of the commit log, the folds kept as
  * user preferences. Backup page: "select all", the count of the selected backups and the confirmations.
  * Without javascript every form still works; only the confirmations and the conveniences need it.
  */
@@ -96,14 +96,6 @@
             var button = closest(e.target, '[data-gm-confirm-button]');
             if (button && !window.confirm(button.getAttribute('data-gm-confirm-button'))) { e.preventDefault(); }
         });
-
-        // "Clear" empties the filter fields before the form is sent.
-        var clear = document.querySelector('[data-gm-clear]');
-        if (clear) {
-            clear.addEventListener('click', function () {
-                each(document.querySelectorAll('#gm-filter input[name^="filter["]'), function (input) { input.value = ''; });
-            });
-        }
 
         // Dates as "3 days ago"; the exact date stays in the tooltip.
         if (window.Intl && Intl.RelativeTimeFormat) {

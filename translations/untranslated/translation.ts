@@ -472,6 +472,58 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Commits in the log with these filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Showing %from–%to of %total commits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No commits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This repository has no branch or tag %ref; the log shows HEAD.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HEAD (checked out)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local branches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote branches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Message contains</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text, any case</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Per page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show %count commits per page.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>First</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>The latest %count commits</source>
         <translation type="unfinished"></translation>
     </message>

@@ -19,7 +19,7 @@ Features
 **Git Management (Web UI)**
 - Checkout local and remote branches — update your site to any git branch via browser
 - Review current HEAD commit and diff
-- Browse commit log with author, date, and range filters
+- Browse the whole commit log page by page (10, 25, 50 or 100 per page), filtered by branch or tag, author, message text and date range; every page and filter is a link of its own
 - Checkout specific commits by hash
 - Submodule checkout support
 
@@ -276,7 +276,7 @@ Using Git Manager (Web)
 1. Go to **Git Manager → Dashboard** in the admin interface
 2. **Switch branch:** Select a local branch and click Checkout, or enter a remote branch name
 3. **Pull latest:** Use the pull/update controls to fetch and apply the latest commits
-4. **Review commits:** Browse the commit log, filter by author or date range
+4. **Review commits:** Browse the commit log page by page, filter by branch, author, message text or date range
 5. **Checkout commit:** Enter a specific hash to roll back to a previous state
 
 

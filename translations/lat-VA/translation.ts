@@ -475,6 +475,58 @@
         <translation>Acta commissorum</translation>
     </message>
     <message>
+        <source>Commits in the log with these filters</source>
+        <translation>Commissa in actis cum his filtris</translation>
+    </message>
+    <message>
+        <source>Showing %from–%to of %total commits</source>
+        <translation>Commissa %from–%to ex %total ostenduntur</translation>
+    </message>
+    <message>
+        <source>No commits</source>
+        <translation>Nulla commissa</translation>
+    </message>
+    <message>
+        <source>This repository has no branch or tag %ref; the log shows HEAD.</source>
+        <translation>Hoc repositorium nec ramum nec signum %ref habet; acta HEAD ostendunt.</translation>
+    </message>
+    <message>
+        <source>HEAD (checked out)</source>
+        <translation>HEAD (in usu)</translation>
+    </message>
+    <message>
+        <source>Local branches</source>
+        <translation>Rami locales</translation>
+    </message>
+    <message>
+        <source>Remote branches</source>
+        <translation>Rami remoti</translation>
+    </message>
+    <message>
+        <source>Message contains</source>
+        <translation>Nuntius continet</translation>
+    </message>
+    <message>
+        <source>Text, any case</source>
+        <translation>Textus, litteris quibusvis</translation>
+    </message>
+    <message>
+        <source>Per page</source>
+        <translation>In singulis paginis</translation>
+    </message>
+    <message>
+        <source>Show %count commits per page.</source>
+        <translation>%count commissa in singulis paginis ostendere.</translation>
+    </message>
+    <message>
+        <source>First</source>
+        <translation>Prima</translation>
+    </message>
+    <message>
+        <source>Last</source>
+        <translation>Ultima</translation>
+    </message>
+    <message>
         <source>The latest %count commits</source>
         <translation>Commissa recentissima: %count</translation>
     </message>

@@ -29,6 +29,14 @@ class Dashboard extends \Exponential\Runnable\ModuleView
         return class_exists( 'GitManagerUpstream', false );
     }
 
+    /** GitManagerLog, loaded from its file when the class map does not list it yet (as upstreamAvailable()). */
+    private static function logAvailable()
+    {
+        if ( !class_exists( 'GitManagerLog' ) && is_file( __DIR__ . '/../../../gitmanagerlog.php' ) )
+            require_once __DIR__ . '/../../../gitmanagerlog.php';
+        return class_exists( 'GitManagerLog', false );
+    }
+
     public function run( array $scope )
     {
         // the including function's variables ($Params, $Module, $cli, ...)
@@ -43,15 +51,15 @@ class Dashboard extends \Exponential\Runnable\ModuleView
         $error   = null;
         $message = null;
         $output  = null;
-        $filter  = array(
-        	'start_date' => null,
-        	'end_date'   => null,
-        	'author'     => null
-        );
-
-        $sess = $http->sessionVariable( 'git_commits_filter', array() );
-
-        $filter = is_array($sess) ? array_merge( $filter, $sess ) : $filter;
+        // The commit log's page and filters, from the view parameters (/(offset)/50/(limit)/25/(author)/jane ...),
+        // so a link reproduces the view; the page size a user picked is kept as the preference
+        // admin_git_manager_log_limit. GitManagerLog checks every value before git sees it.
+        self::logAvailable();
+        $preferredLimit = class_exists( 'eZPreferences' ) ? \eZPreferences::value( 'admin_git_manager_log_limit' ) : false;
+        $log = \GitManagerLog::parseViewParameters( isset( $Params['UserParameters'] ) ? $Params['UserParameters'] : array(), $preferredLimit );
+        if( $log['limit_given'] && (string)$log['limit'] !== (string)$preferredLimit ) {
+        	\eZPreferences::setValue( 'admin_git_manager_log_limit', (string)$log['limit'] );
+        }
 
         if(
         	$module->isCurrentAction( 'CheckoutLocalBranch' )
@@ -77,7 +85,10 @@ class Dashboard extends \Exponential\Runnable\ModuleView
         	$output  = $git->checkoutCommit( $hash );
         	$message = '"' . $hash . '" commit is checked out';
         } elseif( $module->isCurrentAction( 'SetCommitsFilter' ) ) {
-        	$filter = array_merge( $filter, $http->postVariable( 'filter', array() ) );
+        	// The filter form: its values become view parameters of the first page, so the address says what is
+        	// shown and a reload never posts again.
+        	$state = \GitManagerLog::stateFromForm( $http->postVariable( 'filter', array() ), $http->postVariable( 'log_limit', $log['limit'] ) );
+        	return $this->viewResult( isset( $Result ) ? $Result : null, $module->redirectTo( '/git_manager/dashboard' . \GitManagerLog::viewParameterPath( $state ) ) );
         } elseif( ( $module->isCurrentAction( 'FetchUpstream' ) || $http->hasPostVariable( 'FetchUpstream' ) ) && self::upstreamAvailable() ) {
         	// hasPostVariable too: a process that read module.php before FetchUpstream was in it.
         	// The Upstream card's "Fetch now": git fetch --prune of the upstream
@@ -217,9 +228,40 @@ class Dashboard extends \Exponential\Runnable\ModuleView
                 }
         }
 
-        $http->setSessionVariable( 'git_commits_filter', $filter );
+        // One page of the log: the total from git rev-list --count, the page from git log --skip --max-count;
+        // the whole history is never read. A branch or tag the repository does not have is reported, not used.
+        $refNames = $git->refNames();
+        $logRef = \GitManagerLog::resolveRef( $log['ref'], $refNames );
+        $unknownRef = false;
+        if( $logRef === null ) {
+        	$unknownRef = $log['ref'];
+        	$log['ref'] = '';
+        	$logRef = 'HEAD';
+        }
+        $paging = \GitManagerLog::paging( $git->countCommits( $log, $logRef ), $log['offset'], $log['limit'] );
+        $log['offset'] = $paging['offset'];
+        $commits = $paging['total'] > 0 ? $git->logPage( $log, $logRef, $paging['offset'], $paging['limit'] ) : array();
 
-        $commits = $git->getCommits( $filter );
+        $logLinks = array();
+        foreach( array( 'first', 'previous', 'next', 'last' ) as $which ) {
+        	$logLinks[ $which ] = $paging[ $which . '_offset' ] === false ? false
+        		: '/git_manager/dashboard' . \GitManagerLog::viewParameterPath( $log, array( 'offset' => $paging[ $which . '_offset' ] ) );
+        }
+        $logSizes = array();
+        foreach( \GitManagerLog::LIMITS as $size ) {
+        	// The first commit shown stays on the page the new size shows.
+        	$logSizes[] = array( 'size' => $size, 'current' => $size === $paging['limit'],
+        		'url' => '/git_manager/dashboard' . \GitManagerLog::viewParameterPath( $log, array( 'limit' => $size, 'offset' => intdiv( $paging['offset'], $size ) * $size ) ) );
+        }
+        $logBranches = array( 'local' => array(), 'remote' => array() );
+        foreach( $refNames as $refName ) {
+        	if( strpos( $refName, 'refs/heads/' ) === 0 ) {
+        		$logBranches['local'][] = substr( $refName, 11 );
+        	} elseif( strpos( $refName, 'refs/remotes/' ) === 0 && substr( $refName, -5 ) !== '/HEAD' ) {
+        		$logBranches['remote'][] = substr( $refName, 13 );
+        	}
+        }
+        $filter = array( 'ref' => $log['ref'], 'author' => $log['author'], 'grep' => $log['grep'], 'start_date' => $log['since'], 'end_date' => $log['until'] );
 
         $tpl = \eZTemplate::factory();
         $tpl->setVariable( 'git_manager', $git );
@@ -228,6 +270,18 @@ class Dashboard extends \Exponential\Runnable\ModuleView
         $tpl->setVariable( 'output',  $output );
         $tpl->setVariable( 'filter',  $filter );
         $tpl->setVariable( 'commits',  $commits );
+        $tpl->setVariable( 'log', $log );
+        $tpl->setVariable( 'log_filtered', \GitManagerLog::isFiltered( $log ) );
+        $tpl->setVariable( 'log_paging', $paging );
+        $tpl->setVariable( 'log_links', $logLinks );
+        $tpl->setVariable( 'log_sizes', $logSizes );
+        $tpl->setVariable( 'log_branches', $logBranches );
+        $tpl->setVariable( 'log_unknown_ref', $unknownRef );
+        $tpl->setVariable( 'log_navigator_parameters', \GitManagerLog::navigatorParameters( $log ) );
+        $tpl->setVariable( 'log_clear_url', '/git_manager/dashboard' . \GitManagerLog::viewParameterPath( array( 'limit' => $log['limit'] ) ) );
+        // The log is open when this user keeps it open, or when the address asks for a page or a filter.
+        $tpl->setVariable( 'log_open', $log['offset'] > 0 || $log['limit_given'] || \GitManagerLog::isFiltered( $log ) || $unknownRef !== false );
+        $tpl->setVariable( 'head_commit_date', $git->headCommitDate() );
 
         // Upstream: where the installation stands against the remote's branch,
         // from the cache unless something it depends on changed; and the
@@ -253,7 +307,7 @@ class Dashboard extends \Exponential\Runnable\ModuleView
         // counted for the log's summary.
         $unpushed = array();
         foreach( array_keys( $remotes ) as $remoteName ) {
-        	$unpushed[ $remoteName ] = $git->unpushedCommits( $remoteName );
+        	$unpushed[ $remoteName ] = $git->unpushedCommits( $remoteName, 500, $logRef );
         }
         $unpushedCounts = array_fill_keys( array_keys( $remotes ), 0 );
         $localOnly = 0;

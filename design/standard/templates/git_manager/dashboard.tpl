@@ -40,7 +40,7 @@
     <p class="a4-gm-facts">
         <span><strong>{$local_branches|count}</strong> {'local branches'|i18n( 'extension/git_manager' )}</span>
         <span><strong>{$remote_branches|count}</strong> {'remote branches'|i18n( 'extension/git_manager' )}</span>
-        {if $commits|count}<span>{'Last commit'|i18n( 'extension/git_manager' )} <time class="a4-gm-when" datetime="{$commits[0].date|wash}" title="{$commits[0].date|wash}">{$commits[0].date|wash}</time></span>{/if}
+        {if $head_commit_date}<span>{'Last commit'|i18n( 'extension/git_manager' )} <time class="a4-gm-when" datetime="{$head_commit_date|wash}" title="{$head_commit_date|wash}">{$head_commit_date|wash}</time></span>{/if}
     </p>
 </section>
 
@@ -300,24 +300,56 @@
 </section>
 {/if}
 
-{* The commit log, folded unless this user opened it (the user preference admin_git_manager_commit_log). The summary
-   says what is waiting to be pushed, open or closed. *}
+{* The commit log, one page at a time: folded unless this user opened it (the user preference
+   admin_git_manager_commit_log) or the address asks for a page or a filter. The page, its size and the filters are
+   view parameters (/(offset)/50/(limit)/25/(ref)/main/(author)/jane/(grep)/fix/(since)/2026-01-01/(until)/...), so a
+   link reproduces the view; the page size is also kept as the preference admin_git_manager_log_limit. The pages are
+   the shared pager (design:navigator/google.tpl) with first and last next to it. The summary says what is waiting to
+   be pushed among the commits shown. *}
 <section class="a4-section a4-gm-log-section" aria-labelledby="gm-commits-title">
-<h2 class="a4-h2" id="gm-commits-title">{'Commits log'|i18n( 'extension/git_manager' )} <span class="a4-badge">{$commits|count}</span></h2>
-<details class="a4-fold a4-gm-log-card" id="gm-log-card"{if eq( ezpreference( 'admin_git_manager_commit_log' ), '1' )} open="open"{/if}
+<h2 class="a4-h2" id="gm-commits-title">{'Commits log'|i18n( 'extension/git_manager' )} <span class="a4-badge" title="{'Commits in the log with these filters'|i18n( 'extension/git_manager' )|wash}">{$log_paging.total}</span></h2>
+<details class="a4-fold a4-gm-log-card" id="gm-log-card"{if or( eq( ezpreference( 'admin_git_manager_commit_log' ), '1' ), $log_open )} open="open"{/if}
          data-preference-url={'/user/preferences/set_and_exit/admin_git_manager_commit_log'|ezurl}>
     <summary>
-        <span class="a4-gm-log-summary-title">{'The latest %count commits'|i18n( 'extension/git_manager',, hash( '%count', $commits|count ) )}</span>
+        <span class="a4-gm-log-summary-title">{if $log_paging.total}{'Showing %from–%to of %total commits'|i18n( 'extension/git_manager',, hash( '%from', $log_paging.from, '%to', $log_paging.to, '%total', $log_paging.total ) )}{else}{'No commits'|i18n( 'extension/git_manager' )}{/if}</span>
         {if $local_only_count}<span class="a4-badge is-warn">{'%count not pushed anywhere'|i18n( 'extension/git_manager',, hash( '%count', $local_only_count ) )}</span>{/if}
         {foreach $unpushed_counts as $remote_name => $count}{if $count}<span class="a4-badge is-info">{'%count not on %remote'|i18n( 'extension/git_manager',, hash( '%count', $count, '%remote', $remote_name ) )|wash}</span>{/if}{/foreach}
-        {if and( $remotes|count, eq( $unpushed_total, 0 ) )}<span class="a4-badge is-ok">{'Everything here is on every remote'|i18n( 'extension/git_manager' )}</span>{/if}
+        {if and( $remotes|count, $commits|count, eq( $unpushed_total, 0 ) )}<span class="a4-badge is-ok">{'Everything here is on every remote'|i18n( 'extension/git_manager' )}</span>{/if}
     </summary>
     <div class="a4-fold-body">
 
+    {if $log_unknown_ref}
+    <div class="a4-notice is-warn" role="status"><p>{'This repository has no branch or tag %ref; the log shows HEAD.'|i18n( 'extension/git_manager',, hash( '%ref', $log_unknown_ref ) )|wash}</p></div>
+    {/if}
+
     <form class="a4-filterbar" id="gm-filter" action={'git_manager/dashboard'|ezurl} method="post">
+        <input type="hidden" name="log_limit" value="{$log_paging.limit}" />
+        <div class="a4-field">
+            <label for="gm-filter-ref">{'Branch'|i18n( 'extension/git_manager' )}</label>
+            <select class="a4-input is-auto" id="gm-filter-ref" name="filter[ref]">
+                <option value="">{'HEAD (checked out)'|i18n( 'extension/git_manager' )}</option>
+                {if $log_branches.local|count}
+                <optgroup label="{'Local branches'|i18n( 'extension/git_manager' )|wash}">
+                {foreach $log_branches.local as $branch_name}<option value="{$branch_name|wash}"{if eq( $branch_name, $filter.ref )} selected="selected"{/if}>{$branch_name|wash}</option>{/foreach}
+                </optgroup>
+                {/if}
+                {if $log_branches.remote|count}
+                <optgroup label="{'Remote branches'|i18n( 'extension/git_manager' )|wash}">
+                {foreach $log_branches.remote as $branch_name}<option value="{$branch_name|wash}"{if eq( $branch_name, $filter.ref )} selected="selected"{/if}>{$branch_name|wash}</option>{/foreach}
+                </optgroup>
+                {/if}
+                {if and( $filter.ref, $log_branches.local|contains( $filter.ref )|not, $log_branches.remote|contains( $filter.ref )|not )}
+                <option value="{$filter.ref|wash}" selected="selected">{$filter.ref|wash}</option>
+                {/if}
+            </select>
+        </div>
         <div class="a4-field">
             <label for="gm-filter-author">{'Author'|i18n( 'extension/git_manager' )}</label>
-            <input type="text" id="gm-filter-author" name="filter[author]" value="{$filter.author|wash}" placeholder="{'Name or e-mail'|i18n( 'extension/git_manager' )|wash}" />
+            <input type="text" id="gm-filter-author" name="filter[author]" maxlength="200" value="{$filter.author|wash}" placeholder="{'Name or e-mail'|i18n( 'extension/git_manager' )|wash}" />
+        </div>
+        <div class="a4-field">
+            <label for="gm-filter-grep">{'Message contains'|i18n( 'extension/git_manager' )}</label>
+            <input type="text" id="gm-filter-grep" name="filter[grep]" maxlength="200" value="{$filter.grep|wash}" placeholder="{'Text, any case'|i18n( 'extension/git_manager' )|wash}" />
         </div>
         <div class="a4-field">
             <label for="gm-filter-start">{'Start date'|i18n( 'extension/git_manager' )}</label>
@@ -329,8 +361,8 @@
         </div>
         <div class="a4-actions">
             <input class="a4-btn a4-btn-primary" type="submit" name="SetCommitsFilter" value="{'Filter'|i18n( 'extension/git_manager' )}" />
-            {if or( $filter.author, $filter.start_date, $filter.end_date )}
-            <button class="a4-btn" type="submit" name="SetCommitsFilter" value="1" data-gm-clear="1">{'Clear'|i18n( 'extension/git_manager' )}</button>
+            {if $log_filtered}
+            <a class="a4-btn" href={$log_clear_url|ezurl}>{'Clear'|i18n( 'extension/git_manager' )}</a>
             {/if}
         </div>
         <div class="a4-field">
@@ -374,6 +406,36 @@
     {else}
     <p class="a4-empty">{'No commits match the filter.'|i18n( 'extension/git_manager' )}</p>
     {/if}
+
+    {* The page size (10, 25, 50, 100; kept as a preference), where this page stands, and the pages: first and
+       last, and the shared pager with previous, next and the page numbers. *}
+    <div class="a4-listfoot a4-gm-log-foot">
+        <p class="a4-sizes">
+            <span>{'Per page'|i18n( 'extension/git_manager' )}:</span>
+        {foreach $log_sizes as $size}
+            {if $size.current}
+            <span class="current" aria-current="true">{$size.size}</span>
+            {else}
+            <a href={$size.url|ezurl} title="{'Show %count commits per page.'|i18n( 'extension/git_manager',, hash( '%count', $size.size ) )|wash}">{$size.size}</a>
+            {/if}
+        {/foreach}
+        </p>
+        {if $log_paging.total}<p class="a4-meta a4-gm-log-range" aria-live="polite">{'Showing %from–%to of %total commits'|i18n( 'extension/git_manager',, hash( '%from', $log_paging.from, '%to', $log_paging.to, '%total', $log_paging.total ) )}</p>{/if}
+        {if gt( $log_paging.page_count, 1 )}
+        <div class="a4-gm-log-pages">
+            {if $log_links.first}<a class="a4-btn a4-btn-small" href={$log_links.first|ezurl}>{'First'|i18n( 'extension/git_manager' )}</a>{else}<span class="a4-btn a4-btn-small is-disabled" aria-disabled="true">{'First'|i18n( 'extension/git_manager' )}</span>{/if}
+            <div class="a4-pager">
+            {include name=navigator
+                     uri='design:navigator/google.tpl'
+                     page_uri='/git_manager/dashboard'
+                     item_count=$log_paging.total
+                     view_parameters=$log_navigator_parameters
+                     item_limit=$log_paging.limit}
+            </div>
+            {if $log_links.last}<a class="a4-btn a4-btn-small" href={$log_links.last|ezurl}>{'Last'|i18n( 'extension/git_manager' )}</a>{else}<span class="a4-btn a4-btn-small is-disabled" aria-disabled="true">{'Last'|i18n( 'extension/git_manager' )}</span>{/if}
+        </div>
+        {/if}
+    </div>
     </div>
 </details>
 </section>

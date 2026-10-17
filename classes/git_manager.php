@@ -198,11 +198,15 @@ class GitManager
 	 * last fetch knows them: hash => true, the newest $max. A remote nothing
 	 * was fetched from has none of them.
 	 */
-	public function unpushedCommits( $remote, $max = 500 ) {
+	public function unpushedCommits( $remote, $max = 500, $ref = 'HEAD' ) {
 		if( !isset( $this->getRemotes()[ $remote ] ) ) {
 			return array();
 		}
-		$hashes = $this->cli( 'rev-list --max-count=' . (int)$max . ' HEAD --not ' . escapeshellarg( '--remotes=' . $remote ), false, true );
+		// $ref: HEAD or a full ref name the commit log checked (GitManagerLog::resolveRef()).
+		if( $ref !== 'HEAD' && ( !is_string( $ref ) || strpos( $ref, 'refs/' ) !== 0 || !self::isBranchName( substr( $ref, 5 ) ) ) ) {
+			$ref = 'HEAD';
+		}
+		$hashes = $this->cli( 'rev-list --max-count=' . (int)$max . ' ' . escapeshellarg( $ref ) . ' --not ' . escapeshellarg( '--remotes=' . $remote ), false, true );
 		$result = array();
 		foreach( $hashes as $hash ) {
 			if( preg_match( '/^[0-9a-f]{40}$/', trim( $hash ) ) ) {
@@ -570,6 +574,65 @@ class GitManager
                 }
 
 		return $result;
+	}
+
+	/**
+	 * Runs git with $arguments as they are, one argument each, without a shell: nothing in them is ever read as
+	 * a command, a redirection or a variable. Read only callers (the commit log); stopped after $seconds.
+	 * Returns array( 'exit' => int, 'ok' => bool, 'output' => stdout ).
+	 */
+	public function git( array $arguments, $seconds = 30 ) {
+		$command = array_merge( array( 'git' ), array_map( 'strval', array_values( $arguments ) ) );
+		foreach( array( '/usr/bin/timeout', '/bin/timeout' ) as $timeout ) {
+			if( is_executable( $timeout ) ) {
+				$command = array_merge( array( $timeout, (string)(int)$seconds ), $command );
+				break;
+			}
+		}
+		$env = array( 'GIT_TERMINAL_PROMPT' => '0', 'LC_ALL' => 'C', 'PATH' => getenv( 'PATH' ) ?: '/usr/local/bin:/usr/bin:/bin' );
+		if( getenv( 'HOME' ) ) {
+			$env['HOME'] = getenv( 'HOME' );
+		}
+		$pipes = array();
+		// Plain pipes on all three: in a long-running server process (Velocity) PHP's 'file' descriptors made
+		// posix_spawn() fail with "Bad file descriptor", while pipes work everywhere.
+		$process = proc_open( $command, array( 0 => array( 'pipe', 'r' ), 1 => array( 'pipe', 'w' ), 2 => array( 'pipe', 'w' ) ), $pipes, self::$path, $env );
+		if( !is_resource( $process ) ) {
+			return array( 'exit' => 1, 'ok' => false, 'output' => '' );
+		}
+		fclose( $pipes[0] );
+		$output = (string)stream_get_contents( $pipes[1] );
+		fclose( $pipes[1] );
+		$errors = (string)stream_get_contents( $pipes[2] );
+		fclose( $pipes[2] );
+		$exit = proc_close( $process );
+		// A server that reaps its children itself (a SIGCHLD handler) makes proc_close() report -1: then git
+		// succeeded when it wrote no error.
+		return array( 'exit' => $exit, 'ok' => $exit === 0 || ( $exit === -1 && trim( $errors ) === '' ), 'output' => $output );
+	}
+
+	/** The repository's branches, remote-tracking branches and tags, as full ref names (refs/heads/main ...). */
+	public function refNames() {
+		$result = $this->git( array( 'for-each-ref', '--format=%(refname)', 'refs/heads', 'refs/remotes', 'refs/tags' ) );
+		return $result['ok'] ? array_values( array_filter( array_map( 'trim', explode( "\n", $result['output'] ) ), 'strlen' ) ) : array();
+	}
+
+	/** One page of the commit log (GitManagerLog::logArguments()): array( hash, author, date, title ) each. */
+	public function logPage( array $state, $fullRef, $offset, $limit ) {
+		$result = $this->git( GitManagerLog::logArguments( $state, $fullRef, $offset, $limit ) );
+		return $result['ok'] ? GitManagerLog::parseLog( $result['output'] ) : array();
+	}
+
+	/** How many commits the log has with the state's filters, all pages together (git rev-list --count). */
+	public function countCommits( array $state, $fullRef ) {
+		$result = $this->git( GitManagerLog::countArguments( $state, $fullRef ) );
+		return $result['ok'] && preg_match( '/^\d+$/', trim( $result['output'] ) ) ? (int)trim( $result['output'] ) : 0;
+	}
+
+	/** The committer date of HEAD (RFC 2822), '' when there is none. */
+	public function headCommitDate() {
+		$result = $this->git( array( 'log', '-1', '--format=%cD', 'HEAD', '--' ) );
+		return $result['ok'] ? trim( $result['output'] ) : '';
 	}
 
 	private function cli( $command, $path = false, $explodeLines = false, $regenerateAutoloads = false ) {

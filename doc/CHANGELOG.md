@@ -4,6 +4,29 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
+2.0.21 (2026-10-17)
+-------------------
+
+- Added: The dashboard's commit log has pages, so the whole history can be browsed: first,
+  previous, the page numbers (the administration's shared pager), next and last, with "Showing
+  x–y of z commits" and a page size of 10, 25, 50 or 100, kept as the user preference
+  admin_git_manager_log_limit (50 until one is chosen). A page is `git log --skip --max-count`
+  and the total `git rev-list --count`, so a long history is never read as a whole.
+- Added: The log filters by branch or tag, author and text in the message (fixed text, any case),
+  besides the dates. The page, its size and the filters are view parameters
+  (/(offset)/50/(limit)/25/(ref)/main/(author)/jane/(grep)/fix/(since)/2026-01-01/(until)/...),
+  so a link reproduces the view; the form redirects to that address. Values are written into a
+  link as ~XX for any character other than letters, digits, dot, dash, underscore and @.
+- Updated: Every value reaches git as an argument of its own, without a shell
+  (GitManager::git()), after a check (GitManagerLog): a branch or tag must be one of the
+  repository's refs (for-each-ref), the revision stands between --end-of-options and --, dates
+  must be real days, texts lose control characters and are cut at 200 characters.
+- Updated: The filter no longer lives in the session; "Clear" is a link to the unfiltered log.
+  "Last commit" in the HEAD card is HEAD's own date, whichever page is shown.
+- Added: tests/unit/LogPagingTest.php (the paging maths, the view parameters and the git
+  arguments, hostile values included). The new strings are translated in eng-US, ger-DE, esl-ES,
+  esl-MX, heb-IL, lat-VA and tlh-QO.
+
 2.0.20 (2026-10-17)
 -------------------
 

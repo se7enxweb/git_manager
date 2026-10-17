@@ -475,6 +475,58 @@
         <translation>commitmey qun</translation>
     </message>
     <message>
+        <source>Commits in the log with these filters</source>
+        <translation>Say&apos;moHwI&apos;meyvam rapbogh commitmey</translation>
+    </message>
+    <message>
+        <source>Showing %from–%to of %total commits</source>
+        <translation>commitmey %from–%to cha&apos;lu&apos; (%total Hoch)</translation>
+    </message>
+    <message>
+        <source>No commits</source>
+        <translation>commitmey tu&apos;lu&apos;be&apos;</translation>
+    </message>
+    <message>
+        <source>This repository has no branch or tag %ref; the log shows HEAD.</source>
+        <translation>%ref He pagh per ghaj&apos;be&apos; pol&apos;a&apos;vam; HEAD cha&apos; qun.</translation>
+    </message>
+    <message>
+        <source>HEAD (checked out)</source>
+        <translation>HEAD (lo&apos;lu&apos;bogh)</translation>
+    </message>
+    <message>
+        <source>Local branches</source>
+        <translation>Sumbogh Hemey</translation>
+    </message>
+    <message>
+        <source>Remote branches</source>
+        <translation>Hopbogh Hemey</translation>
+    </message>
+    <message>
+        <source>Message contains</source>
+        <translation>QIn ngaS</translation>
+    </message>
+    <message>
+        <source>Text, any case</source>
+        <translation>ghItlh, tInbogh ghItlhmey mach ghItlhmey je</translation>
+    </message>
+    <message>
+        <source>Per page</source>
+        <translation>nav wa&apos;DIch</translation>
+    </message>
+    <message>
+        <source>Show %count commits per page.</source>
+        <translation>nav wa&apos;DIch %count commitmey ticha&apos;.</translation>
+    </message>
+    <message>
+        <source>First</source>
+        <translation>wa&apos;DIch</translation>
+    </message>
+    <message>
+        <source>Last</source>
+        <translation>Qav</translation>
+    </message>
+    <message>
         <source>The latest %count commits</source>
         <translation>Qav commitmey (%count)</translation>
     </message>

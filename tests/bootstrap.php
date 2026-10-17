@@ -13,4 +13,5 @@ $checkout = dirname( __DIR__ );
 require_once $checkout . '/classes/gitmanagerbackupcatalogue.php';
 require_once $checkout . '/classes/gitmanagerbackupfreshness.php';
 require_once $checkout . '/classes/gitmanagerbackupmessages.php';
+require_once $checkout . '/classes/gitmanagerlog.php';
 require_once __DIR__ . '/unit/BackupFixture.php';

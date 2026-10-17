@@ -249,7 +249,7 @@ class AdminStylingTest extends PHPUnit\Framework\TestCase
                 $this->assertMatchesRegularExpression( '/name="' . $action . '"|\'action\', \'' . $action . '\'/', $source, 'git_manager/' . $view . ' keeps the ' . $action . ' button' );
             }
         }
-        foreach ( array( 'data-gm-confirm=', 'data-gm-push=', 'data-gm-busy=', 'data-gm-confirm-button=', 'data-gm-clear=', 'data-preference-url=', 'id="gm-log-find"', 'id="gm-only-unpushed"', 'id="gm-log"' ) as $hook )
+        foreach ( array( 'data-gm-confirm=', 'data-gm-push=', 'data-gm-busy=', 'data-gm-confirm-button=', 'href={$log_clear_url|ezurl}', 'design:navigator/google.tpl', 'name="log_limit"', 'name="filter[ref]"', 'name="filter[grep]"', 'data-preference-url=', 'id="gm-log-find"', 'id="gm-only-unpushed"', 'id="gm-log"' ) as $hook )
         {
             $this->assertStringContainsString( $hook, $templates['dashboard'] );
         }

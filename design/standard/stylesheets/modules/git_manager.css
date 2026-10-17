@@ -83,6 +83,9 @@
 .a4-gm-log-title { overflow: hidden; color: var(--a4-ink); font-weight: 650; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
 .a4-gm-log-title:hover { color: var(--a4-accent-text); text-decoration: underline; }
 .a4-gm-log-side { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--a4-space-2); }
+/* Under the log: the page size, "Showing x–y of z", and first / the shared pager / last in one row that wraps. */
+.a4-gm-log-range { margin: 0; }
+.a4-gm-log-pages { display: flex; flex-wrap: wrap; align-items: center; gap: var(--a4-space-2); min-width: 0; }
 
 /* ---- Dashboard: Upstream ---------------------------------------------------------------------------------------- */
 
