@@ -4,6 +4,11 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
+2.0.22 (2026-10-19)
+-------------------
+
+- Added: Translations in Croatian, Czech, Danish, Dutch, Italian, Norwegian, Polish, Brazilian Portuguese, Swedish and Turkish.
+
 2.0.21 (2026-10-17)
 -------------------
 
