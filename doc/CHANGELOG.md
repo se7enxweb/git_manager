@@ -4,6 +4,20 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
+2.0.23 (2026-10-21)
+-------------------
+
+- Updated: The Git tab of the top menu shows the git icon in the admin4 design (`Icon=git` in
+  [Topmenu_gitmanager] of menu.ini.append). Older admin designs ignore the setting.
+- Updated: composer.json requires PHP 8.0 and the Exponential legacy installer, names the
+  extension directory for both installer keys, links the issues and the source, and lists the
+  original author and 7x as maintainer.
+- Updated: ezinfo.php and extension.xml state the release, the same copyright, the license and
+  the website.
+- Updated: The README is rewritten for new users: installation with Composer and by hand, every
+  setting with an example, the dashboard's cards, the policy functions, the command line tools,
+  upgrading, known limits and troubleshooting.
+
 2.0.22 (2026-10-19)
 -------------------
 
