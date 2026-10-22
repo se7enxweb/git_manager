@@ -1,29 +1,48 @@
 {
     "name": "se7enxweb/git_manager",
-    "description": "Git Manager offers Local / remote branch checkout - Use this feature to update your website to the latest available commit in your git repository",
+    "description": "Git Manager for Exponential: check out branches and commits, compare with the upstream branch, push, manage remotes and submodules, and make, encrypt and download site backups from the administration, without shell access.",
     "type": "ezpublish-legacy-extension",
-    "keywords": [ "eZ Publish", "eZ Publish Legacy", "eZ Publish Platform", "kernel updater", "extension", "git", "manager", "vcs", "module" ],
+    "keywords": [
+        "exponential",
+        "exponential-legacy",
+        "ezpublish-legacy",
+        "extension",
+        "git",
+        "deployment",
+        "backup",
+        "gpg",
+        "mysqldump",
+        "admin"
+    ],
     "homepage": "https://github.com/se7enxweb/git_manager",
+    "support": {
+        "issues": "https://github.com/se7enxweb/git_manager/issues",
+        "source": "https://github.com/se7enxweb/git_manager"
+    },
     "license": "GPL-2.0-or-later",
     "authors": [
         {
-            "name" : "7x",
-            "homepage": "https://se7enx.com",
-            "email": "info@se7enx.com",
-            "role": "Developer"
-        },
-	{
-            "name" : "Serhey Dolgushev",
+            "name": "Serhey Dolgushev",
             "homepage": "https://ua.linkedin.com/in/serheydolgushev",
             "role": "Author"
-        }	
+        },
+        {
+            "name": "7x",
+            "email": "info@se7enx.com",
+            "homepage": "https://se7enx.com",
+            "role": "Maintainer"
+        }
     ],
-    "minimum-stability": "dev",
     "require": {
-        "php": ">=5.0.0",
-        "se7enxweb/ezpublish-legacy-installer": "*"
+        "php": ">=8.0",
+        "se7enxweb/exponential-legacy-installer": "*"
+    },
+    "suggest": {
+        "ext-posix": "Lets the Upstream card name the user the site runs as and, run as root, fetch as the owner of the repository.",
+        "ext-mbstring": "Cuts long log filter texts at a character boundary."
     },
     "extra": {
-        "ezpublish-legacy-extension-name": "git_manager"
+        "ezpublish-legacy-extension-name": "git_manager",
+        "installer-name": "git_manager"
     }
 }
