@@ -77,7 +77,7 @@
     </message>
     <message>
         <source>Enter encryption passphrase...</source>
-        <translation>Wpisz hasło szyfrowania...</translation>
+        <translation>Wpisać hasło szyfrowania...</translation>
     </message>
     <message>
         <source>&lt;strong&gt;Important:&lt;/strong&gt; Remember your passphrase! Encrypted files cannot be recovered without it.</source>
@@ -93,7 +93,7 @@
     </message>
     <message>
         <source>Create Full Site Backup</source>
-        <translation>Utwórz pełną kopię zapasową witryny</translation>
+        <translation>Utworzyć pełną kopię zapasową witryny</translation>
     </message>
     <message>
         <source>DB + Files Caption</source>
@@ -109,7 +109,7 @@
     </message>
     <message>
         <source>Create Full Caption</source>
-        <translation>Utwórz pełną migawkę</translation>
+        <translation>Utworzyć pełną migawkę</translation>
     </message>
     <message>
         <source>Database Only</source>
@@ -129,7 +129,7 @@
     </message>
     <message>
         <source>Capture Database</source>
-        <translation>Wykonaj migawkę bazy danych</translation>
+        <translation>Wykonać migawkę bazy danych</translation>
     </message>
     <message>
         <source>Files Only (var/)</source>
@@ -145,7 +145,7 @@
     </message>
     <message>
         <source>Capture Files</source>
-        <translation>Wykonaj migawkę plików</translation>
+        <translation>Wykonać migawkę plików</translation>
     </message>
     <message>
         <source>📋 Existing Captions</source>
@@ -153,7 +153,7 @@
     </message>
     <message>
         <source>Select All</source>
-        <translation>Zaznacz wszystko</translation>
+        <translation>Zaznaczyć wszystko</translation>
     </message>
     <message>
         <source>🗑️ Delete Selected</source>
@@ -197,7 +197,7 @@
     </message>
     <message>
         <source>Copy</source>
-        <translation>Kopiuj</translation>
+        <translation>Kopiować</translation>
     </message>
     <message>
         <source>Changes</source>
@@ -221,7 +221,7 @@
     </message>
     <message>
         <source>Back to the dashboard</source>
-        <translation>Wróć do pulpitu</translation>
+        <translation>Wrócić do pulpitu</translation>
     </message>
     <message>
         <source>Checkout this commit</source>
@@ -237,7 +237,7 @@
     </message>
     <message>
         <source>Copy the full hash</source>
-        <translation>Kopiuj pełny hash</translation>
+        <translation>Kopiować pełny hash</translation>
     </message>
     <message>
         <source>local branches</source>
@@ -269,7 +269,7 @@
     </message>
     <message>
         <source>Regenerate autoloads</source>
-        <translation>Wygeneruj ponownie autoloady</translation>
+        <translation>Wygenerować ponownie autoloady</translation>
     </message>
     <message>
         <source>Checkout</source>
@@ -309,7 +309,7 @@
     </message>
     <message>
         <source>Fetch</source>
-        <translation>Pobierz</translation>
+        <translation>Pobrać</translation>
     </message>
     <message>
         <source>Push %branch to %remote (%url)? The commits go out to everyone who uses that remote.</source>
@@ -321,11 +321,11 @@
     </message>
     <message>
         <source>Push</source>
-        <translation>Wypchnij</translation>
+        <translation>Wypchnąć</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation>Edytuj</translation>
+        <translation>Edytować</translation>
     </message>
     <message>
         <source>Name</source>
@@ -337,11 +337,11 @@
     </message>
     <message>
         <source>Save</source>
-        <translation>Zapisz</translation>
+        <translation>Zapisać</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation>Usuń</translation>
+        <translation>Usunąć</translation>
     </message>
     <message>
         <source>Remove the remote %remote? Its remote-tracking branches go with it; the commits stay.</source>
@@ -361,11 +361,11 @@
     </message>
     <message>
         <source>Add a remote</source>
-        <translation>Dodaj repozytorium zdalne</translation>
+        <translation>Dodać repozytorium zdalne</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation>Dodaj</translation>
+        <translation>Dodać</translation>
     </message>
     <message>
         <source>https://, ssh://, git:// or file:// addresses, user@host:path, or an absolute path.</source>
@@ -385,7 +385,7 @@
     </message>
     <message>
         <source>Update all submodules</source>
-        <translation>Zaktualizuj wszystkie podmoduły</translation>
+        <translation>Zaktualizować wszystkie podmoduły</translation>
     </message>
     <message>
         <source>Adding, changing and removing a submodule changes the working tree and stages the change; it is kept once it is committed.</source>
@@ -421,7 +421,7 @@
     </message>
     <message>
         <source>Update</source>
-        <translation>Zaktualizuj</translation>
+        <translation>Zaktualizować</translation>
     </message>
     <message>
         <source>Branch</source>
@@ -445,7 +445,7 @@
     </message>
     <message>
         <source>Add a submodule</source>
-        <translation>Dodaj podmoduł</translation>
+        <translation>Dodać podmoduł</translation>
     </message>
     <message>
         <source>Clone the repository into this path and stage it as a submodule?</source>
@@ -513,7 +513,7 @@
     </message>
     <message>
         <source>Show %count commits per page.</source>
-        <translation>Pokaż %count commitów na stronę.</translation>
+        <translation>Pokazać %count commitów na stronę.</translation>
     </message>
     <message>
         <source>First</source>
@@ -561,11 +561,11 @@
     </message>
     <message>
         <source>Clear</source>
-        <translation>Wyczyść</translation>
+        <translation>Wyczyścić</translation>
     </message>
     <message>
         <source>Find on this page</source>
-        <translation>Znajdź na tej stronie</translation>
+        <translation>Znaleźć na tej stronie</translation>
     </message>
     <message>
         <source>Title, author or hash</source>
@@ -733,7 +733,7 @@
     </message>
     <message>
         <source>Fetch now</source>
-        <translation>Pobierz teraz</translation>
+        <translation>Pobrać teraz</translation>
     </message>
     <message>
         <source>Fetch to see what the remote has.</source>
@@ -777,7 +777,7 @@
     </message>
     <message>
         <source>Open</source>
-        <translation>Otwórz</translation>
+        <translation>Otworzyć</translation>
     </message>
     <message>
         <source>Remote</source>
@@ -1025,7 +1025,7 @@
     </message>
     <message>
         <source>Create a backup</source>
-        <translation>Utwórz kopię zapasową</translation>
+        <translation>Utworzyć kopię zapasową</translation>
     </message>
     <message>
         <source>Full site backup</source>
@@ -1037,7 +1037,7 @@
     </message>
     <message>
         <source>Create full site backup</source>
-        <translation>Utwórz pełną kopię zapasową witryny</translation>
+        <translation>Utworzyć pełną kopię zapasową witryny</translation>
     </message>
     <message>
         <source>Database and files</source>
@@ -1049,7 +1049,7 @@
     </message>
     <message>
         <source>Create backup</source>
-        <translation>Utwórz kopię zapasową</translation>
+        <translation>Utworzyć kopię zapasową</translation>
     </message>
     <message>
         <source>Database only</source>
@@ -1061,7 +1061,7 @@
     </message>
     <message>
         <source>Back up the database</source>
-        <translation>Utwórz kopię zapasową bazy danych</translation>
+        <translation>Utworzyć kopię zapasową bazy danych</translation>
     </message>
     <message>
         <source>Files only</source>
@@ -1073,7 +1073,7 @@
     </message>
     <message>
         <source>Back up the files</source>
-        <translation>Utwórz kopię zapasową plików</translation>
+        <translation>Utworzyć kopię zapasową plików</translation>
     </message>
     <message>
         <source>Description</source>
@@ -1085,7 +1085,7 @@
     </message>
     <message>
         <source>Encrypt the archives (GPG, AES-256)</source>
-        <translation>Zaszyfruj archiwa (GPG, AES-256)</translation>
+        <translation>Zaszyfrować archiwa (GPG, AES-256)</translation>
     </message>
     <message>
         <source>Passphrase for encryption</source>
@@ -1113,15 +1113,15 @@
     </message>
     <message>
         <source>Select all</source>
-        <translation>Zaznacz wszystko</translation>
+        <translation>Zaznaczyć wszystko</translation>
     </message>
     <message>
         <source>Remove selected</source>
-        <translation>Usuń zaznaczone</translation>
+        <translation>Usunąć zaznaczone</translation>
     </message>
     <message>
         <source>Select %name</source>
-        <translation>Zaznacz %name</translation>
+        <translation>Zaznaczyć %name</translation>
     </message>
     <message>
         <source>Newest</source>
@@ -1157,7 +1157,7 @@
     </message>
     <message>
         <source>Download</source>
-        <translation>Pobierz</translation>
+        <translation>Pobrać</translation>
     </message>
     <message>
         <source>Encrypted</source>
