@@ -569,6 +569,6 @@ Upstream card, remotes and submodules, the paged log, the audit event, the admin
 translations.
 
 - Copyright (C) 2013 - 2014 Serhey Dolgushev
-- Copyright (C) 1998 - 2026 7x
+- Copyright (C) 1998 - 2026 Exponential Foundation and 7x. All rights reserved.
 
 See [doc/CREDITS.md](doc/CREDITS.md) and [doc/COPYRIGHT.md](doc/COPYRIGHT.md).
