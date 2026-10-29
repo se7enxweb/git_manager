@@ -4,9 +4,18 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
-Unreleased
-----------
+2.0.26 (2026-10-29)
+-------------------
 
+- Updated: One copyright notice, Exponential Foundation and 7x: every file header and the
+  extension metadata read "Copyright (C) 1998 - 2026 Exponential Foundation and 7x. All rights
+  reserved."
+
+2.0.25 (2026-10-29)
+-------------------
+
+- Updated: The admin stylesheets use the shared admin tokens for weights, durations, radii,
+  table headers and muted text.
 - Added: Captions dump every database engine the kernel runs on, not only MySQL and MariaDB:
   PostgreSQL (`pg_dump --clean --if-exists`, the password in the environment), SQLite (a
   consistent copy with `VACUUM INTO` while the site runs, the file copied as a fallback) and
