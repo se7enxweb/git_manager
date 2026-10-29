@@ -14,7 +14,7 @@ class git_managerInfo
             'Name'      => '<a href="https://github.com/se7enxweb/git_manager">Git Manager</a>',
             'Version'   => '2.0.26',
             'Author'    => 'Serhey Dolgushev and 7x',
-            'Copyright' => 'Copyright &copy; 2013 - 2014 <a href="https://ua.linkedin.com/in/serheydolgushev">Serhey Dolgushev</a> and 1998 - ' . date( 'Y' ) . ' 7x',
+            'Copyright' => 'Copyright (C) 1998 - 2026 Exponential Foundation and 7x. All rights reserved. Copyright &copy; 2013 - 2014 <a href="https://ua.linkedin.com/in/serheydolgushev">Serhey Dolgushev</a>',
             'License'   => 'GNU General Public License v2.0 (or any later version)',
             'Info_url'  => 'https://github.com/se7enxweb/git_manager'
         );
