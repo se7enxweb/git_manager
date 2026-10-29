@@ -70,7 +70,7 @@
 .a4-gm-log > li.is-head { background-color: var(--a4-ok-bg); box-shadow: inset 4px 0 0 var(--a4-ok); }
 .a4-gm-log > li.is-head.is-local { box-shadow: inset 4px 0 0 var(--a4-ok), inset 8px 0 0 var(--a4-warn); }
 .a4-gm-log.is-only-unpushed > li:not([data-unpushed]) { display: none; }
-.a4-gm-avatar { display: inline-flex; align-items: center; justify-content: center; width: 2.2em; height: 2.2em; border-radius: 50%; background-color: var(--a4-soft); box-shadow: inset 0 0 0 2px var(--a4-line-strong); color: var(--a4-ink); font-size: var(--a4-text-xs); font-weight: 700; }
+.a4-gm-avatar { display: inline-flex; align-items: center; justify-content: center; width: 2.2em; height: 2.2em; border-radius: 50%; background-color: var(--a4-soft); box-shadow: inset 0 0 0 2px var(--a4-line-strong); color: var(--a4-ink); font-size: var(--a4-text-xs); font-weight: var(--a4-weight-bold); }
 .a4-gm-avatar.is-c1 { box-shadow: inset 0 0 0 3px var(--a4-chart-1); }
 .a4-gm-avatar.is-c2 { box-shadow: inset 0 0 0 3px var(--a4-chart-2); }
 .a4-gm-avatar.is-c3 { box-shadow: inset 0 0 0 3px var(--a4-chart-3); }
@@ -80,7 +80,7 @@
 .a4-gm-avatar.is-c7 { box-shadow: inset 0 0 0 3px var(--a4-chart-7); }
 .a4-gm-avatar.is-c8 { box-shadow: inset 0 0 0 3px var(--a4-chart-8); }
 .a4-gm-log-main { display: flex; flex-direction: column; min-width: 0; }
-.a4-gm-log-title { overflow: hidden; color: var(--a4-ink); font-weight: 650; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
+.a4-gm-log-title { overflow: hidden; color: var(--a4-ink); font-weight: var(--a4-weight-heading); text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
 .a4-gm-log-title:hover { color: var(--a4-accent-text); text-decoration: underline; }
 .a4-gm-log-side { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--a4-space-2); }
 /* Under the log: the page size, "Showing x–y of z", and first / the shared pager / last in one row that wraps. */
@@ -101,7 +101,7 @@
 .a4-gm-commits > li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 var(--a4-space-2); padding: var(--a4-space-2) var(--a4-space-3); border-top: 1px solid var(--a4-line); }
 .a4-gm-commits > li:first-child { border-top: 0; }
 .a4-gm-uhash { grid-row: span 2; align-self: start; padding: 0 var(--a4-space-1); border-radius: var(--a4-radius-s); background-color: var(--a4-soft); color: var(--a4-ink); text-decoration: none; }
-.a4-gm-usubject { min-width: 0; overflow: hidden; color: var(--a4-ink); font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.a4-gm-usubject { min-width: 0; overflow: hidden; color: var(--a4-ink); font-weight: var(--a4-weight-heading); text-overflow: ellipsis; white-space: nowrap; }
 .a4-gm-upstream-foot { margin: var(--a4-space-3) 0 0; }
 
 /* ---- Commit details --------------------------------------------------------------------------------------------- */
