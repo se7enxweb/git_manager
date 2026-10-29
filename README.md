@@ -296,7 +296,9 @@ Requirements
 - Exponential 6.x (the audit event of "Fetch now" needs the audit log of Exponential 6.0.15 or later)
 - PHP 8.0 or later (tested up to PHP 8.5), with `proc_open`, `exec` and `shell_exec` allowed
 - The `git` binary, runnable by the user the web server runs PHP as, and a git checkout of the site
-- `mysqldump` (MySQL or MariaDB) for database backups
+- For database backups, the dump tool of the engine: `mysqldump` (MySQL or MariaDB), `pg_dump`
+  (PostgreSQL), `mongodump` (MongoDB); SQLite needs none (`VACUUM INTO`, SQLite 3.27 or later, else
+  the file is copied)
 - GnuPG (`gpg`) for encrypted backups only
 - `tar` and `gzip` for compressed backups
 - Optional: the PHP `posix` extension (the Upstream card names the user the site runs as and, when
@@ -501,7 +503,10 @@ Known limits
 - Backups and fetches run inside the web request. A very large database or `var/` folder can take
   longer than the web server's timeout; use `bin/php/backup-create.php` from a shell or a crontab
   for those.
-- Database backups support MySQL and MariaDB (`mysqldump`). Other database engines are not backed up.
+- Database backups support MySQL and MariaDB (`mysqldump`), PostgreSQL (`pg_dump --clean`), SQLite
+  (a consistent copy with `VACUUM INTO`) and MongoDB (`mongodump`). Each caption says in `dump.json`
+  which engine, archive and file it holds. Oracle is not dumped: export it with Data Pump (`expdp`)
+  before an upgrade; the caption fails with that hint.
 - A persistent PHP server keeps a whole download in memory, so large archives are refused there
   (`PersistentServerDownloadLimitMB`); Apache or PHP-FPM stream them.
 - Git Manager does not pull, merge or rebase, and it never forces a push.

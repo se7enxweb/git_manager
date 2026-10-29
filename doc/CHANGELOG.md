@@ -4,6 +4,18 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
+Unreleased
+----------
+
+- Added: Captions dump every database engine the kernel runs on, not only MySQL and MariaDB:
+  PostgreSQL (`pg_dump --clean --if-exists`, the password in the environment), SQLite (a
+  consistent copy with `VACUUM INTO` while the site runs, the file copied as a fallback) and
+  MongoDB (`mongodump`, the address in a file only its owner reads). Oracle fails with the Data
+  Pump export to run instead. Each dump is packed like the MySQL one (`sql_<caption>.tar.gz`).
+- Added: `dump.json` in every caption names the engine, the archive and the dump inside it, so a
+  restore (`./console exp:upgrade:rollback`) finds it; `BackupManager::supportedEngines()`,
+  `databaseEngine()` and `databaseDumpHint()` for callers such as the kernel's `exp:upgrade`.
+
 2.0.23 (2026-10-21)
 -------------------
 

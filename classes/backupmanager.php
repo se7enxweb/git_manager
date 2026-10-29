@@ -149,7 +149,47 @@ class BackupManager
         } );
     }
 
+    /**
+     * The engines a caption can dump: MySQL/MariaDB (mysqldump), PostgreSQL (pg_dump), SQLite (VACUUM INTO, a
+     * consistent copy while the site runs) and MongoDB (mongodump). Oracle has no dump here: make one with expdp
+     * (databaseDumpHint()).
+     *
+     * @return string[]
+     */
+    public static function supportedEngines() {
+        return array( 'mysql', 'postgresql', 'sqlite', 'mongodb' );
+    }
+
+    /**
+     * The engine of the installation's database connection: mysql, postgresql, sqlite, oracle, mongodb, or the
+     * driver's own name.
+     *
+     * @return string
+     */
+    public static function databaseEngine() {
+        $db = eZDB::instance();
+        if( class_exists( 'expKernelTableSchema' ) ) {
+            return expKernelTableSchema::type( $db );
+        }
+        $name = strtolower( (string)$db->databaseName() );
+        $map = array( 'mysqli' => 'mysql', 'mysql' => 'mysql', 'postgresql' => 'postgresql', 'sqlite' => 'sqlite', 'oracle' => 'oracle' );
+        return isset( $map[ $name ] ) ? $map[ $name ] : ( strpos( $name, 'mongo' ) === 0 ? 'mongodb' : $name );
+    }
+
+    /** What an operator runs to dump an engine that has no built-in dump (Oracle). */
+    public static function databaseDumpHint( $engine ) {
+        if( $engine === 'oracle' ) {
+            return 'Oracle: no built-in dump. Export with Data Pump before the upgrade, for example '
+                . 'expdp <user> SCHEMAS=<user> DIRECTORY=DATA_PUMP_DIR DUMPFILE=<site>-%U.dmp LOGFILE=<site>.log';
+        }
+        return 'no built-in dump for ' . $engine;
+    }
+
     private function createDatabaseDumpUnguarded( $outputDir, $encrypt = false, $passphrase = '', $agplCompatible = false ) {
+        $engine = self::databaseEngine();
+        if( $engine !== 'mysql' ) {
+            return $this->createEngineDump( $engine, $outputDir, $encrypt, $passphrase );
+        }
         $dbSettings = $this->getDatabaseSettings();
         
         if( empty($dbSettings['database']) ) {
@@ -222,7 +262,8 @@ class BackupManager
         
         // Remove uncompressed SQL files
         exec( 'rm -rf ' . escapeshellarg($sqlDir) );
-        
+        $this->writeDumpDescription( $outputDir, 'mysql', basename( $tarFile ), 'sql/complete.sql', $encrypt && !empty( $passphrase ) );
+
         // Create AGPL-compatible sanitized dump if requested
         if( $agplCompatible ) {
             // Re-extract complete.sql, sanitize it, repackage as agpl_sql_*.tar.gz
@@ -282,6 +323,125 @@ class BackupManager
         );
     }
     
+    /**
+     * The database dump of an engine other than MySQL, packed like the MySQL one (sql_<caption>.tar.gz with sql/ and
+     * licenses/) and described in dump.json:
+     *
+     *   sqlite      sql/database.sqlite  VACUUM INTO, a consistent copy while the site runs; the file copied as fallback
+     *   postgresql  sql/complete.sql     pg_dump --clean --if-exists --no-owner (the password in the environment)
+     *   mongodb     sql/mongodb/         mongodump (the address with its password in a file only the owner reads)
+     *   oracle      none                 the export hint (databaseDumpHint()); the caption fails
+     *
+     * @return array success, message | file, size, encrypted
+     */
+    private function createEngineDump( $engine, $outputDir, $encrypt, $passphrase ) {
+        if( !in_array( $engine, self::supportedEngines(), true ) ) {
+            return array( 'success' => false, 'message' => self::databaseDumpHint( $engine ) );
+        }
+        $sqlDir = $outputDir . '/sql';
+        if( !$this->createDirectory( $sqlDir ) ) {
+            return array( 'success' => false, 'message' => 'Failed to create SQL directory' );
+        }
+        if( !is_dir( $outputDir . '/licenses' ) ) {
+            $this->writeLicenseFiles( $outputDir );
+        }
+        $db = eZDB::instance();
+        $errors = '';
+        switch( $engine ) {
+            case 'sqlite':
+                $inner = 'sql/database.sqlite';
+                $file = $outputDir . '/' . $inner;
+                $ok = false;
+                try {
+                    $db->query( "VACUUM INTO '" . str_replace( "'", "''", $file ) . "'" );
+                    $ok = is_file( $file ) && filesize( $file ) > 0;
+                } catch( Exception $e ) {
+                    $errors = $e->getMessage();
+                }
+                if( !$ok ) {
+                    $source = class_exists( 'eZSQLite3DB' ) ? eZSQLite3DB::filePath( (string)$db->DB ) : (string)$db->DB;
+                    if( $source !== '' && $source[0] !== '/' ) {
+                        $source = $this->realInstallPath . '/' . $source;
+                    }
+                    $ok = is_file( $source ) && copy( $source, $file );
+                }
+                break;
+            case 'postgresql':
+                $inner = 'sql/complete.sql';
+                $file = $outputDir . '/' . $inner;
+                $cmd = 'pg_dump --no-owner --clean --if-exists -h ' . escapeshellarg( $db->Server ?: 'localhost' )
+                    . ( $db->Port ? ' -p ' . (int)$db->Port : '' ) . ' -U ' . escapeshellarg( (string)$db->User )
+                    . ' -f ' . escapeshellarg( $file ) . ' ' . escapeshellarg( (string)$db->DB );
+                $ok = $this->runWithEnvironment( $cmd, array( 'PGPASSWORD' => (string)$db->Password ), $errors ) === 0 && is_file( $file );
+                break;
+            case 'mongodb':
+                $inner = 'sql/mongodb';
+                $file = $outputDir . '/' . $inner;
+                $uri = 'mongodb://' . ( (string)$db->User !== '' ? rawurlencode( (string)$db->User ) . ':' . rawurlencode( (string)$db->Password ) . '@' : '' )
+                    . ( $db->Server ?: 'localhost' ) . ( $db->Port ? ':' . (int)$db->Port : '' ) . '/' . rawurlencode( (string)$db->DB );
+                $config = $outputDir . '/.mongodump.yaml';
+                file_put_contents( $config, '' );
+                chmod( $config, self::fileMode( 0600 ) );
+                file_put_contents( $config, 'uri: "' . str_replace( '"', '\\"', $uri ) . "\"\n" );
+                $ok = $this->runWithEnvironment( 'mongodump --config=' . escapeshellarg( $config ) . ' --out=' . escapeshellarg( $file ), array(), $errors ) === 0 && is_dir( $file );
+                unlink( $config );
+                break;
+        }
+        if( !$ok ) {
+            return array( 'success' => false, 'message' => 'Database dump failed (' . $engine . '): ' . trim( $errors ) );
+        }
+        $timestamp = basename( $outputDir );
+        $tarFile = $outputDir . '/sql_' . $timestamp . '.tar.gz';
+        $tarPaths = 'sql/' . ( is_dir( $outputDir . '/licenses' ) ? ' licenses/' : '' );
+        exec( 'cd ' . escapeshellarg( $outputDir ) . ' && tar -czf ' . escapeshellarg( basename( $tarFile ) ) . ' ' . $tarPaths . ' 2>&1', $tarOutput, $tarReturn );
+        if( $tarReturn !== 0 ) {
+            return array( 'success' => false, 'message' => 'Failed to create SQL tarball: ' . implode( "\n", $tarOutput ) );
+        }
+        exec( 'rm -rf ' . escapeshellarg( $sqlDir ) );
+        $encrypted = false;
+        if( $encrypt && !empty( $passphrase ) ) {
+            $gpg = new GPGEncryption();
+            $deleteOriginal = eZINI::instance( 'git_manager.ini' )->variable( 'GitManagerSettings', 'DeleteUnencryptedAfterEncryption' ) === 'enabled';
+            $enc = $gpg->encryptFile( $tarFile, $passphrase, $deleteOriginal );
+            if( !$enc['success'] ) {
+                return $enc;
+            }
+            $this->writeDumpDescription( $outputDir, $engine, basename( $enc['file'] ), $inner, true );
+            return array( 'success' => true, 'file' => basename( $enc['file'] ), 'size' => $enc['size'], 'encrypted' => true );
+        }
+        $this->writeDumpDescription( $outputDir, $engine, basename( $tarFile ), $inner, $encrypted );
+        return array( 'success' => true, 'file' => basename( $tarFile ), 'size' => filesize( $tarFile ), 'encrypted' => false );
+    }
+
+    /**
+     * dump.json in the caption: which engine, which archive, and the dump inside it, so a restore (exp:upgrade:rollback)
+     * finds it without guessing.
+     */
+    private function writeDumpDescription( $outputDir, $engine, $archive, $inner, $encrypted ) {
+        file_put_contents( $outputDir . '/dump.json', json_encode( array(
+            'format' => 'git_manager-dump/1', 'engine' => $engine, 'archive' => $archive, 'file' => $inner,
+            'encrypted' => (bool)$encrypted, 'created' => date( 'c' ),
+        ), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES ) . "\n" );
+    }
+
+    /**
+     * Runs a command with extra environment variables (a password), never on a command line other accounts can read.
+     *
+     * @return int the exit code
+     */
+    private function runWithEnvironment( $cmd, array $env, &$errors ) {
+        $process = proc_open( $cmd, array( 1 => array( 'pipe', 'w' ), 2 => array( 'pipe', 'w' ) ), $pipes, null, $env + getenv() );
+        if( !is_resource( $process ) ) {
+            $errors = 'cannot start ' . strtok( $cmd, ' ' );
+            return 127;
+        }
+        stream_get_contents( $pipes[1] );
+        $errors = (string)stream_get_contents( $pipes[2] );
+        fclose( $pipes[1] );
+        fclose( $pipes[2] );
+        return proc_close( $process );
+    }
+
     /**
      * Create var directory backup (excluding cache, log, backups)
      * 
