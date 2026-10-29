@@ -4,6 +4,12 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
+2.0.27 (2026-10-29)
+-------------------
+
+- Updated: The copyright of ezinfo.php and extension.xml names the Exponential Foundation and
+  7x first in the approved form, followed by the notice of the original author.
+
 2.0.26 (2026-10-29)
 -------------------
 
