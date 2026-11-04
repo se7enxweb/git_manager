@@ -22,10 +22,31 @@ class BackupManager
         $this->realInstallPath = $this->resolveInstallPath();
         
         // Set backup path relative to real installation
-        $configuredPath = $ini->variable( 'GitManagerSettings', 'BackupPath' );
-        $this->backupPath = $this->realInstallPath . '/' . $configuredPath;
+        $configuredPath = $ini->hasVariable( 'GitManagerSettings', 'BackupPath' ) ? $ini->variable( 'GitManagerSettings', 'BackupPath' ) : '';
+        $this->backupPath = self::backupPathFor( $this->realInstallPath, $configuredPath );
     }
-    
+
+    /** Where backups go when git_manager.ini names no folder (the extension's own default) */
+    const DEFAULT_BACKUP_PATH = 'var/site/backups/captions';
+
+    /**
+     * The backup folder for $configuredPath below $installPath. An empty
+     * setting, or one that names the installation root itself, falls back to
+     * DEFAULT_BACKUP_PATH: the folder gets a "Require all denied" .htaccess
+     * and an empty index.html, which in the root would shut the whole site
+     * off (that happened when git_manager.ini was not loaded, on an
+     * installation where git_manager is not an active extension).
+     */
+    public static function backupPathFor( $installPath, $configuredPath ) {
+        $relative = trim( str_replace( '\\', '/', (string)$configuredPath ) );
+        $relative = preg_replace( '#^(\./)+#', '', $relative );
+        $relative = trim( $relative, '/' );
+        if( $relative === '' || $relative === '.' ) {
+            $relative = self::DEFAULT_BACKUP_PATH;
+        }
+        return rtrim( $installPath, '/' ) . '/' . $relative;
+    }
+
     /**
      * Resolve the actual installation path, following symlinks if necessary
      * 
