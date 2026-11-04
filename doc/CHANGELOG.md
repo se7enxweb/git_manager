@@ -4,6 +4,15 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
+2.0.28 (2026-11-04)
+-------------------
+
+- Updated: Backups never go to the installation root when the backup folder setting is empty.
+  When git_manager.ini was not loaded (git_manager installed but not an active extension),
+  BackupPath read as empty and the backup folder became the installation root, which then got
+  a "Require all denied" .htaccess and an empty index.html. An empty setting, or one naming the
+  root, now falls back to var/site/backups/captions, with a unit test.
+
 2.0.27 (2026-10-29)
 -------------------
 
