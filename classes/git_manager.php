@@ -582,6 +582,18 @@ class GitManager
 	 * Returns array( 'exit' => int, 'ok' => bool, 'output' => stdout ).
 	 */
 	public function git( array $arguments, $seconds = 30 ) {
+		$r = self::gitAt( self::$path, $arguments, $seconds );
+		unset( $r['truncated'], $r['errors'] );
+		return $r;
+	}
+
+	/**
+	 * git() for any repository, without the instance (a tool that reads several repositories in one run, such as
+	 * the hosting tools of a server): $path is the working tree (or a bare repository), $maxBytes > 0 stops git once
+	 * it printed that much (truncated is then true), $environment adds variables (GIT_CONFIG_* for safe.directory,
+	 * GIT_DIR ...). Returns array( 'exit', 'ok', 'output', 'errors', 'truncated' ).
+	 */
+	public static function gitAt( $path, array $arguments, $seconds = 30, $maxBytes = 0, array $environment = array() ) {
 		$command = array_merge( array( 'git' ), array_map( 'strval', array_values( $arguments ) ) );
 		foreach( array( '/usr/bin/timeout', '/bin/timeout' ) as $timeout ) {
 			if( is_executable( $timeout ) ) {
@@ -593,22 +605,38 @@ class GitManager
 		if( getenv( 'HOME' ) ) {
 			$env['HOME'] = getenv( 'HOME' );
 		}
+		foreach( $environment as $name => $value ) {
+			if( is_string( $name ) && preg_match( '/^[A-Z][A-Z0-9_]*$/', $name ) ) {
+				$env[$name] = (string)$value;
+			}
+		}
 		$pipes = array();
 		// Plain pipes on all three: in a long-running server process (Velocity) PHP's 'file' descriptors made
 		// posix_spawn() fail with "Bad file descriptor", while pipes work everywhere.
-		$process = proc_open( $command, array( 0 => array( 'pipe', 'r' ), 1 => array( 'pipe', 'w' ), 2 => array( 'pipe', 'w' ) ), $pipes, self::$path, $env );
+		$process = proc_open( $command, array( 0 => array( 'pipe', 'r' ), 1 => array( 'pipe', 'w' ), 2 => array( 'pipe', 'w' ) ), $pipes, $path, $env );
 		if( !is_resource( $process ) ) {
-			return array( 'exit' => 1, 'ok' => false, 'output' => '' );
+			return array( 'exit' => 1, 'ok' => false, 'output' => '', 'errors' => 'git could not be started', 'truncated' => false );
 		}
 		fclose( $pipes[0] );
-		$output = (string)stream_get_contents( $pipes[1] );
+		$truncated = false;
+		if( $maxBytes > 0 ) {
+			$output = (string)stream_get_contents( $pipes[1], (int)$maxBytes + 1 );
+			if( strlen( $output ) > $maxBytes ) {
+				$output = substr( $output, 0, (int)$maxBytes );
+				$truncated = true;
+				proc_terminate( $process );
+			}
+		} else {
+			$output = (string)stream_get_contents( $pipes[1] );
+		}
 		fclose( $pipes[1] );
 		$errors = (string)stream_get_contents( $pipes[2] );
 		fclose( $pipes[2] );
 		$exit = proc_close( $process );
 		// A server that reaps its children itself (a SIGCHLD handler) makes proc_close() report -1: then git
-		// succeeded when it wrote no error.
-		return array( 'exit' => $exit, 'ok' => $exit === 0 || ( $exit === -1 && trim( $errors ) === '' ), 'output' => $output );
+		// succeeded when it wrote no error. A run stopped at $maxBytes counts as done: its output is what was asked.
+		return array( 'exit' => $exit, 'ok' => $truncated || $exit === 0 || ( $exit === -1 && trim( $errors ) === '' ), 'output' => $output,
+		              'errors' => substr( $errors, 0, 2000 ), 'truncated' => $truncated );
 	}
 
 	/** The repository's branches, remote-tracking branches and tags, as full ref names (refs/heads/main ...). */

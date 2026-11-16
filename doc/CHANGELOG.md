@@ -4,6 +4,18 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
+Unreleased
+----------
+
+- Added: GitManager::gitAt() runs git in any repository without the instance, with a size limit on
+  the output and extra environment variables, for tools that read several repositories in one run
+  (the hosting servers' site tools). GitManager::git() uses it.
+- Added: GitManagerDiff, the history of a repository with the files and lines of each commit, the
+  file list of the difference between two commits (or a commit and the working tree), the patch of
+  one text file, and a per-table summary of a database repository from paths and counts alone.
+- Added: GitManagerSecretMask, which masks passwords, secrets, tokens, private keys and known API key
+  formats in diff lines and settings files while keeping the setting names, with unit tests.
+
 2.0.28 (2026-11-04)
 -------------------
 
