@@ -448,6 +448,11 @@ class BackupManager
     /**
      * Runs a command with extra environment variables (a password), never on a command line other accounts can read.
      *
+     * Both pipes are read together: mongodump writes a progress line per collection to its error output, and with
+     * the error output read only after the standard output had ended, a database of some hundred collections
+     * filled the pipe, mongodump waited for it to be read and the backup (and the migration run that asked for
+     * it) never finished.
+     *
      * @return int the exit code
      */
     private function runWithEnvironment( $cmd, array $env, &$errors ) {
@@ -456,10 +461,32 @@ class BackupManager
             $errors = 'cannot start ' . strtok( $cmd, ' ' );
             return 127;
         }
-        stream_get_contents( $pipes[1] );
-        $errors = (string)stream_get_contents( $pipes[2] );
-        fclose( $pipes[1] );
-        fclose( $pipes[2] );
+        $errors = '';
+        $open = array( 1 => $pipes[1], 2 => $pipes[2] );
+        foreach( $open as $pipe ) {
+            stream_set_blocking( $pipe, false );
+        }
+        while( $open ) {
+            $read = array_values( $open );
+            $write = $except = null;
+            if( @stream_select( $read, $write, $except, 5 ) === false ) {
+                break;
+            }
+            foreach( $open as $n => $pipe ) {
+                $chunk = fread( $pipe, 65536 );
+                // the end of the error output is what names a failure; a megabyte of it is plenty
+                if( $n === 2 && $chunk !== false && $chunk !== '' ) {
+                    $errors = substr( $errors . $chunk, -1048576 );
+                }
+                if( feof( $pipe ) ) {
+                    fclose( $pipe );
+                    unset( $open[$n] );
+                }
+            }
+        }
+        foreach( $open as $pipe ) {
+            fclose( $pipe );
+        }
         return proc_close( $process );
     }
 
