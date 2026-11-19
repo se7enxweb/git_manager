@@ -4,8 +4,8 @@ Git Manager changelog
 The changes of each release, newest first. Earlier releases are described in their GitHub
 release notes (https://github.com/se7enxweb/git_manager/releases).
 
-Unreleased
-----------
+2.0.29 (2026-11-19)
+-------------------
 
 - Added: GitManager::gitAt() runs git in any repository without the instance, with a size limit on
   the output and extra environment variables, for tools that read several repositories in one run
@@ -15,6 +15,10 @@ Unreleased
   one text file, and a per-table summary of a database repository from paths and counts alone.
 - Added: GitManagerSecretMask, which masks passwords, secrets, tokens, private keys and known API key
   formats in diff lines and settings files while keeping the setting names, with unit tests.
+- Fixed: A MongoDB backup of a database with some hundred collections finishes. mongodump writes a
+  progress line per collection to its error output, and with the error output read only after the
+  standard output had ended the pipe filled and mongodump waited forever, and with it a migration
+  run that takes a backup before it applies anything. Both pipes are read together now.
 
 2.0.28 (2026-11-04)
 -------------------
