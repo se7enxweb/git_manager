@@ -4,7 +4,7 @@
  * patches, and the per-table summary of a database repository (paths and counts only), plus one run against a real
  * throwaway repository through GitManager::gitAt().
  *
- * @copyright Copyright (C) 1998 - 2026 Exponential Foundation and 7x. All rights reserved.
+ * @copyright Copyright (C) 1998 - 2026 Exponential Foundation and 7x; All rights reserved.
  * @license GNU General Public License v2.0 (or any later version)
  * @package tests
  */

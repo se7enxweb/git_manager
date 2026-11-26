@@ -11,7 +11,7 @@
  *
  * Plain PHP with no Exponential calls (the unit tests and the hosting tools use it without a bootstrap).
  *
- * @copyright Copyright (C) 1998 - 2026 Exponential Foundation and 7x. All rights reserved.
+ * @copyright Copyright (C) 1998 - 2026 Exponential Foundation and 7x; All rights reserved.
  * @license GNU General Public License v2.0 (or any later version)
  * @package GitManager
  */
